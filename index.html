@@ -26,6 +26,46 @@
     ::selection { background: var(--cyan); color: var(--bg); }
 
     /* ── Custom cursor ── */
+    /* ── LOADER ── */
+    .loader { position:fixed; inset:0; z-index:99999; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
+    .loader.done { pointer-events:none; }
+
+    .loader-name {
+      font-family:var(--font-ui); font-size:clamp(28px,6vw,48px); font-weight:900;
+      letter-spacing:0.2em; color:var(--text); position:relative;
+    }
+    .loader-name::before, .loader-name::after {
+      content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden;
+    }
+    .loader-name::before { color:var(--cyan); animation:loaderGlitch1 0.3s infinite; }
+    .loader-name::after { color:var(--pink); animation:loaderGlitch2 0.3s infinite; }
+    @keyframes loaderGlitch1 {
+      0%{clip-path:inset(40% 0 20% 0);transform:translate(-2px,1px)} 20%{clip-path:inset(10% 0 60% 0);transform:translate(2px,-1px)}
+      40%{clip-path:inset(70% 0 5% 0);transform:translate(-1px,2px)} 60%{clip-path:inset(20% 0 50% 0);transform:translate(1px,-2px)}
+      80%{clip-path:inset(50% 0 10% 0);transform:translate(-2px,0)} 100%{clip-path:inset(30% 0 30% 0);transform:translate(2px,1px)}
+    }
+    @keyframes loaderGlitch2 {
+      0%{clip-path:inset(60% 0 10% 0);transform:translate(2px,-1px)} 20%{clip-path:inset(5% 0 70% 0);transform:translate(-2px,2px)}
+      40%{clip-path:inset(30% 0 40% 0);transform:translate(1px,-1px)} 60%{clip-path:inset(50% 0 20% 0);transform:translate(-1px,1px)}
+      80%{clip-path:inset(10% 0 50% 0);transform:translate(2px,-2px)} 100%{clip-path:inset(40% 0 30% 0);transform:translate(-2px,1px)}
+    }
+
+    .loader-bar-wrap {
+      width:min(320px, 80vw); height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; position:relative;
+    }
+    .loader-bar {
+      height:100%; width:0; background:linear-gradient(90deg,var(--cyan),var(--pink)); border-radius:2px;
+      box-shadow:0 0 12px var(--cyan);
+      transition:width 0.1s;
+    }
+
+    .loader-pct {
+      font-family:var(--font-ui); font-size:12px; letter-spacing:0.2em; color:var(--text-soft);
+    }
+    .loader-sub {
+      font-family:var(--font-hand); font-size:13px; color:var(--text-soft); opacity:0.5;
+    }
+
     .cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); pointer-events: none; z-index: 10000; mix-blend-mode: difference; transition: transform 0.1s; }
     .cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: 10000; transition: all 0.15s ease-out; opacity: 0.5; }
     .cursor-ring.hover { width: 60px; height: 60px; border-color: var(--pink); opacity: 0.8; }
@@ -196,6 +236,14 @@
 </head>
 <body>
 
+  <!-- LOADER -->
+  <div class="loader" id="loader">
+    <div class="loader-name" data-text="NATSUNE">NATSUNE</div>
+    <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
+    <div class="loader-pct" id="loaderPct">0%</div>
+    <div class="loader-sub">ENTERING PORTAL...</div>
+  </div>
+
   <canvas id="bgCanvas"></canvas>
   <div class="cursor" id="cur"></div>
   <div class="cursor-ring" id="curRing"></div>
@@ -334,6 +382,48 @@
   </footer>
 
   <script>
+    // ── LOADER + REVEAL ──
+    (() => {
+      const loader = document.getElementById('loader');
+      const bar = document.getElementById('loaderBar');
+      const pct = document.getElementById('loaderPct');
+      const wrap = document.querySelector('.wrap');
+      wrap.style.opacity = '0';
+      wrap.style.transform = 'scale(0.95)';
+      document.querySelector('.foot').style.opacity = '0';
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 12 + 3;
+        if (progress > 100) progress = 100;
+        bar.style.width = progress + '%';
+        pct.textContent = Math.floor(progress) + '%';
+        if (progress >= 100) {
+          clearInterval(interval);
+          // Glitch intensify then reveal
+          setTimeout(() => {
+            const tl = gsap.timeline();
+            // Flash effect
+            tl.to(loader, { opacity: 0, duration: 0.1 })
+              .to(loader, { opacity: 1, duration: 0.05 })
+              .to(loader, { opacity: 0, duration: 0.1 })
+              .to(loader, { opacity: 0.5, duration: 0.05 })
+              .to(loader, { opacity: 0, duration: 0.15 })
+              .set(loader, { display: 'none' })
+              // World reveal
+              .to(wrap, { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' }, '-=0.1')
+              .to('.foot', { opacity: 1, duration: 0.6 }, '-=0.6')
+              // Hero elements stagger in
+              .from('.hero-status', { y: 20, opacity: 0, duration: 0.5 }, '-=0.8')
+              .from('.hero-role', { y: 20, opacity: 0, duration: 0.5 }, '-=0.6')
+              .from('.hero-desc', { y: 20, opacity: 0, duration: 0.5 }, '-=0.4')
+              .from('.hero-btns', { y: 20, opacity: 0, duration: 0.5 }, '-=0.3')
+              .from('.avatar-wrap', { scale: 0.8, opacity: 0, duration: 0.8, ease: 'back.out(1.4)' }, '-=0.6');
+          }, 400);
+        }
+      }, 80);
+    })();
+
     // ── Lenis ──
     const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10*t)) });
     gsap.ticker.add(t => lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
