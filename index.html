@@ -66,6 +66,10 @@
       font-family:var(--font-hand); font-size:13px; color:var(--text-soft); opacity:0.5;
     }
 
+    /* Curtain panels */
+    .curtain-top, .curtain-bot { position:fixed; left:0; width:100%; height:50vh; z-index:99998; background:#fff; }
+    .curtain-top { top:0; } .curtain-bot { bottom:0; }
+
     .cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); pointer-events: none; z-index: 10000; transition: transform 0.1s; }
     .cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: 10000; transition: all 0.15s ease-out; opacity: 0.5; }
     .cursor-ring.hover { width: 60px; height: 60px; border-color: var(--pink); opacity: 0.8; }
@@ -243,6 +247,8 @@
     <div class="loader-pct" id="loaderPct">0%</div>
     <div class="loader-sub">ENTERING PORTAL...</div>
   </div>
+  <div class="curtain-top" id="curtainTop"></div>
+  <div class="curtain-bot" id="curtainBot"></div>
 
   <canvas id="bgCanvas"></canvas>
   <div class="cursor" id="cur"></div>
@@ -403,23 +409,27 @@
           // Glitch intensify then reveal
           setTimeout(() => {
             const tl = gsap.timeline();
-            // Flash effect
-            tl.to(loader, { opacity: 0, duration: 0.1 })
-              .to(loader, { opacity: 1, duration: 0.05 })
-              .to(loader, { opacity: 0, duration: 0.1 })
-              .to(loader, { opacity: 0.5, duration: 0.05 })
-              .to(loader, { opacity: 0, duration: 0.15 })
+            const cTop = document.getElementById('curtainTop');
+            const cBot = document.getElementById('curtainBot');
+            // Flash glitch
+            tl.to(loader, { opacity: 0, duration: 0.08 })
+              .to(loader, { opacity: 1, duration: 0.04 })
+              .to(loader, { opacity: 0, duration: 0.08 })
               .set(loader, { display: 'none' })
-              // World reveal
-              .to(wrap, { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out' }, '-=0.1')
-              .to('.foot', { opacity: 1, duration: 0.6 }, '-=0.6')
-              // Hero elements stagger in
-              .from('.hero-status', { y: 20, opacity: 0, duration: 0.5 }, '-=0.8')
-              .from('.hero-role', { y: 20, opacity: 0, duration: 0.5 }, '-=0.6')
-              .from('.hero-desc', { y: 20, opacity: 0, duration: 0.5 }, '-=0.4')
-              .from('.hero-btns', { y: 20, opacity: 0, duration: 0.5 }, '-=0.3')
-              .from('.avatar-wrap', { scale: 0.8, opacity: 0, duration: 0.8, ease: 'back.out(1.4)' }, '-=0.6');
-          }, 400);
+              // Curtains open — world reveals
+              .to(cTop, { yPercent: -100, duration: 1, ease: 'expo.inOut' }, '-=0.05')
+              .to(cBot, { yPercent: 100, duration: 1, ease: 'expo.inOut' }, '<')
+              .to(wrap, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, '-=0.7')
+              .to('.foot', { opacity: 1, duration: 0.5 }, '-=0.4')
+              // Hero stagger
+              .from('.hero-status', { y: 30, opacity: 0, duration: 0.5 }, '-=0.5')
+              .from('.hero-role', { y: 30, opacity: 0, duration: 0.5 }, '-=0.4')
+              .from('.hero-desc', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
+              .from('.hero-btns', { y: 30, opacity: 0, duration: 0.5 }, '-=0.2')
+              .from('.avatar-wrap', { scale: 0.85, opacity: 0, duration: 0.9, ease: 'back.out(1.4)' }, '-=0.5')
+              // Cleanup
+              .set([cTop, cBot], { display: 'none' });
+          }, 300);
         }
       }, 80);
     })();
