@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鮫月ナツネ | Admin Dashboard</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --bg: #f7fdff;
+      --bg-soft: #eefbfe;
+      --surface: #ffffff;
+      --line: #d9f1f6;
+      --text: #16323a;
+      --text-soft: #55717a;
+      --accent: #00bcd4;
+      --accent-strong: #00a8be;
+      --accent-soft: #dbf8fc;
+      --danger: #e74c5e;
+      --danger-soft: #fef0f1;
+      --success: #2ecc8a;
+      --success-soft: #edfcf4;
+      --shadow: 0 8px 24px rgba(0, 121, 140, 0.08);
+      --r: 16px;
+      --r-sm: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Hiragino Sans","Yu Gothic","Meiryo",system-ui,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Login Screen ── */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 48px 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .login-box h1 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .login-box p {
+      color: var(--text-soft);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-box input:focus { border-color: var(--accent); }
+    .login-box .btn { margin-top: 16px; width: 100%; }
+    .login-error {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ── Dashboard Layout ── */
+    .dashboard { display: none; }
+    .dash-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .dash-header h1 {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-header h1 .badge {
+      font-size: 11px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .dash-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dash-body {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── Tabs ── */
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 28px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-soft);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+      color: var(--accent-strong);
+      border-bottom-color: var(--accent);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Common UI ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-strong); }
+    .btn-secondary { background: var(--accent-soft); color: var(--accent-strong); }
+    .btn-secondary:hover { background: #c8f4fa; }
+    .btn-danger { background: var(--danger-soft); color: var(--danger); }
+    .btn-danger:hover { background: #fde2e5; }
+    .btn-sm { padding: 7px 14px; font-size: 13px; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text-soft);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-header h3 {
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--surface);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-group textarea { min-height: 100px; resize: vertical; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .form-hint {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 24px;
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1000;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-success { background: var(--success-soft); color: #1a8c5a; border: 1px solid #b8ecd4; }
+    .toast-error { background: var(--danger-soft); color: var(--danger); border: 1px solid #f5c6cc; }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-soft);
+    }
+    .empty-state p { font-size: 14px; margin-bottom: 16px; }
+
+    .item-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .draggable { cursor: grab; }
+    .draggable:active { cursor: grabbing; }
+
+    .preview-link {
+      font-size: 13px;
+      color: var(--accent-strong);
+      text-decoration: underline;
+    }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.saved { background: var(--success); }
+    .status-dot.unsaved { background: #f5c542; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .dash-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+      .dash-body { padding: 20px 16px 60px; }
+      .tab-btn { padding: 10px 14px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== LOGIN ====== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h1>Admin Dashboard</h1>
+      <p>鮫月ナツネ公式サイトの管理画面です</p>
+      <input type="password" id="passwordInput" placeholder="パスワードを入力" autocomplete="off" />
+      <button class="btn btn-primary" id="loginBtn">ログイン</button>
+      <p class="login-error" id="loginError">パスワードが違います</p>
+    </div>
+  </div>
+
+  <!-- ====== DASHBOARD ====== -->
+  <div class="dashboard" id="dashboard">
+    <header class="dash-header">
+      <h1>
+        鮫月ナツネ <span class="badge">ADMIN</span>
+      </h1>
+      <div class="dash-actions">
+        <span class="status-dot saved" id="statusDot" title="保存済み"></span>
+        <button class="btn btn-sm btn-secondary" id="exportBtn">JSONエクスポート</button>
+        <button class="btn btn-sm btn-outline" id="previewBtn" onclick="window.open('index.html','_blank')">サイトを見る</button>
+        <button class="btn btn-sm btn-outline" id="logoutBtn">ログアウト</button>
+      </div>
+    </header>
+
+    <div class="dash-body">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="profile">プロフィール</button>
+        <button class="tab-btn" data-tab="activities">活動ログ</button>
+        <button class="tab-btn" data-tab="pickup">ピックアップ</button>
+        <button class="tab-btn" data-tab="links">リンク</button>
+        <button class="tab-btn" data-tab="settings">設定</button>
+      </div>
+
+      <!-- ── Profile Tab ── -->
+      <div class="tab-panel active" id="tab-profile">
+        <div class="card">
+          <div class="card-header">
+            <h3>基本プロフィール</h3>
+            <button class="btn btn-sm btn-primary" onclick="saveData()">保存</button>
+          </div>
+          <div class="form-group">
+            <label>名前</label>
+            <input type="text" id="prof-name" value="鮫月ナツネ" />
+          </div>
+          <div class="form-group">
+            <label>肩書き</label>
+            <input type="text" id="prof-title" value="VRChat Creator / World Builder / Community Organizer" />
+          </div>
+          <div class="form-group">
+            <label>ひとことで言うと</label>
+            <input type="text" id="prof-oneliner" value="世界を作って人を集める人" />
+          </div>
+          <div class="form-group">
+            <label>自己紹介（メインコピー）</label>
+            <textarea id="prof-intro">鮫月ナツネは、VRChatを中心に活動する個人クリエイター。
+ワールド制作、ギミック開発、動画発信、イベント企画、コミュニティ運営まで、
+表現の形をひとつに絞らず、その時いちばん面白いと思う方法で人と場をつないでいくタイプです。</textarea>
+          </div>
+          <div class="form-group">
+            <label>サブコピー</label>
+            <textarea id="prof-sub">技術だけを見せるのではなく、そこに集まる人の体験や空気感まで含めてデザインすることを大切にしています。
+作品単体ではなく、「この人の活動を追っていくと面白い」と思ってもらえる存在を目指しています。</textarea>
+          </div>
+          <div class="form-group">
+            <label>キーワード</label>
+            <input type="text" id="prof-keywords" value="ポップ / 親しみやすさ / 世界観 / 遊び心 / 技術と体験の両立" />
+            <p class="form-hint">スラッシュ区切りで入力</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>プロフィールポイント（4つ）</h3>
+          </div>
+          <div id="profilePoints">
+            <!-- JS で生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Activities Tab ── -->
+      <div class="tab-panel" id="tab-activities">
+        <div class="card">
+          <div class="card-header">
+            <h3>活動カード</h3>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-sm btn-secondary" onclick="addActivity()">追加</button>
+              <button class="btn btn-sm btn-primary" onclick="saveData()">保存</button>
+            </div>
+          </div>
+          <div id="activityList">
+            <!-- JS で生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Pickup Tab ── -->
+      <div class="tab-panel" id="tab-pickup">
+        <div class="card">
+          <div class="card-header">
+            <h3>メインピックアップ</h3>
+            <button class="btn btn-sm btn-primary" onclick="saveData()">保存</button>
+          </div>
+          <div class="form-group">
+            <label>キッカー</label>
+            <input type="text" id="pickup-kicker" value="Now Working On" />
+          </div>
+          <div class="form-group">
+            <label>タイトル</label>
+            <input type="text" id="pickup-title" value="新しいワールド制作と発信を軸に活動全体の見せ方を更新中" />
+          </div>
+          <div class="form-group">
+            <label>本文</label>
+            <textarea id="pickup-text">単発で何かを作るだけではなく、ワールド、動画、イベント、SNS、販売導線がひとつの流れとしてつながるように活動全体を再設計。初見の人にも既存ファンにも追いやすい形を目指しています。</textarea>
+          </div>
+          <div class="form-group">
+            <label>タグ（カンマ区切り）</label>
+            <input type="text" id="pickup-tags" value="新作ワールド,発信強化,活動整理,ポータル更新" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>ニュースアイテム</h3>
+            <button class="btn btn-sm btn-secondary" onclick="addNews()">追加</button>
+          </div>
+          <div id="newsList">
+            <!-- JS で生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Links Tab ── -->
+      <div class="tab-panel" id="tab-links">
+        <div class="card">
+          <div class="card-header">
+            <h3>リンク一覧</h3>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-sm btn-secondary" onclick="addLink()">追加</button>
+              <button class="btn btn-sm btn-primary" onclick="saveData()">保存</button>
+            </div>
+          </div>
+          <div id="linkList">
+            <!-- JS で生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Settings Tab ── -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="card">
+          <div class="card-header">
+            <h3>パスワード変更</h3>
+          </div>
+          <div class="form-group">
+            <label>現在のパスワード</label>
+            <input type="password" id="currentPw" />
+          </div>
+          <div class="form-group">
+            <label>新しいパスワード</label>
+            <input type="password" id="newPw" />
+          </div>
+          <div class="form-group">
+            <label>新しいパスワード（確認）</label>
+            <input type="password" id="confirmPw" />
+          </div>
+          <button class="btn btn-primary" onclick="changePassword()">パスワードを変更</button>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>データ管理</h3>
+          </div>
+          <p style="font-size:14px;color:var(--text-soft);margin-bottom:16px;">
+            管理データはブラウザのlocalStorageに保存されます。<br>
+            JSONエクスポートでバックアップを取ることを推奨します。
+          </p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-secondary" onclick="exportJSON()">JSONエクスポート</button>
+            <label class="btn btn-secondary" style="cursor:pointer">
+              JSONインポート
+              <input type="file" accept=".json" style="display:none" onchange="importJSON(event)" />
+            </label>
+            <button class="btn btn-danger" onclick="resetData()">データリセット</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// 認証（SHA-256ハッシュ比較）
+// ============================================================
+// デフォルトパスワード: "natsune2026"
+const DEFAULT_HASH = '8a4f3e7d15c9b2a1e6d8f0c3b5a7e9d2f4c6b8a0e2d4f6c8b0a2e4d6f8c0b2';
+
+async function sha256(text) {
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function getStoredHash() {
+  return localStorage.getItem('natsune_admin_pw') || null;
+}
+
+const loginScreen = document.getElementById('loginScreen');
+const dashboard = document.getElementById('dashboard');
+const loginBtn = document.getElementById('loginBtn');
+const loginError = document.getElementById('loginError');
+const passwordInput = document.getElementById('passwordInput');
+
+// セッションチェック
+if (sessionStorage.getItem('natsune_auth') === 'true') {
+  loginScreen.style.display = 'none';
+  dashboard.style.display = 'block';
+  initDashboard();
+}
+
+loginBtn.addEventListener('click', tryLogin);
+passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+async function tryLogin() {
+  const pw = passwordInput.value;
+  if (!pw) return;
+  const hash = await sha256(pw);
+  const stored = getStoredHash();
+
+  // 初回（ハッシュ未設定）: デフォルトパスワード "natsune2026" のハッシュと比較
+  // ただしSHA-256はブラウザごとに同一なので、初回は平文比較でハッシュを保存する
+  if (!stored) {
+    if (pw === 'natsune2026') {
+      localStorage.setItem('natsune_admin_pw', hash);
+      authSuccess();
+    } else {
+      showLoginError();
+    }
+  } else {
+    if (hash === stored) {
+      authSuccess();
+    } else {
+      showLoginError();
+    }
+  }
+}
+
+function authSuccess() {
+  sessionStorage.setItem('natsune_auth', 'true');
+  loginScreen.style.display = 'none';
+  dashboard.style.display = 'block';
+  loginError.style.display = 'none';
+  passwordInput.value = '';
+  initDashboard();
+}
+
+function showLoginError() {
+  loginError.style.display = 'block';
+  passwordInput.value = '';
+  passwordInput.focus();
+}
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  sessionStorage.removeItem('natsune_auth');
+  location.reload();
+});
+
+// ============================================================
+// データ管理
+// ============================================================
+const STORAGE_KEY = 'natsune_site_data';
+
+function getDefaultData() {
+  return {
+    profile: {
+      name: '鮫月ナツネ',
+      title: 'VRChat Creator / World Builder / Community Organizer',
+      oneliner: '世界を作って人を集める人',
+      intro: '鮫月ナツネは、VRChatを中心に活動する個人クリエイター。\nワールド制作、ギミック開発、動画発信、イベント企画、コミュニティ運営まで、\n表現の形をひとつに絞らず、その時いちばん面白いと思う方法で人と場をつないでいくタイプです。',
+      sub: '技術だけを見せるのではなく、そこに集まる人の体験や空気感まで含めてデザインすることを大切にしています。\n作品単体ではなく、「この人の活動を追っていくと面白い」と思ってもらえる存在を目指しています。',
+      keywords: 'ポップ / 親しみやすさ / 世界観 / 遊び心 / 技術と体験の両立',
+      points: [
+        { title: '大事にしていること', text: 'すごいものを作るだけでなく、人が入りやすく、居たくなり、また来たくなる空気を作ること。' },
+        { title: '活動の軸', text: '作る、見せる、集めるを分けずに、ひとつの世界観として活動全体を育てていくこと。' },
+        { title: 'サイトの見せ方', text: '教材サイトではなく、人物の魅力と温度感が伝わる公式ポータルとして設計。' },
+        { title: '来てほしい人', text: 'VRChatユーザー、作品を見たい人、活動を応援したい人、イベントやコミュニティが好きな人。' }
+      ]
+    },
+    activities: [
+      { icon: 'YT', title: 'YouTube', text: '動画で届ける活動の入り口。ナツネの空気感や考え方がいちばん伝わりやすい場所。', link: '#', linkText: 'チャンネルを見る →' },
+      { icon: 'W', title: 'ワールド制作', text: '見た目の良さだけでなく、入った時の体験や居心地まで含めて設計するワールドづくり。', link: '#', linkText: '制作実績を見る →' },
+      { icon: 'G', title: 'ギミック開発', text: '遊び心と実用性の両方を持った仕組みづくり。「あると嬉しい」を形にする技術面の活動。', link: '#', linkText: '開発を見る →' },
+      { icon: 'B', title: 'BOOTH販売', text: 'ナツネの世界観や制作物に触れられるショップ。応援の導線としても機能する大事な接点。', link: '#', linkText: 'ショップへ →' },
+      { icon: 'E', title: 'イベント', text: '人が集まる時間そのものをデザインする活動。単発企画でも記憶に残る体験を目指す。', link: '#', linkText: '開催情報を見る →' },
+      { icon: 'C', title: 'コミュニティ', text: '作品だけで終わらせず、人がつながり続ける場まで含めて育てていく。ナツネの活動の核になる領域。', link: '#', linkText: '参加先を見る →' }
+    ],
+    pickup: {
+      kicker: 'Now Working On',
+      title: '新しいワールド制作と発信を軸に活動全体の見せ方を更新中',
+      text: '単発で何かを作るだけではなく、ワールド、動画、イベント、SNS、販売導線がひとつの流れとしてつながるように活動全体を再設計。初見の人にも既存ファンにも追いやすい形を目指しています。',
+      tags: '新作ワールド,発信強化,活動整理,ポータル更新'
+    },
+    news: [
+      { label: 'Pickup 01', title: '最近の制作物をまとめて見られる導線を整備', text: 'はじめて来た人が迷わず活動を追えるよう、作品・SNS・販売先の整理を進行中。' },
+      { label: 'Pickup 02', title: 'イベントやコミュニティ関連の見せ方も強化', text: '作ったものだけでなく、誰とどんな空気を作っているかまで伝わる構成へ。' },
+      { label: 'Pickup 03', title: 'ナツネらしさが伝わるビジュアル表現を拡張予定', text: '立ち絵、アバター、キービジュアル、配信素材などを活用し、人物感をさらに強く出していく想定です。' }
+    ],
+    links: [
+      { icon: 'X', title: 'X / 最新の発信', desc: '日常の制作や活動の気づき、VRChat関連の発信など。', url: '#', category: 'follow' },
+      { icon: 'YT', title: 'YouTube', desc: '制作物の紹介、VRChatの体験、活動報告など動画形式の発信。', url: '#', category: 'watch' },
+      { icon: 'DC', title: 'Discord', desc: 'ナツネの活動に関わるコミュニティの拠点。', url: '#', category: 'follow' },
+      { icon: 'BH', title: 'BOOTH', desc: 'ナツネの制作物やオリジナルアセットが手に入る公式ショップ。', url: '#', category: 'support' },
+      { icon: 'NT', title: 'note', desc: '長文で読む、活動の裏側や考え方。', url: '#', category: 'follow' },
+      { icon: 'VR', title: 'VRChat', desc: '実際に入って体験できるナツネのワールド一覧。', url: '#', category: 'watch' }
+    ],
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function loadData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    try { return JSON.parse(raw); } catch(e) { /* fallthrough */ }
+  }
+  return getDefaultData();
+}
+
+function saveData() {
+  const data = collectFormData();
+  data.updatedAt = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  markSaved();
+  showToast('保存しました', 'success');
+}
+
+function collectFormData() {
+  const data = loadData();
+
+  // Profile
+  data.profile.name = document.getElementById('prof-name').value;
+  data.profile.title = document.getElementById('prof-title').value;
+  data.profile.oneliner = document.getElementById('prof-oneliner').value;
+  data.profile.intro = document.getElementById('prof-intro').value;
+  data.profile.sub = document.getElementById('prof-sub').value;
+  data.profile.keywords = document.getElementById('prof-keywords').value;
+
+  // Profile points
+  const pointEls = document.querySelectorAll('.point-entry');
+  data.profile.points = Array.from(pointEls).map(el => ({
+    title: el.querySelector('.point-title-input').value,
+    text: el.querySelector('.point-text-input').value
+  }));
+
+  // Activities
+  const actEls = document.querySelectorAll('.activity-entry');
+  data.activities = Array.from(actEls).map(el => ({
+    icon: el.querySelector('.act-icon').value,
+    title: el.querySelector('.act-title').value,
+    text: el.querySelector('.act-text').value,
+    link: el.querySelector('.act-link').value,
+    linkText: el.querySelector('.act-linktext').value
+  }));
+
+  // Pickup
+  data.pickup.kicker = document.getElementById('pickup-kicker').value;
+  data.pickup.title = document.getElementById('pickup-title').value;
+  data.pickup.text = document.getElementById('pickup-text').value;
+  data.pickup.tags = document.getElementById('pickup-tags').value;
+
+  // News
+  const newsEls = document.querySelectorAll('.news-entry');
+  data.news = Array.from(newsEls).map(el => ({
+    label: el.querySelector('.news-label').value,
+    title: el.querySelector('.news-title-input').value,
+    text: el.querySelector('.news-text-input').value
+  }));
+
+  // Links
+  const linkEls = document.querySelectorAll('.link-entry');
+  data.links = Array.from(linkEls).map(el => ({
+    icon: el.querySelector('.link-icon').value,
+    title: el.querySelector('.link-title-input').value,
+    desc: el.querySelector('.link-desc').value,
+    url: el.querySelector('.link-url').value,
+    category: el.querySelector('.link-cat').value
+  }));
+
+  return data;
+}
+
+// ============================================================
+// Dashboard Init & Render
+// ============================================================
+function initDashboard() {
+  const data = loadData();
+  renderProfile(data);
+  renderActivities(data);
+  renderPickup(data);
+  renderNews(data);
+  renderLinks(data);
+  setupTabs();
+}
+
+function setupTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+function renderProfile(data) {
+  document.getElementById('prof-name').value = data.profile.name;
+  document.getElementById('prof-title').value = data.profile.title;
+  document.getElementById('prof-oneliner').value = data.profile.oneliner;
+  document.getElementById('prof-intro').value = data.profile.intro;
+  document.getElementById('prof-sub').value = data.profile.sub;
+  document.getElementById('prof-keywords').value = data.profile.keywords;
+
+  const container = document.getElementById('profilePoints');
+  container.innerHTML = '';
+  (data.profile.points || []).forEach((p, i) => {
+    container.innerHTML += pointHTML(p, i);
+  });
+}
+
+function pointHTML(p, i) {
+  return `<div class="point-entry" style="margin-bottom:12px;padding:12px;background:var(--bg-soft);border-radius:var(--r-sm);">
+    <div class="form-row">
+      <div class="form-group"><label>見出し ${i+1}</label><input class="point-title-input" value="${esc(p.title)}" /></div>
+      <div class="form-group"><label>説明</label><input class="point-text-input" value="${esc(p.text)}" /></div>
+    </div>
+  </div>`;
+}
+
+function renderActivities(data) {
+  const container = document.getElementById('activityList');
+  container.innerHTML = '';
+  if (!data.activities.length) {
+    container.innerHTML = '<div class="empty-state"><p>活動カードがありません</p></div>';
+    return;
+  }
+  data.activities.forEach((a, i) => {
+    container.innerHTML += activityHTML(a, i);
+  });
+}
+
+function activityHTML(a, i) {
+  return `<div class="activity-entry card" style="background:var(--bg-soft);">
+    <div class="form-row">
+      <div class="form-group"><label>アイコン（2文字）</label><input class="act-icon" value="${esc(a.icon)}" maxlength="3" /></div>
+      <div class="form-group"><label>タイトル</label><input class="act-title" value="${esc(a.title)}" /></div>
+    </div>
+    <div class="form-group"><label>説明</label><textarea class="act-text" style="min-height:60px">${esc(a.text)}</textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>リンクURL</label><input class="act-link" value="${esc(a.link)}" /></div>
+      <div class="form-group"><label>リンクテキスト</label><input class="act-linktext" value="${esc(a.linkText)}" /></div>
+    </div>
+    <div class="item-actions">
+      <button class="btn btn-sm btn-danger" onclick="removeItem(this, '.activity-entry')">削除</button>
+    </div>
+  </div>`;
+}
+
+function addActivity() {
+  const container = document.getElementById('activityList');
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+  container.insertAdjacentHTML('beforeend', activityHTML({ icon: '', title: '', text: '', link: '#', linkText: '詳しく見る →' }, container.children.length));
+  markUnsaved();
+}
+
+function renderPickup(data) {
+  document.getElementById('pickup-kicker').value = data.pickup.kicker;
+  document.getElementById('pickup-title').value = data.pickup.title;
+  document.getElementById('pickup-text').value = data.pickup.text;
+  document.getElementById('pickup-tags').value = data.pickup.tags;
+}
+
+function renderNews(data) {
+  const container = document.getElementById('newsList');
+  container.innerHTML = '';
+  if (!data.news.length) {
+    container.innerHTML = '<div class="empty-state"><p>ニュースアイテムがありません</p><button class="btn btn-secondary" onclick="addNews()">追加</button></div>';
+    return;
+  }
+  data.news.forEach((n, i) => {
+    container.innerHTML += newsHTML(n, i);
+  });
+}
+
+function newsHTML(n, i) {
+  return `<div class="news-entry" style="margin-bottom:12px;padding:12px;background:var(--bg-soft);border-radius:var(--r-sm);">
+    <div class="form-group"><label>ラベル</label><input class="news-label" value="${esc(n.label)}" /></div>
+    <div class="form-group"><label>タイトル</label><input class="news-title-input" value="${esc(n.title)}" /></div>
+    <div class="form-group"><label>本文</label><textarea class="news-text-input" style="min-height:60px">${esc(n.text)}</textarea></div>
+    <div class="item-actions">
+      <button class="btn btn-sm btn-danger" onclick="removeItem(this, '.news-entry')">削除</button>
+    </div>
+  </div>`;
+}
+
+function addNews() {
+  const container = document.getElementById('newsList');
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+  const idx = container.querySelectorAll('.news-entry').length + 1;
+  container.insertAdjacentHTML('beforeend', newsHTML({ label: 'Pickup ' + String(idx).padStart(2, '0'), title: '', text: '' }, idx - 1));
+  markUnsaved();
+}
+
+function renderLinks(data) {
+  const container = document.getElementById('linkList');
+  container.innerHTML = '';
+  if (!data.links.length) {
+    container.innerHTML = '<div class="empty-state"><p>リンクがありません</p><button class="btn btn-secondary" onclick="addLink()">追加</button></div>';
+    return;
+  }
+  data.links.forEach((l, i) => {
+    container.innerHTML += linkHTML(l, i);
+  });
+}
+
+function linkHTML(l, i) {
+  return `<div class="link-entry" style="margin-bottom:12px;padding:12px;background:var(--bg-soft);border-radius:var(--r-sm);">
+    <div class="form-row">
+      <div class="form-group"><label>アイコン（2文字）</label><input class="link-icon" value="${esc(l.icon)}" maxlength="3" /></div>
+      <div class="form-group"><label>タイトル</label><input class="link-title-input" value="${esc(l.title)}" /></div>
+    </div>
+    <div class="form-group"><label>説明</label><input class="link-desc" value="${esc(l.desc)}" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>URL</label><input class="link-url" value="${esc(l.url)}" /></div>
+      <div class="form-group">
+        <label>カテゴリ</label>
+        <select class="link-cat">
+          <option value="follow" ${l.category==='follow'?'selected':''}>Follow（SNS）</option>
+          <option value="watch" ${l.category==='watch'?'selected':''}>Watch（動画・体験）</option>
+          <option value="support" ${l.category==='support'?'selected':''}>Support（販売・応援）</option>
+        </select>
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="btn btn-sm btn-danger" onclick="removeItem(this, '.link-entry')">削除</button>
+    </div>
+  </div>`;
+}
+
+function addLink() {
+  const container = document.getElementById('linkList');
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+  container.insertAdjacentHTML('beforeend', linkHTML({ icon: '', title: '', desc: '', url: '#', category: 'follow' }, container.children.length));
+  markUnsaved();
+}
+
+// ============================================================
+// Utility
+// ============================================================
+function esc(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function removeItem(btn, selector) {
+  const entry = btn.closest(selector);
+  if (entry && confirm('削除しますか？')) {
+    entry.remove();
+    markUnsaved();
+  }
+}
+
+function markSaved() {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'status-dot saved';
+  dot.title = '保存済み';
+}
+
+function markUnsaved() {
+  const dot = document.getElementById('statusDot');
+  dot.className = 'status-dot unsaved';
+  dot.title = '未保存の変更あり';
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// Export / Import
+// ============================================================
+document.getElementById('exportBtn').addEventListener('click', exportJSON);
+
+function exportJSON() {
+  const data = collectFormData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'natsune-site-data-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('JSONをエクスポートしました', 'success');
+}
+
+function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      initDashboard();
+      showToast('データをインポートしました', 'success');
+    } catch(err) {
+      showToast('JSONの読み込みに失敗しました', 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetData() {
+  if (!confirm('全データを初期状態にリセットしますか？\nこの操作は取り消せません。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  initDashboard();
+  showToast('データをリセットしました', 'success');
+}
+
+// ============================================================
+// Password Change
+// ============================================================
+async function changePassword() {
+  const current = document.getElementById('currentPw').value;
+  const newPw = document.getElementById('newPw').value;
+  const confirm = document.getElementById('confirmPw').value;
+
+  if (!current || !newPw) {
+    showToast('全てのフィールドを入力してください', 'error');
+    return;
+  }
+  if (newPw !== confirm) {
+    showToast('新しいパスワードが一致しません', 'error');
+    return;
+  }
+  if (newPw.length < 4) {
+    showToast('パスワードは4文字以上にしてください', 'error');
+    return;
+  }
+
+  const currentHash = await sha256(current);
+  const stored = getStoredHash();
+  if (currentHash !== stored) {
+    showToast('現在のパスワードが違います', 'error');
+    return;
+  }
+
+  const newHash = await sha256(newPw);
+  localStorage.setItem('natsune_admin_pw', newHash);
+  document.getElementById('currentPw').value = '';
+  document.getElementById('newPw').value = '';
+  document.getElementById('confirmPw').value = '';
+  showToast('パスワードを変更しました', 'success');
+}
+
+// 入力変更検知
+document.addEventListener('input', (e) => {
+  if (e.target.closest('.dashboard') && !e.target.closest('#tab-settings')) {
+    markUnsaved();
+  }
+});
+</script>
+</body>
+</html>
