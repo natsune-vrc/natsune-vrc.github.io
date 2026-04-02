@@ -916,6 +916,107 @@
         border-radius: 20px;
       }
     }
+
+    /* ══════════════════════════════════════
+       遊び心 — Playful additions
+       ══════════════════════════════════════ */
+
+    /* ── スクロールでふわっと登場 ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .section { animation: fadeUp 0.7s ease both; }
+    .section:nth-child(2) { animation-delay: 0.08s; }
+    .section:nth-child(3) { animation-delay: 0.16s; }
+
+    /* ── カードのホバーで微妙に傾く ── */
+    .activity-card { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, border-color 0.25s ease; }
+    .activity-card:nth-child(1):hover { transform: rotate(-1.5deg) translateY(-6px) scale(1.02); }
+    .activity-card:nth-child(2):hover { transform: rotate(0.8deg) translateY(-7px) scale(1.02); }
+    .activity-card:nth-child(3):hover { transform: rotate(-0.6deg) translateY(-5px) scale(1.03); }
+    .activity-card:nth-child(4):hover { transform: rotate(1.2deg) translateY(-6px) scale(1.02); }
+    .activity-card:nth-child(5):hover { transform: rotate(-1deg) translateY(-7px) scale(1.02); }
+    .activity-card:nth-child(6):hover { transform: rotate(0.5deg) translateY(-5px) scale(1.03); }
+
+    /* ── 活動カードのアイコンに個別カラー ── */
+    .activity-card:nth-child(1) .activity-icon { background: #ffe0e0; color: #d32f2f; }
+    .activity-card:nth-child(2) .activity-icon { background: #e0f2ff; color: #1976d2; }
+    .activity-card:nth-child(3) .activity-icon { background: #e8f5e9; color: #388e3c; }
+    .activity-card:nth-child(4) .activity-icon { background: #fff3e0; color: #e65100; }
+    .activity-card:nth-child(5) .activity-icon { background: #f3e5f5; color: #7b1fa2; }
+    .activity-card:nth-child(6) .activity-icon { background: #e0f7fa; color: #00838f; }
+
+    /* ── フローティングバブルがゆらゆら ── */
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .float-bubble { animation: gentleFloat 4s ease-in-out infinite; }
+    .bubble-bottom { animation-delay: 1.5s; }
+
+    /* ── ヒーローのメタチップがぽよんとホバー ── */
+    .meta-chip {
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
+      cursor: default;
+    }
+    .meta-chip:hover {
+      transform: scale(1.12) rotate(-2deg);
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+    }
+
+    /* ── プロフィールポイントにホバー色変化 ── */
+    .point {
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.3s, border-color 0.3s;
+    }
+    .point:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    /* ── ニュースアイテムに左ボーダーカラー ── */
+    .news-item { border-left: 3px solid transparent; transition: border-color 0.3s, transform 0.25s; }
+    .news-item:nth-child(1) { border-left-color: #00bcd4; }
+    .news-item:nth-child(2) { border-left-color: #ff9800; }
+    .news-item:nth-child(3) { border-left-color: #e040fb; }
+    .news-item:hover { transform: translateX(6px); }
+
+    /* ── リンクカードに遊びのホバー ── */
+    .link-card {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s, border-color 0.25s;
+    }
+    .link-card:hover {
+      transform: translateY(-4px) rotate(0.5deg);
+      box-shadow: var(--shadow);
+      border-color: var(--accent);
+    }
+    .link-card:hover .link-icon { transform: scale(1.15) rotate(-5deg); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+
+    /* ── ブランドマークがホバーでくるん ── */
+    .brand-mark { transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .brand-mark:hover { transform: rotate(12deg) scale(1.1); }
+
+    /* ── ボタンにぷるっと感 ── */
+    .btn-primary {
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, background 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 8px 24px rgba(0,188,212,0.3);
+    }
+    .btn-primary:active { transform: scale(0.96); }
+
+    /* ── to-topボタンにバウンス ── */
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .to-top.show { animation: bounce 2s ease infinite; }
+
+    /* ── フッターリンクに波線下線 ── */
+    .footer-link {
+      text-decoration-style: wavy;
+      text-underline-offset: 4px;
+    }
   </style>
 </head>
 <body>
