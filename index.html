@@ -1,1040 +1,458 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>鮫月ナツネ | Official Portal</title>
-  <meta
-    name="description"
-    content="鮫月ナツネの個人ポータルサイト。YouTube、ワールド制作、ギミック開発、BOOTH販売、イベント、コミュニティなどの活動をまとめて紹介。"
-  />
+  <meta name="description" content="鮫月ナツネの個人ポータルサイト。YouTube、ワールド制作、ギミック開発、BOOTH販売、イベント、コミュニティなどの活動をまとめて紹介。" />
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f7fdff;
-      --bg-soft: #eefbfe;
+      --bg: #fef9f4;
+      --bg2: #f0f5ff;
+      --bg3: #fdf0f8;
       --surface: #ffffff;
-      --surface-2: #f9feff;
-      --line: #d9f1f6;
-      --text: #16323a;
-      --text-soft: #55717a;
+      --text: #2d2a3e;
+      --text-soft: #6e6a80;
       --accent: #00bcd4;
-      --accent-strong: #00a8be;
-      --accent-soft: #dbf8fc;
-      --shadow: 0 14px 40px rgba(0, 121, 140, 0.10);
-      --shadow-soft: 0 8px 24px rgba(0, 121, 140, 0.08);
-      --radius-xl: 32px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-      --container: 1180px;
+      --accent2: #ff6b9d;
+      --accent3: #ffa726;
+      --accent4: #7c4dff;
+      --shadow: 0 8px 32px rgba(45,42,62,0.08);
+      --shadow-pop: 0 12px 40px rgba(45,42,62,0.14);
+      --font-hand: 'Klee One', cursive;
+      --font-round: 'Zen Maru Gothic', sans-serif;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      font-family:
-        "Hiragino Sans",
-        "Yu Gothic",
-        "Meiryo",
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
+      font-family: var(--font-round);
       color: var(--text);
-      background:
-        radial-gradient(circle at top right, rgba(0, 188, 212, 0.10), transparent 28%),
-        radial-gradient(circle at left 20%, rgba(0, 188, 212, 0.07), transparent 24%),
-        linear-gradient(180deg, #fcfeff 0%, #f5fcfe 100%);
+      background: var(--bg);
       line-height: 1.7;
-      letter-spacing: 0.02em;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Floating decorations ── */
+    .deco {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.12;
+      font-size: 2rem;
+      animation: floatAround 20s ease-in-out infinite;
+    }
+    .deco:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 2.5rem; }
+    .deco:nth-child(2) { top: 30%; right: 8%; animation-delay: -4s; font-size: 1.8rem; }
+    .deco:nth-child(3) { top: 55%; left: 12%; animation-delay: -8s; }
+    .deco:nth-child(4) { top: 75%; right: 15%; animation-delay: -12s; font-size: 2.2rem; }
+    .deco:nth-child(5) { top: 90%; left: 20%; animation-delay: -16s; font-size: 1.5rem; }
+    @keyframes floatAround {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(15px, -20px) rotate(5deg); }
+      50% { transform: translate(-10px, -35px) rotate(-3deg); }
+      75% { transform: translate(20px, -15px) rotate(4deg); }
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
+    /* ── Container ── */
+    .container { width: min(calc(100% - 32px), 1100px); margin: 0 auto; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(calc(100% - 32px), var(--container));
-      margin: 0 auto;
-    }
-
-    .section {
-      padding: 88px 0;
-    }
-
-    .section-head {
-      margin-bottom: 34px;
-    }
-
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent-strong);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.2;
-      letter-spacing: 0.01em;
-    }
-
-    .section-desc {
-      margin: 0;
-      max-width: 760px;
-      color: var(--text-soft);
-      font-size: 16px;
-    }
-
+    /* ── Header ── */
     .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, 0.86);
-      border-bottom: 1px solid rgba(217, 241, 246, 0.9);
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(254,249,244,0.85);
+      border-bottom: 2px dashed rgba(0,188,212,0.2);
+      padding: 0 20px;
     }
-
     .header-inner {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      max-width: 1100px; margin: 0 auto;
+      min-height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
+    .brand { display: flex; align-items: center; gap: 10px; }
     .brand-mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #00c5dd 0%, #7de9f5 100%);
-      color: white;
-      font-size: 20px;
-      font-weight: 800;
-      box-shadow: var(--shadow-soft);
-      flex: 0 0 auto;
+      width: 40px; height: 40px;
+      border-radius: 50% 50% 50% 20%;
+      background: linear-gradient(135deg, #00c5dd, #7de9f5);
+      display: grid; place-items: center;
+      font-size: 18px; color: #fff;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
-
-    .brand-text {
-      min-width: 0;
-    }
-
-    .brand-name {
-      margin: 0;
-      font-size: 18px;
-      line-height: 1.2;
-      font-weight: 800;
-    }
-
-    .brand-sub {
-      margin: 3px 0 0;
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
+    .brand-mark:hover { transform: rotate(20deg) scale(1.15); }
+    .brand-name { font-size: 16px; font-weight: 900; }
+    .brand-sub { font-size: 11px; color: var(--text-soft); font-family: var(--font-hand); }
+    .nav { display: flex; gap: 4px; flex-wrap: wrap; }
     .nav a {
-      padding: 11px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-soft);
-      transition: 0.2s ease;
+      padding: 8px 14px; border-radius: 999px;
+      font-size: 13px; font-weight: 700; color: var(--text-soft);
+      transition: all 0.25s;
     }
+    .nav a:hover { background: var(--accent); color: #fff; transform: scale(1.05); }
+    .menu-btn { display: none; }
 
-    .nav a:hover {
-      color: var(--accent-strong);
-      background: var(--accent-soft);
-    }
-
-    .menu-btn {
-      display: none;
-      border: 0;
-      background: var(--surface);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-weight: 700;
-      box-shadow: var(--shadow-soft);
-      cursor: pointer;
-    }
-
+    /* ── Hero ── */
     .hero {
+      padding: 80px 0 60px;
       position: relative;
-      overflow: hidden;
-      padding: 46px 0 72px;
     }
-
     .hero-wrap {
       display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-columns: 1fr 0.85fr;
+      gap: 40px;
       align-items: center;
-      gap: 44px;
     }
-
-    .hero-copy {
-      position: relative;
-      z-index: 1;
-    }
-
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
+      display: inline-block;
+      padding: 6px 16px;
       border-radius: 999px;
-      background: #ffffff;
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow-soft);
-      color: var(--accent-strong);
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 20px;
+      background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+      font-size: 12px; font-weight: 700; font-family: var(--font-hand);
+      color: var(--accent); letter-spacing: 0.05em;
+      margin-bottom: 16px;
     }
-
-    .hero-title {
-      margin: 0;
-      font-size: clamp(42px, 7vw, 82px);
-      line-height: 0.98;
-      letter-spacing: -0.02em;
-    }
-
     .hero-title small {
-      display: block;
-      margin-bottom: 14px;
-      font-size: clamp(18px, 2vw, 24px);
-      line-height: 1.4;
-      letter-spacing: 0.08em;
-      color: var(--accent-strong);
-      font-weight: 800;
+      display: block; font-size: 15px; font-weight: 700;
+      color: var(--accent); font-family: var(--font-hand);
+      margin-bottom: 8px;
+    }
+    .hero-name {
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 900; line-height: 1.1;
+      display: inline-block;
+    }
+    .hero-name span {
+      display: inline-block;
+      animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .hero-name span:nth-child(1) { animation-delay: 0.1s; }
+    .hero-name span:nth-child(2) { animation-delay: 0.18s; }
+    .hero-name span:nth-child(3) { animation-delay: 0.26s; }
+    .hero-name span:nth-child(4) { animation-delay: 0.34s; }
+    .hero-name span:nth-child(5) { animation-delay: 0.42s; }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: translateY(40px) scale(0.5) rotate(-8deg); }
+      60% { transform: translateY(-8px) scale(1.08) rotate(2deg); }
+      100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
     }
 
     .hero-lead {
-      margin: 24px 0 0;
-      max-width: 620px;
-      font-size: clamp(16px, 1.9vw, 20px);
-      color: var(--text-soft);
+      margin: 20px 0 28px; font-size: 16px; color: var(--text-soft);
+      font-family: var(--font-hand); line-height: 2;
     }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 32px;
-    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
 
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 52px;
-      padding: 0 22px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      font-size: 15px;
-      font-weight: 800;
-      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 700;
+      border: none; cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
     .btn-primary {
-      background: linear-gradient(135deg, #00c4dc 0%, #00aec5 100%);
-      color: #fff;
-      box-shadow: 0 12px 26px rgba(0, 188, 212, 0.24);
+      background: linear-gradient(135deg, #00bcd4, #00e5ff);
+      color: #fff; box-shadow: 0 4px 20px rgba(0,188,212,0.3);
     }
-
+    .btn-primary:hover { transform: translateY(-3px) scale(1.06); box-shadow: 0 8px 30px rgba(0,188,212,0.4); }
     .btn-secondary {
-      background: #fff;
-      color: var(--accent-strong);
-      border-color: var(--line);
-      box-shadow: var(--shadow-soft);
+      background: #fff; color: var(--accent);
+      border: 2px dashed var(--accent);
     }
+    .btn-secondary:hover { background: var(--accent); color: #fff; border-style: solid; transform: rotate(-2deg) scale(1.05); }
 
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 30px;
+    .hero-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      border: 1.5px solid; cursor: default;
+      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
     }
+    .chip:nth-child(1) { border-color: #00bcd4; color: #00bcd4; }
+    .chip:nth-child(2) { border-color: #ff6b9d; color: #ff6b9d; }
+    .chip:nth-child(3) { border-color: #ffa726; color: #ffa726; }
+    .chip:nth-child(4) { border-color: #7c4dff; color: #7c4dff; }
+    .chip:nth-child(5) { border-color: #66bb6a; color: #66bb6a; }
+    .chip:hover { transform: scale(1.15) rotate(-3deg); color: #fff; }
+    .chip:nth-child(1):hover { background: #00bcd4; }
+    .chip:nth-child(2):hover { background: #ff6b9d; }
+    .chip:nth-child(3):hover { background: #ffa726; }
+    .chip:nth-child(4):hover { background: #7c4dff; }
+    .chip:nth-child(5):hover { background: #66bb6a; }
 
-    .meta-chip {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid var(--line);
-      color: var(--text-soft);
-      font-size: 13px;
-      font-weight: 700;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .hero-visual {
+    /* ── Hero avatar ── */
+    .hero-visual { position: relative; }
+    .avatar-frame {
       position: relative;
-    }
-
-    .visual-card {
-      position: relative;
-      border-radius: 36px;
-      padding: 18px;
-      background: linear-gradient(180deg, #ffffff 0%, #f4fdff 100%);
-      border: 1px solid rgba(217, 241, 246, 0.95);
-      box-shadow: var(--shadow);
-    }
-
-    .visual-main {
-      aspect-ratio: 0.88 / 1;
-      border-radius: 28px;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
       overflow: hidden;
-      position: relative;
-      background:
-        linear-gradient(180deg, rgba(0, 188, 212, 0.14) 0%, rgba(255, 255, 255, 0.2) 100%),
-        linear-gradient(135deg, #dff9fd 0%, #fafdff 50%, #d5f7fb 100%);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      aspect-ratio: 0.85 / 1;
+      box-shadow: var(--shadow-pop);
+      animation: blobMorph 10s ease-in-out infinite;
     }
-
-    .visual-main::before {
-      content: "";
-      position: absolute;
-      inset: auto auto 16% auto;
-      width: 78%;
-      height: 58%;
-      border-radius: 999px 999px 0 0;
-      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.95), rgba(255,255,255,0.25) 65%, transparent 80%);
-      filter: blur(5px);
+    .avatar-frame img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
     }
-
-    .visual-placeholder {
-      position: relative;
-      z-index: 1;
-      width: 82%;
-      height: 88%;
-      border-radius: 28px 28px 0 0;
-      background:
-        radial-gradient(circle at 50% 18%, #ffffff 0%, #d5f4fa 18%, #95e2ee 46%, #51cada 78%, #1baec2 100%);
-      box-shadow: inset 0 -20px 40px rgba(0, 0, 0, 0.08);
+    @keyframes blobMorph {
+      0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      25% { border-radius: 58% 42% 38% 62% / 52% 28% 72% 48%; }
+      50% { border-radius: 42% 58% 62% 38% / 38% 62% 38% 62%; }
+      75% { border-radius: 62% 38% 28% 72% / 48% 52% 48% 52%; }
     }
-
-    .visual-placeholder::before {
-      content: "";
-      position: absolute;
-      top: 13%;
-      left: 50%;
-      width: 42%;
-      height: 18%;
-      transform: translateX(-50%);
-      border-radius: 999px 999px 60px 60px;
-      background: rgba(255,255,255,0.58);
-      filter: blur(2px);
-    }
-
-    .visual-placeholder::after {
-      content: "鮫月ナツネ\nMain Visual";
-      white-space: pre;
-      position: absolute;
-      inset: auto 18px 20px 18px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.88);
-      color: var(--accent-strong);
-      font-size: 14px;
-      font-weight: 800;
-      line-height: 1.5;
-      letter-spacing: 0.08em;
-      text-align: center;
-    }
-
-    .float-bubble {
-      position: absolute;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow-soft);
-      padding: 14px 16px;
-    }
-
-    .bubble-top {
-      top: 24px;
-      left: -18px;
-    }
-
-    .bubble-bottom {
-      right: -18px;
-      bottom: 30px;
-    }
-
-    .bubble-label {
-      margin: 0 0 4px;
-      font-size: 12px;
-      color: var(--text-soft);
-      font-weight: 700;
-    }
-
-    .bubble-value {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1.3;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 28px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .profile-card {
-      padding: 32px;
-    }
-
-    .profile-copy {
-      margin: 0 0 20px;
-      color: var(--text-soft);
-      font-size: 16px;
-    }
-
-    .profile-points {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
-    }
-
-    .point {
-      padding: 18px;
-      border-radius: 18px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-    }
-
-    .point-title {
-      margin: 0 0 8px;
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--accent-strong);
-    }
-
-    .point-text {
-      margin: 0;
-      font-size: 14px;
-      color: var(--text-soft);
-      line-height: 1.7;
-    }
-
-    .profile-side {
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .mini-block {
-      padding: 18px 18px 16px;
-      border-radius: 20px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-    }
-
-    .mini-label {
-      margin: 0 0 8px;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--accent-strong);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .mini-body {
-      margin: 0;
-      font-size: 15px;
-      color: var(--text-soft);
-    }
-
-    .activity-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .activity-card {
-      padding: 24px;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-    }
-
-    .activity-card:hover {
-      transform: translateY(-4px);
+    .bubble {
+      position: absolute; padding: 12px 16px;
+      background: #fff; border-radius: 20px;
       box-shadow: var(--shadow);
-      border-color: #bfeaf2;
+      font-size: 13px; font-family: var(--font-hand);
+      animation: floatBubble 4s ease-in-out infinite;
+      z-index: 2;
     }
+    .bubble-top { top: -10px; left: -30px; transform: rotate(-4deg); }
+    .bubble-bottom { bottom: 20px; right: -30px; transform: rotate(3deg); animation-delay: 1.5s; }
+    .bubble strong { display: block; font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
+    .bubble small { color: var(--text-soft); font-size: 11px; }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0) rotate(var(--r, -4deg)); }
+      50% { transform: translateY(-10px) rotate(var(--r, -4deg)); }
+    }
+
+    /* ── Section ── */
+    .section { padding: 80px 0; position: relative; }
+    .section-head { margin-bottom: 40px; }
+    .section-label {
+      display: inline-block; padding: 5px 14px;
+      border-radius: 999px; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 900; line-height: 1.3; margin-bottom: 12px;
+      font-family: var(--font-hand);
+    }
+    .section-desc { color: var(--text-soft); font-size: 15px; max-width: 680px; }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.22,0.61,0.36,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── About section ── */
+    #about { background: var(--bg2); border-radius: 60px; margin: 0 16px; }
+    #about .section-label { background: #e3f2fd; color: #1976d2; }
+    .about-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+    .profile-card {
+      background: #fff; padding: 32px;
+      border-radius: 32px; box-shadow: var(--shadow);
+      transform: rotate(-1deg);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .profile-card:hover { transform: rotate(0deg) scale(1.01); }
+    .profile-copy { color: var(--text-soft); font-size: 15px; margin-bottom: 18px; }
+    .profile-points { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .point {
+      padding: 16px; border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .point:nth-child(1) { background: #e8f5e9; }
+    .point:nth-child(2) { background: #fff3e0; }
+    .point:nth-child(3) { background: #fce4ec; }
+    .point:nth-child(4) { background: #e8eaf6; }
+    .point:hover { transform: translateY(-4px) rotate(-1deg) scale(1.03); }
+    .point-title { margin: 0 0 6px; font-size: 14px; font-weight: 700; font-family: var(--font-hand); }
+    .point:nth-child(1) .point-title { color: #2e7d32; }
+    .point:nth-child(2) .point-title { color: #e65100; }
+    .point:nth-child(3) .point-title { color: #c2185b; }
+    .point:nth-child(4) .point-title { color: #283593; }
+    .point-text { margin: 0; font-size: 13px; color: var(--text-soft); }
+
+    .profile-side { display: flex; flex-direction: column; gap: 12px; }
+    .mini-block {
+      padding: 18px; border-radius: 24px;
+      background: #fff; box-shadow: var(--shadow);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .mini-block:nth-child(odd) { transform: rotate(1.5deg); }
+    .mini-block:nth-child(even) { transform: rotate(-1.5deg); }
+    .mini-block:hover { transform: rotate(0deg) scale(1.03); }
+    .mini-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
+    }
+    .mini-body { font-size: 14px; color: var(--text-soft); }
+
+    /* ── Activities ── */
+    #activities .section-label { background: #fce4ec; color: #c2185b; }
+    .activity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .activity-card {
+      display: block; padding: 24px; border-radius: 28px;
+      background: #fff; box-shadow: var(--shadow);
+      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      border: 2px solid transparent;
+      text-decoration: none;
+    }
+    .activity-card:nth-child(1) { transform: rotate(-1.5deg); }
+    .activity-card:nth-child(2) { transform: rotate(1deg); }
+    .activity-card:nth-child(3) { transform: rotate(-0.5deg); }
+    .activity-card:nth-child(4) { transform: rotate(1.5deg); }
+    .activity-card:nth-child(5) { transform: rotate(-1deg); }
+    .activity-card:nth-child(6) { transform: rotate(0.5deg); }
+    .activity-card:hover { transform: rotate(0deg) translateY(-8px) scale(1.04); box-shadow: var(--shadow-pop); }
 
     .activity-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      background: var(--accent-soft);
-      color: var(--accent-strong);
-      margin-bottom: 18px;
-      font-weight: 800;
+      width: 52px; height: 52px; border-radius: 50% 50% 50% 20%;
+      display: grid; place-items: center;
+      font-size: 20px; font-weight: 900; margin-bottom: 14px;
     }
+    .activity-card:nth-child(1) .activity-icon { background: #ffebee; color: #d32f2f; }
+    .activity-card:nth-child(2) .activity-icon { background: #e3f2fd; color: #1565c0; }
+    .activity-card:nth-child(3) .activity-icon { background: #e8f5e9; color: #2e7d32; }
+    .activity-card:nth-child(4) .activity-icon { background: #fff3e0; color: #e65100; }
+    .activity-card:nth-child(5) .activity-icon { background: #f3e5f5; color: #6a1b9a; }
+    .activity-card:nth-child(6) .activity-icon { background: #e0f7fa; color: #00695c; }
+    .activity-card:nth-child(1):hover { border-color: #ef5350; }
+    .activity-card:nth-child(2):hover { border-color: #42a5f5; }
+    .activity-card:nth-child(3):hover { border-color: #66bb6a; }
+    .activity-card:nth-child(4):hover { border-color: #ffa726; }
+    .activity-card:nth-child(5):hover { border-color: #ab47bc; }
+    .activity-card:nth-child(6):hover { border-color: #26c6da; }
 
-    .activity-title {
-      margin: 0 0 10px;
-      font-size: 20px;
-      line-height: 1.3;
-    }
+    .activity-title { margin: 0 0 8px; font-size: 18px; font-weight: 900; font-family: var(--font-hand); }
+    .activity-text { margin: 0 0 14px; font-size: 14px; color: var(--text-soft); }
+    .activity-link { font-size: 13px; font-weight: 700; color: var(--accent); }
 
-    .activity-text {
-      margin: 0 0 18px;
-      color: var(--text-soft);
-      font-size: 15px;
-    }
-
-    .activity-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--accent-strong);
-      font-weight: 800;
-      font-size: 14px;
-    }
-
-    .pickup-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 22px;
-    }
-
+    /* ── Pickup ── */
+    #pickup { background: var(--bg3); border-radius: 60px; margin: 0 16px; }
+    #pickup .section-label { background: #fce4ec; color: #e91e63; }
+    .pickup-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 20px; }
     .pickup-main {
-      padding: 32px;
-      background:
-        linear-gradient(135deg, rgba(0, 188, 212, 0.10), rgba(255,255,255,0.95)),
-        #ffffff;
+      padding: 32px; border-radius: 32px;
+      background: linear-gradient(135deg, #e0f7fa 0%, #fce4ec 100%);
+      box-shadow: var(--shadow);
+      transform: rotate(-0.5deg);
     }
-
+    .pickup-main:hover { transform: rotate(0deg); }
     .pickup-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #ffffff;
-      border: 1px solid var(--line);
-      color: var(--accent-strong);
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 18px;
+      display: inline-block; padding: 5px 14px; border-radius: 999px;
+      background: var(--accent); color: #fff;
+      font-size: 12px; font-weight: 700; margin-bottom: 14px;
     }
-
-    .pickup-title {
-      margin: 0 0 12px;
-      font-size: clamp(26px, 3.2vw, 38px);
-      line-height: 1.25;
-    }
-
-    .pickup-text {
-      margin: 0 0 22px;
-      color: var(--text-soft);
-      font-size: 16px;
-      max-width: 640px;
-    }
-
-    .pickup-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-
+    .pickup-title { font-size: 22px; font-weight: 900; line-height: 1.4; margin-bottom: 14px; font-family: var(--font-hand); }
+    .pickup-text { font-size: 14px; color: var(--text-soft); margin-bottom: 16px; }
+    .pickup-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
     .tag {
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.88);
-      border: 1px solid var(--line);
-      color: var(--text-soft);
-      font-size: 13px;
-      font-weight: 700;
+      padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      background: rgba(255,255,255,0.7); color: var(--text);
     }
-
-    .news-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
+    .news-list { display: flex; flex-direction: column; gap: 12px; }
     .news-item {
-      padding: 22px;
+      padding: 20px; border-radius: 24px; background: #fff;
+      box-shadow: var(--shadow);
+      border-left: 4px solid;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
+    .news-item:nth-child(1) { border-color: #00bcd4; transform: rotate(1deg); }
+    .news-item:nth-child(2) { border-color: #ff6b9d; transform: rotate(-0.5deg); }
+    .news-item:nth-child(3) { border-color: #ffa726; transform: rotate(0.8deg); }
+    .news-item:hover { transform: rotate(0deg) translateX(8px) scale(1.02); }
+    .news-meta { font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+    .news-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; font-family: var(--font-hand); }
+    .news-text { font-size: 13px; color: var(--text-soft); }
 
-    .news-meta {
-      margin: 0 0 8px;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--accent-strong);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .news-title {
-      margin: 0 0 8px;
-      font-size: 18px;
-      line-height: 1.4;
-    }
-
-    .news-text {
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 14px;
-    }
-
-    .links-wrap {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .links-intro,
+    /* ── Links ── */
+    #links .section-label { background: #ede7f6; color: #5e35b1; }
     .links-grid {
-      padding: 30px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      padding: 24px; background: #fff; border-radius: 32px; box-shadow: var(--shadow);
     }
-
-    .links-intro p {
-      margin: 0 0 18px;
-      color: var(--text-soft);
-    }
-
-    .link-stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .stat-box {
-      min-width: 118px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-    }
-
-    .stat-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-soft);
-      margin-bottom: 4px;
-    }
-
-    .stat-value {
-      display: block;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .links-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
     .link-card {
-      min-height: 112px;
-      padding: 18px;
-      border-radius: 20px;
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px; border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      border: 1.5px solid #eee;
     }
-
-    .link-card:hover {
-      transform: translateY(-3px);
-      border-color: #bfeaf2;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .link-card-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
+    .link-card:hover { background: #f5f5f5; transform: translateY(-3px) rotate(-1deg); border-color: var(--accent); }
     .link-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: #fff;
-      border: 1px solid var(--line);
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--accent-strong);
-      flex: 0 0 auto;
+      width: 40px; height: 40px; border-radius: 50% 50% 50% 20%;
+      display: grid; place-items: center;
+      font-size: 14px; font-weight: 900; color: #fff; flex-shrink: 0;
     }
-
-    .link-title {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 800;
+    .link-title { font-size: 14px; font-weight: 700; }
+    .link-desc { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+    .links-intro {
+      padding: 28px; border-radius: 32px;
+      background: linear-gradient(135deg, #ede7f6, #e8f5e9);
+      box-shadow: var(--shadow); margin-bottom: 20px;
+      font-size: 15px; color: var(--text-soft);
+      transform: rotate(0.5deg);
     }
+    .links-intro:hover { transform: rotate(0deg); }
 
-    .link-desc {
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
+    /* ── Footer ── */
     .site-footer {
-      padding: 30px 0 40px;
-      border-top: 1px solid rgba(217, 241, 246, 0.95);
-      background: rgba(255, 255, 255, 0.55);
-      backdrop-filter: blur(8px);
+      text-align: center; padding: 60px 20px;
+      font-family: var(--font-hand);
     }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
+    .footer-wave {
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--text-soft); margin-bottom: 20px;
     }
-
-    .footer-copy {
-      margin: 0;
-      color: var(--text-soft);
-      font-size: 14px;
+    .footer-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .footer-link {
+      padding: 10px 20px; border-radius: 999px;
+      background: #fff; box-shadow: var(--shadow);
+      font-size: 13px; font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
-
-    .footer-nav {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .footer-nav a {
-      color: var(--text-soft);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .footer-nav a:hover {
-      color: var(--accent-strong);
-    }
+    .footer-link:hover { transform: translateY(-3px) rotate(-2deg); box-shadow: var(--shadow-pop); background: var(--accent); color: #fff; }
+    .footer-copy { font-size: 12px; color: var(--text-soft); }
 
     .to-top {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      width: 52px;
-      height: 52px;
-      border: 0;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #00c4dc 0%, #00aec5 100%);
-      color: #fff;
-      font-size: 18px;
-      font-weight: 800;
-      box-shadow: 0 14px 30px rgba(0, 188, 212, 0.24);
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(12px);
-      transition: 0.2s ease;
-      z-index: 70;
+      position: fixed; bottom: 24px; right: 24px; z-index: 50;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 20px; cursor: pointer;
+      opacity: 0; transform: scale(0.5);
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
+    .to-top.show { opacity: 1; transform: scale(1); }
+    .to-top:hover { transform: scale(1.15) rotate(-10deg); }
 
-    .to-top.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 1080px) {
-      .hero-wrap,
-      .about-grid,
-      .pickup-grid,
-      .links-wrap {
-        grid-template-columns: 1fr;
-      }
-
-      .activity-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .hero-visual {
-        max-width: 680px;
-      }
-    }
-
+    /* ── Responsive ── */
     @media (max-width: 820px) {
-      .header-inner {
-        min-height: 72px;
-      }
-
-      .menu-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .nav {
-        position: absolute;
-        top: calc(100% + 10px);
-        left: 16px;
-        right: 16px;
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 4px;
-        padding: 12px;
-        background: rgba(255,255,255,0.98);
-        border: 1px solid var(--line);
-        border-radius: 22px;
-        box-shadow: var(--shadow);
-      }
-
-      .nav.open {
-        display: flex;
-      }
-
-      .nav a {
-        padding: 13px 14px;
-      }
-
-      .hero {
-        padding-top: 24px;
-      }
-
-      .hero-title {
-        line-height: 1.05;
-      }
-
-      .profile-points,
-      .links-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .activity-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .bubble-top,
-      .bubble-bottom {
-        position: static;
-        margin-top: 14px;
-      }
+      .hero-wrap, .about-grid, .pickup-grid { grid-template-columns: 1fr; }
+      .activity-grid, .links-grid { grid-template-columns: 1fr 1fr; }
+      .nav { display: none; }
+      .menu-btn { display: block; }
+      #about, #pickup { margin: 0 8px; border-radius: 32px; }
     }
-
     @media (max-width: 560px) {
-      .container {
-        width: min(calc(100% - 20px), var(--container));
-      }
-
-      .section {
-        padding: 68px 0;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .profile-card,
-      .profile-side,
-      .pickup-main,
-      .links-intro,
-      .links-grid {
-        padding: 22px;
-      }
-
-      .visual-card {
-        padding: 12px;
-        border-radius: 24px;
-      }
-
-      .visual-main {
-        border-radius: 20px;
-      }
-    }
-
-    /* ══════════════════════════════════════
-       遊び心 — Playful additions
-       ══════════════════════════════════════ */
-
-    /* ── スクロールでふわっと登場 ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .section { animation: fadeUp 0.7s ease both; }
-    .section:nth-child(2) { animation-delay: 0.08s; }
-    .section:nth-child(3) { animation-delay: 0.16s; }
-
-    /* ── カードのホバーで微妙に傾く ── */
-    .activity-card { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, border-color 0.25s ease; }
-    .activity-card:nth-child(1):hover { transform: rotate(-1.5deg) translateY(-6px) scale(1.02); }
-    .activity-card:nth-child(2):hover { transform: rotate(0.8deg) translateY(-7px) scale(1.02); }
-    .activity-card:nth-child(3):hover { transform: rotate(-0.6deg) translateY(-5px) scale(1.03); }
-    .activity-card:nth-child(4):hover { transform: rotate(1.2deg) translateY(-6px) scale(1.02); }
-    .activity-card:nth-child(5):hover { transform: rotate(-1deg) translateY(-7px) scale(1.02); }
-    .activity-card:nth-child(6):hover { transform: rotate(0.5deg) translateY(-5px) scale(1.03); }
-
-    /* ── 活動カードのアイコンに個別カラー ── */
-    .activity-card:nth-child(1) .activity-icon { background: #ffe0e0; color: #d32f2f; }
-    .activity-card:nth-child(2) .activity-icon { background: #e0f2ff; color: #1976d2; }
-    .activity-card:nth-child(3) .activity-icon { background: #e8f5e9; color: #388e3c; }
-    .activity-card:nth-child(4) .activity-icon { background: #fff3e0; color: #e65100; }
-    .activity-card:nth-child(5) .activity-icon { background: #f3e5f5; color: #7b1fa2; }
-    .activity-card:nth-child(6) .activity-icon { background: #e0f7fa; color: #00838f; }
-
-    /* ── フローティングバブルがゆらゆら ── */
-    @keyframes gentleFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    .float-bubble { animation: gentleFloat 4s ease-in-out infinite; }
-    .bubble-bottom { animation-delay: 1.5s; }
-
-    /* ── ヒーローのメタチップがぽよんとホバー ── */
-    .meta-chip {
-      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
-      cursor: default;
-    }
-    .meta-chip:hover {
-      transform: scale(1.12) rotate(-2deg);
-      background: var(--accent-soft);
-      color: var(--accent-strong);
-    }
-
-    /* ── プロフィールポイントにホバー色変化 ── */
-    .point {
-      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.3s, border-color 0.3s;
-    }
-    .point:hover {
-      transform: translateY(-3px) scale(1.02);
-      background: var(--accent-soft);
-      border-color: var(--accent);
-    }
-
-    /* ── ニュースアイテムに左ボーダーカラー ── */
-    .news-item { border-left: 3px solid transparent; transition: border-color 0.3s, transform 0.25s; }
-    .news-item:nth-child(1) { border-left-color: #00bcd4; }
-    .news-item:nth-child(2) { border-left-color: #ff9800; }
-    .news-item:nth-child(3) { border-left-color: #e040fb; }
-    .news-item:hover { transform: translateX(6px); }
-
-    /* ── リンクカードに遊びのホバー ── */
-    .link-card {
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s, border-color 0.25s;
-    }
-    .link-card:hover {
-      transform: translateY(-4px) rotate(0.5deg);
-      box-shadow: var(--shadow);
-      border-color: var(--accent);
-    }
-    .link-card:hover .link-icon { transform: scale(1.15) rotate(-5deg); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-
-    /* ── ブランドマークがホバーでくるん ── */
-    .brand-mark { transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-    .brand-mark:hover { transform: rotate(12deg) scale(1.1); }
-
-    /* ── ボタンにぷるっと感 ── */
-    .btn-primary {
-      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, background 0.2s;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px) scale(1.04);
-      box-shadow: 0 8px 24px rgba(0,188,212,0.3);
-    }
-    .btn-primary:active { transform: scale(0.96); }
-
-    /* ── to-topボタンにバウンス ── */
-    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-    .to-top.show { animation: bounce 2s ease infinite; }
-
-    /* ── フッターリンクに波線下線 ── */
-    .footer-link {
-      text-decoration-style: wavy;
-      text-underline-offset: 4px;
+      .activity-grid, .links-grid { grid-template-columns: 1fr; }
+      .hero { padding: 40px 0 30px; }
+      .hero-actions { flex-direction: column; }
+      .btn { width: 100%; }
+      .profile-points { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Floating decorations -->
+  <div class="deco">✦</div>
+  <div class="deco">🌊</div>
+  <div class="deco">⭐</div>
+  <div class="deco">🦈</div>
+  <div class="deco">💫</div>
+
+  <!-- Header -->
   <header class="site-header">
-    <div class="container header-inner">
-      <a href="#top" class="brand" aria-label="鮫月ナツネ トップへ">
-        <div class="brand-mark">鮫</div>
-        <div class="brand-text">
-          <p class="brand-name">鮫月ナツネ</p>
-          <p class="brand-sub">Official Personal Portal</p>
+    <div class="header-inner">
+      <a href="#" class="brand">
+        <div class="brand-mark">🦈</div>
+        <div>
+          <div class="brand-name">鮫月ナツネ</div>
+          <div class="brand-sub">Personal Portal ✨</div>
         </div>
       </a>
-
-      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="globalNav">
-        MENU
-      </button>
-
-      <nav class="nav" id="globalNav">
+      <nav class="nav">
         <a href="#about">About</a>
         <a href="#activities">Activities</a>
         <a href="#pickup">Pickup</a>
@@ -1044,450 +462,216 @@
     </div>
   </header>
 
-  <main id="top">
+  <main>
+    <!-- Hero -->
     <section class="hero">
       <div class="container hero-wrap">
         <div class="hero-copy">
-          <div class="hero-badge">Personal Portal / Creator Site</div>
-
+          <div class="hero-badge">✨ Personal Portal / Creator Site</div>
           <h1 class="hero-title">
             <small>VRChat Creator / World Builder / Community Organizer</small>
-            鮫月ナツネ
+            <div class="hero-name">
+              <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+            </div>
           </h1>
-
           <p class="hero-lead">
-            ワールド制作も ギミック開発も 動画も イベントも
-            全部ひっくるめて“鮫月ナツネ”という活動。
-            このサイトは 技術の説明書ではなく
+            ワールド制作も ギミック開発も 動画も イベントも<br>
+            全部ひっくるめて "鮫月ナツネ" という活動。<br>
+            このサイトは 技術の説明書ではなく<br>
             ナツネという人そのものに触れるための入口です。
           </p>
-
           <div class="hero-actions">
-            <a href="#about" class="btn btn-primary">ナツネを知る</a>
-            <a href="#links" class="btn btn-secondary">SNS・外部リンクへ</a>
+            <a href="#about" class="btn btn-primary">🦈 ナツネを知る</a>
+            <a href="#links" class="btn btn-secondary">✦ SNS・外部リンクへ</a>
           </div>
-
-          <div class="hero-meta">
-            <div class="meta-chip">World Creation</div>
-            <div class="meta-chip">Gimmick Development</div>
-            <div class="meta-chip">YouTube</div>
-            <div class="meta-chip">BOOTH</div>
-            <div class="meta-chip">Event & Community</div>
+          <div class="hero-chips">
+            <div class="chip">World Creation</div>
+            <div class="chip">Gimmick Dev</div>
+            <div class="chip">YouTube</div>
+            <div class="chip">BOOTH</div>
+            <div class="chip">Event & Community</div>
           </div>
         </div>
 
         <div class="hero-visual">
-          <div class="visual-card">
-            <div class="visual-main">
-              <img src="images/avatar.png" alt="鮫月ナツネ" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:2;" />
-            </div>
+          <div class="avatar-frame">
+            <img src="images/avatar.png" alt="鮫月ナツネ" />
           </div>
-
-          <div class="float-bubble bubble-top">
-            <p class="bubble-label">ひとことで言うと</p>
-            <p class="bubble-value">世界を作って<br />人を集める人</p>
+          <div class="bubble bubble-top" style="--r:-4deg">
+            <small>ひとことで言うと</small>
+            <strong>世界を作って<br>人を集める人</strong>
           </div>
-
-          <div class="float-bubble bubble-bottom">
-            <p class="bubble-label">サイトの役割</p>
-            <p class="bubble-value">推し活の入口になる<br />個人ポータル</p>
+          <div class="bubble bubble-bottom" style="--r:3deg">
+            <small>サイトの役割</small>
+            <strong>推し活の入口になる<br>個人ポータル</strong>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="about">
+    <!-- About -->
+    <section class="section reveal" id="about">
       <div class="container">
         <div class="section-head">
           <div class="section-label">About / Profile</div>
-          <h2 class="section-title">何を作っているかより<br />どんな人かが先に伝わる場所へ</h2>
-          <p class="section-desc">
-            鮫月ナツネのプロフィールは、実績の羅列よりも
-            「何を大事にして、どんな空気を作る人なのか」を
-            先に感じてもらう構成にしています。
-          </p>
+          <h2 class="section-title">何を作っているかより<br>どんな人かが先に伝わる場所へ</h2>
+          <p class="section-desc">鮫月ナツネのプロフィールは、実績の羅列よりも「何を大事にして、どんな空気を作る人なのか」を先に感じてもらう構成にしています。</p>
         </div>
-
         <div class="about-grid">
-          <div class="card profile-card">
-            <p class="profile-copy">
-              鮫月ナツネは、VRChatを中心に活動する個人クリエイター。
-              ワールド制作、ギミック開発、動画発信、イベント企画、コミュニティ運営まで、
-              表現の形をひとつに絞らず、その時いちばん面白いと思う方法で人と場をつないでいくタイプです。
-            </p>
-            <p class="profile-copy">
-              技術だけを見せるのではなく、そこに集まる人の体験や空気感まで含めてデザインすることを大切にしています。
-              作品単体ではなく、「この人の活動を追っていくと面白い」と思ってもらえる存在を目指しています。
-            </p>
-
+          <div class="profile-card">
+            <p class="profile-copy">鮫月ナツネは、VRChatを中心に活動する個人クリエイター。ワールド制作、ギミック開発、動画発信、イベント企画、コミュニティ運営まで、表現の形をひとつに絞らず、その時いちばん面白いと思う方法で人と場をつないでいくタイプです。</p>
+            <p class="profile-copy">技術だけを見せるのではなく、そこに集まる人の体験や空気感まで含めてデザインすることを大切にしています。作品単体ではなく、「この人の活動を追っていくと面白い」と思ってもらえる存在を目指しています。</p>
             <div class="profile-points">
-              <div class="point">
-                <h3 class="point-title">大事にしていること</h3>
-                <p class="point-text">
-                  すごいものを作るだけでなく、
-                  人が入りやすく、居たくなり、また来たくなる空気を作ること。
-                </p>
-              </div>
-
-              <div class="point">
-                <h3 class="point-title">活動の軸</h3>
-                <p class="point-text">
-                  作る、見せる、集めるを分けずに、
-                  ひとつの世界観として活動全体を育てていくこと。
-                </p>
-              </div>
-
-              <div class="point">
-                <h3 class="point-title">サイトの見せ方</h3>
-                <p class="point-text">
-                  教材サイトではなく、
-                  人物の魅力と温度感が伝わる公式ポータルとして設計。
-                </p>
-              </div>
-
-              <div class="point">
-                <h3 class="point-title">来てほしい人</h3>
-                <p class="point-text">
-                  VRChatユーザー、作品を見たい人、
-                  活動を応援したい人、イベントやコミュニティが好きな人。
-                </p>
-              </div>
+              <div class="point"><h3 class="point-title">大事にしていること</h3><p class="point-text">すごいものを作るだけでなく、人が入りやすく、居たくなり、また来たくなる空気を作ること。</p></div>
+              <div class="point"><h3 class="point-title">活動の軸</h3><p class="point-text">作る、見せる、集めるを分けずに、ひとつの世界観として活動全体を育てていくこと。</p></div>
+              <div class="point"><h3 class="point-title">サイトの見せ方</h3><p class="point-text">教材サイトではなく、人物の魅力と温度感が伝わる公式ポータルとして設計。</p></div>
+              <div class="point"><h3 class="point-title">来てほしい人</h3><p class="point-text">VRChatユーザー、作品を見たい人、活動を応援したい人、イベントやコミュニティが好きな人。</p></div>
             </div>
           </div>
-
-          <div class="card profile-side">
-            <div class="mini-block">
-              <p class="mini-label">Profile Note</p>
-              <p class="mini-body">
-                作品ごとに人が違って見えるのではなく、
-                どの活動を見ても「鮫月ナツネらしい」と感じられることを重視。
-              </p>
-            </div>
-
-            <div class="mini-block">
-              <p class="mini-label">Keyword</p>
-              <p class="mini-body">
-                ポップ / 親しみやすさ / 世界観 / 遊び心 / 技術と体験の両立
-              </p>
-            </div>
-
-            <div class="mini-block">
-              <p class="mini-label">For Visitors</p>
-              <p class="mini-body">
-                はじめて来た人には「何者か」がすぐ分かる。
-                既に知っている人には「今なにしてるか」が追いやすい。
-                その両方を両立させるのがこのサイトの役目です。
-              </p>
-            </div>
-
-            <div class="mini-block">
-              <p class="mini-label">Visual Replace</p>
-              <p class="mini-body">
-                ここには立ち絵、キービジュアル、アバター画像、
-                配信サムネ風素材などを入れると人物感が一気に強くなります。
-              </p>
-            </div>
+          <div class="profile-side">
+            <div class="mini-block"><p class="mini-label">Profile Note</p><p class="mini-body">作品ごとに人が違って見えるのではなく、どの活動を見ても「鮫月ナツネらしい」と感じられることを重視。</p></div>
+            <div class="mini-block"><p class="mini-label">Keyword</p><p class="mini-body">ポップ / 親しみやすさ / 世界観 / 遊び心 / 技術と体験の両立</p></div>
+            <div class="mini-block"><p class="mini-label">For Visitors</p><p class="mini-body">はじめて来た人には「何者か」がすぐ分かる。既に知っている人には「今なにしてるか」が追いやすい。その両方を両立させるのがこのサイトの役目です。</p></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="activities">
+    <!-- Activities -->
+    <section class="section reveal" id="activities">
       <div class="container">
         <div class="section-head">
           <div class="section-label">Activities</div>
-          <h2 class="section-title">活動を“ジャンル”ではなく<br />鮫月ナツネの一面として並べる</h2>
-          <p class="section-desc">
-            どれかひとつが本体ではなく、全部が鮫月ナツネの活動。
-            動画、制作、販売、イベント、コミュニティを同じ熱量で見せる構成です。
-          </p>
+          <h2 class="section-title">活動を "ジャンル" ではなく<br>鮫月ナツネの一面として並べる</h2>
+          <p class="section-desc">どれかひとつが本体ではなく、全部が鮫月ナツネの活動。動画、制作、販売、イベント、コミュニティを同じ熱量で見せる構成です。</p>
         </div>
-
         <div class="activity-grid">
-          <a href="https://www.youtube.com/@natsune_vrc" target="_blank" rel="noopener" class="card activity-card">
-            <div class="activity-icon">YT</div>
+          <a href="https://www.youtube.com/@natsune_vrc" target="_blank" rel="noopener" class="activity-card">
+            <div class="activity-icon">▶</div>
             <h3 class="activity-title">YouTube</h3>
-            <p class="activity-text">
-              動画で届ける活動の入り口。
-              ナツネの空気感や考え方がいちばん伝わりやすい場所。
-            </p>
+            <p class="activity-text">動画で届ける活動の入り口。ナツネの空気感や考え方がいちばん伝わりやすい場所。</p>
             <span class="activity-link">チャンネルを見る →</span>
           </a>
-
-          <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" rel="noopener" class="card activity-card">
-            <div class="activity-icon">W</div>
+          <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" rel="noopener" class="activity-card">
+            <div class="activity-icon">🌍</div>
             <h3 class="activity-title">ワールド制作</h3>
-            <p class="activity-text">
-              見た目の良さだけでなく、
-              入った時の体験や居心地まで含めて設計するワールドづくり。
-            </p>
+            <p class="activity-text">見た目の良さだけでなく、入った時の体験や居心地まで含めて設計するワールドづくり。</p>
             <span class="activity-link">制作実績を見る →</span>
           </a>
-
-          <a href="#" class="card activity-card">
-            <div class="activity-icon">G</div>
+          <a href="#" class="activity-card">
+            <div class="activity-icon">⚙</div>
             <h3 class="activity-title">ギミック開発</h3>
-            <p class="activity-text">
-              遊び心と実用性の両方を持った仕組みづくり。
-              「あると嬉しい」を形にする技術面の活動。
-            </p>
+            <p class="activity-text">遊び心と実用性の両方を持った仕組みづくり。「あると嬉しい」を形にする技術面の活動。</p>
             <span class="activity-link">開発を見る →</span>
           </a>
-
-          <a href="#" class="card activity-card">
-            <div class="activity-icon">B</div>
+          <a href="#" class="activity-card">
+            <div class="activity-icon">🛒</div>
             <h3 class="activity-title">BOOTH販売</h3>
-            <p class="activity-text">
-              ナツネの世界観や制作物に触れられるショップ。
-              応援の導線としても機能する大事な接点。
-            </p>
+            <p class="activity-text">ナツネの世界観や制作物に触れられるショップ。応援の導線としても機能する大事な接点。</p>
             <span class="activity-link">ショップへ →</span>
           </a>
-
-          <a href="#" class="card activity-card">
-            <div class="activity-icon">E</div>
+          <a href="#" class="activity-card">
+            <div class="activity-icon">🎪</div>
             <h3 class="activity-title">イベント</h3>
-            <p class="activity-text">
-              人が集まる時間そのものをデザインする活動。
-              単発企画でも記憶に残る体験を目指す。
-            </p>
+            <p class="activity-text">人が集まる時間そのものをデザインする活動。単発企画でも記憶に残る体験を目指す。</p>
             <span class="activity-link">開催情報を見る →</span>
           </a>
-
-          <a href="#" class="card activity-card">
-            <div class="activity-icon">C</div>
+          <a href="#" class="activity-card">
+            <div class="activity-icon">💬</div>
             <h3 class="activity-title">コミュニティ</h3>
-            <p class="activity-text">
-              作品だけで終わらせず、人がつながり続ける場まで含めて育てていく。
-              ナツネの活動の核になる領域。
-            </p>
+            <p class="activity-text">作品だけで終わらせず、人がつながり続ける場まで含めて育てていく。ナツネの活動の核になる領域。</p>
             <span class="activity-link">参加先を見る →</span>
           </a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="pickup">
+    <!-- Pickup -->
+    <section class="section reveal" id="pickup">
       <div class="container">
         <div class="section-head">
           <div class="section-label">Latest / Pickup</div>
-          <h2 class="section-title">今、何をやっている人なのかが<br />すぐ分かる更新エリア</h2>
-          <p class="section-desc">
-            固定的なプロフィールだけで終わらせず、
-            現在進行中の活動や注目トピックを見せることで
-            “今追う理由”を作るためのセクションです。
-          </p>
+          <h2 class="section-title">今、何をやっている人なのかが<br>すぐ分かる更新エリア</h2>
+          <p class="section-desc">固定的なプロフィールだけで終わらせず、現在進行中の活動や注目トピックを見せることで "今追う理由" を作るためのセクションです。</p>
         </div>
-
         <div class="pickup-grid">
-          <div class="card pickup-main">
+          <div class="pickup-main">
             <div class="pickup-kicker">Now Working On</div>
-            <h3 class="pickup-title">新しいワールド制作と発信を軸に<br />活動全体の見せ方を更新中</h3>
-            <p class="pickup-text">
-              単発で何かを作るだけではなく、
-              ワールド、動画、イベント、SNS、販売導線が
-              ひとつの流れとしてつながるように活動全体を再設計。
-              初見の人にも既存ファンにも追いやすい形を目指しています。
-            </p>
-
+            <h3 class="pickup-title">新しいワールド制作と発信を軸に<br>活動全体の見せ方を更新中</h3>
+            <p class="pickup-text">単発で何かを作るだけではなく、ワールド、動画、イベント、SNS、販売導線がひとつの流れとしてつながるように活動全体を再設計。初見の人にも既存ファンにも追いやすい形を目指しています。</p>
             <div class="pickup-tags">
               <span class="tag">新作ワールド</span>
               <span class="tag">発信強化</span>
               <span class="tag">活動整理</span>
               <span class="tag">ポータル更新</span>
             </div>
-
             <a href="#links" class="btn btn-primary">最新の投稿先を見る</a>
           </div>
-
           <div class="news-list">
-            <article class="card news-item">
-              <p class="news-meta">Pickup 01</p>
-              <h3 class="news-title">最近の制作物をまとめて見られる導線を整備</h3>
-              <p class="news-text">
-                はじめて来た人が迷わず活動を追えるよう、
-                作品・SNS・販売先の整理を進行中。
-              </p>
-            </article>
-
-            <article class="card news-item">
-              <p class="news-meta">Pickup 02</p>
-              <h3 class="news-title">イベントやコミュニティ関連の見せ方も強化</h3>
-              <p class="news-text">
-                作ったものだけでなく、
-                誰とどんな空気を作っているかまで伝わる構成へ。
-              </p>
-            </article>
-
-            <article class="card news-item">
-              <p class="news-meta">Pickup 03</p>
-              <h3 class="news-title">ナツネらしさが伝わるビジュアル表現を拡張予定</h3>
-              <p class="news-text">
-                立ち絵、アバター、キービジュアル、配信素材などを活用し、
-                人物感をさらに強く出していく想定です。
-              </p>
-            </article>
+            <article class="news-item"><p class="news-meta">Pickup 01</p><h3 class="news-title">最近の制作物をまとめて見られる導線を整備</h3><p class="news-text">はじめて来た人が迷わず活動を追えるよう、作品・SNS・販売先の整理を進行中。</p></article>
+            <article class="news-item"><p class="news-meta">Pickup 02</p><h3 class="news-title">イベントやコミュニティ関連の見せ方も強化</h3><p class="news-text">作ったものだけでなく、誰とどんな空気を作っているかまで伝わる構成へ。</p></article>
+            <article class="news-item"><p class="news-meta">Pickup 03</p><h3 class="news-title">ナツネらしさが伝わるビジュアル表現を拡張予定</h3><p class="news-text">立ち絵、アバター、キービジュアル、配信素材などを活用し、人物感をさらに強く出していく想定です。</p></article>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="links">
+    <!-- Links -->
+    <section class="section reveal" id="links">
       <div class="container">
         <div class="section-head">
           <div class="section-label">Link Hub</div>
-          <h2 class="section-title">推したいと思った人が<br />次の一歩を踏み出しやすい導線へ</h2>
-          <p class="section-desc">
-            SNSのプロフィール欄を並べるだけではなく、
-            それぞれのリンクが「何を見る場所なのか」まで添えて
-            行き先の意味が分かるリンクハブにしています。
-          </p>
+          <h2 class="section-title">推したいと思った人が<br>次の一歩を踏み出しやすい導線へ</h2>
+          <p class="section-desc">SNSのプロフィール欄を並べるだけではなく、それぞれのリンクが「何を見る場所なのか」まで添えて行き先の意味が分かるリンクハブにしています。</p>
         </div>
-
-        <div class="links-wrap">
-          <div class="card links-intro">
-            <p>
-              このエリアは、単なるリンク集ではなく
-              鮫月ナツネの活動を追うための入口を整理する場所です。
-              情報を受け取る場所、作品を見る場所、応援する場所を
-              分かりやすく分けておくと、ファン化導線がかなり強くなります。
-            </p>
-            <p>
-              実運用時は各リンクに実URLを差し替え、
-              一番見てほしいリンクだけ色を強めるのがおすすめです。
-            </p>
-
-            <div class="link-stats">
-              <div class="stat-box">
-                <span class="stat-label">Follow</span>
-                <span class="stat-value">SNS</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-label">Watch</span>
-                <span class="stat-value">動画</span>
-              </div>
-              <div class="stat-box">
-                <span class="stat-label">Support</span>
-                <span class="stat-value">販売</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card links-grid">
-            <a href="#" class="link-card">
-              <div class="link-card-head">
-                <div class="link-icon">X</div>
-                <h3 class="link-title">X / 最新の発信</h3>
-              </div>
-              <p class="link-desc">
-                今いちばん早い更新を見る場所。
-                日々の動きや告知を追いたい人向け。
-              </p>
-            </a>
-
-            <a href="#" class="link-card">
-              <div class="link-card-head">
-                <div class="link-icon">YT</div>
-                <h3 class="link-title">YouTube / 動画</h3>
-              </div>
-              <p class="link-desc">
-                ナツネの声や空気感まで伝わる主力導線。
-                初見にもおすすめ。
-              </p>
-            </a>
-
-            <a href="#" class="link-card">
-              <div class="link-card-head">
-                <div class="link-icon">B</div>
-                <h3 class="link-title">BOOTH / 作品・販売</h3>
-              </div>
-              <p class="link-desc">
-                制作物に直接触れたい人、
-                応援したい人のためのショップ導線。
-              </p>
-            </a>
-
-            <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" class="link-card" target="_blank" rel="noopener">
-              <div class="link-card-head">
-                <div class="link-icon">V</div>
-                <h3 class="link-title">VRChat関連</h3>
-              </div>
-              <p class="link-desc">
-                ワールドやイベント、
-                活動の舞台そのものに触れたい人向け。
-              </p>
-            </a>
-
-            <a href="#" class="link-card">
-              <div class="link-card-head">
-                <div class="link-icon">D</div>
-                <h3 class="link-title">Discord / コミュニティ</h3>
-              </div>
-              <p class="link-desc">
-                見るだけでなく参加したい人向け。
-                ナツネの活動を近い距離で追える場所。
-              </p>
-            </a>
-
-            <a href="#" class="link-card">
-              <div class="link-card-head">
-                <div class="link-icon">M</div>
-                <h3 class="link-title">その他まとめ</h3>
-              </div>
-              <p class="link-desc">
-                サブSNS、問い合わせ、外部サービスなど。
-                必要に応じて整理して追加できます。
-              </p>
-            </a>
-          </div>
+        <div class="links-intro">
+          <p>ナツネの活動を追うための入口を整理した場所です。情報を受け取る場所、作品を見る場所、応援する場所を分かりやすく分けています。</p>
+        </div>
+        <div class="links-grid">
+          <a href="https://x.com/natsune_vrc" target="_blank" class="link-card"><div class="link-icon" style="background:#000">𝕏</div><div><div class="link-title">X / 最新の発信</div><div class="link-desc">日々の動きや告知を追いたい人向け</div></div></a>
+          <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="link-card"><div class="link-icon" style="background:#f00">▶</div><div><div class="link-title">YouTube / 動画</div><div class="link-desc">ナツネの空気感まで伝わる主力導線</div></div></a>
+          <a href="#" class="link-card"><div class="link-icon" style="background:#fc4d50">BT</div><div><div class="link-title">BOOTH / 作品・販売</div><div class="link-desc">制作物に直接触れたい人向け</div></div></a>
+          <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" class="link-card"><div class="link-icon" style="background:#00bcd4">VR</div><div><div class="link-title">VRChat関連</div><div class="link-desc">ワールドやイベントの舞台</div></div></a>
+          <a href="#" class="link-card"><div class="link-icon" style="background:#5865f2">DC</div><div><div class="link-title">Discord / コミュニティ</div><div class="link-desc">ナツネの活動を近い距離で追える場所</div></div></a>
+          <a href="links.html" class="link-card" style="background:linear-gradient(135deg,#e0f7fa,#fce4ec);border-color:var(--accent)"><div class="link-icon" style="background:linear-gradient(135deg,#00bcd4,#ff6b9d)">→</div><div><div class="link-title">全リンクを見る</div><div class="link-desc">もっと詳しいリンク集はこちら</div></div></a>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <p class="footer-copy">© 2026 鮫月ナツネ Official Portal</p>
-      <nav class="footer-nav">
-        <a href="#top">Top</a>
-        <a href="#about">About</a>
-        <a href="#activities">Activities</a>
-        <a href="#pickup">Pickup</a>
-        <a href="#links">Links</a>
-        <a href="links.html">All Links</a>
-      </nav>
+    <p class="footer-wave">✨ ここまで見てくれてありがとう ✨</p>
+    <div class="footer-links">
+      <a href="https://x.com/natsune_vrc" target="_blank" class="footer-link">𝕏 Twitter</a>
+      <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="footer-link">▶ YouTube</a>
+      <a href="links.html" class="footer-link">🔗 All Links</a>
     </div>
+    <p class="footer-copy">&copy; 2026 鮫月ナツネ</p>
   </footer>
 
   <button class="to-top" id="toTop" type="button" aria-label="ページ上部へ戻る">↑</button>
 
+  <!-- Cursor effect -->
+  <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
   <script>
-    const menuBtn = document.getElementById("menuBtn");
-    const nav = document.getElementById("globalNav");
-    const toTop = document.getElementById("toTop");
+    // Fairy dust cursor
+    new cursoreffects.fairyDustCursor({ colors: ['#00bcd4', '#ff6b9d', '#ffa726', '#7c4dff'] });
 
-    menuBtn.addEventListener("click", () => {
-      const isOpen = nav.classList.toggle("open");
-      menuBtn.setAttribute("aria-expanded", String(isOpen));
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // To top button
+    const toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', () => {
+      toTop.classList.toggle('show', window.scrollY > 400);
     });
-
-    nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        nav.classList.remove("open");
-        menuBtn.setAttribute("aria-expanded", "false");
-      });
-    });
-
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 320) {
-        toTop.classList.add("show");
-      } else {
-        toTop.classList.remove("show");
-      }
-    });
-
-    toTop.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    toTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   </script>
 </body>
