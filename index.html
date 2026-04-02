@@ -386,6 +386,9 @@
     </div>
   </header>
 
+  <!-- Particle Network Canvas -->
+  <canvas id="particleNet" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
   <main>
     <section class="hero">
       <div class="container hero-wrap">
@@ -527,6 +530,64 @@
   <button class="to-top" id="toTop">↑</button>
 
   <script>
+    // ── Particle Network (つながりの表現) ──
+    (() => {
+      const c = document.getElementById('particleNet');
+      const ctx = c.getContext('2d');
+      let w, h, particles = [];
+      const NUM = 60, DIST = 140;
+      function resize() { w = c.width = innerWidth; h = c.height = innerHeight; }
+      resize(); addEventListener('resize', resize);
+
+      class P {
+        constructor() { this.reset(); }
+        reset() {
+          this.x = Math.random() * w; this.y = Math.random() * h;
+          this.vx = (Math.random() - 0.5) * 0.4;
+          this.vy = (Math.random() - 0.5) * 0.4;
+          this.r = Math.random() * 2 + 1;
+          // Cyan, pink, purple randomly
+          const cols = ['0,229,255','255,64,129','179,136,255'];
+          this.col = cols[Math.floor(Math.random()*3)];
+        }
+        update() {
+          this.x += this.vx; this.y += this.vy;
+          if (this.x < 0 || this.x > w) this.vx *= -1;
+          if (this.y < 0 || this.y > h) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${this.col},0.6)`;
+          ctx.fill();
+        }
+      }
+      for (let i = 0; i < NUM; i++) particles.push(new P());
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < NUM; i++) {
+          particles[i].update();
+          particles[i].draw();
+          for (let j = i + 1; j < NUM; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const d = Math.sqrt(dx*dx + dy*dy);
+            if (d < DIST) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(0,229,255,${0.12 * (1 - d/DIST)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
     // Scroll reveal
     const obs = new IntersectionObserver(es => {
       es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
