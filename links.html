@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鮫月ナツネ | Links</title>
+  <meta name="description" content="鮫月ナツネの各種リンク集。YouTube、X、Discord、BOOTH、note、VRChatなど。" />
+  <style>
+    :root {
+      --bg: #f7fdff;
+      --bg-soft: #eefbfe;
+      --surface: #ffffff;
+      --line: #d9f1f6;
+      --text: #16323a;
+      --text-soft: #55717a;
+      --accent: #00bcd4;
+      --accent-strong: #00a8be;
+      --accent-soft: #dbf8fc;
+      --shadow: 0 10px 30px rgba(0,121,140,0.08);
+      --shadow-hover: 0 16px 40px rgba(0,121,140,0.14);
+      --r: 16px;
+      --r-sm: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Hiragino Sans","Yu Gothic","Meiryo",system-ui,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Back nav ── */
+    .back-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(247,253,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--accent-strong);
+      font-size: 14px;
+      font-weight: 600;
+      transition: gap 0.2s;
+    }
+    .back-link:hover { gap: 10px; }
+    .back-link svg { width: 16px; height: 16px; }
+    .back-bar-title {
+      font-size: 13px;
+      color: var(--text-soft);
+      font-weight: 600;
+    }
+
+    /* ── Main container ── */
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* ── Profile header ── */
+    .profile {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .profile-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 3px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      margin: 0 auto 12px;
+    }
+    .profile-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .profile-handle {
+      font-size: 0.82rem;
+      color: var(--accent-strong);
+      margin: 4px 0 8px;
+    }
+    .profile-bio {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* ── Section ── */
+    .section { margin-bottom: 36px; }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+      margin-bottom: 14px;
+      padding-left: 2px;
+    }
+
+    /* ── Card Grid (PC) ── */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    /* ── Link Card ── */
+    .link-card {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      overflow: hidden;
+    }
+    .link-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+    }
+
+    .link-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+      color: #fff;
+      font-weight: 700;
+      transition: transform 0.28s;
+    }
+    .link-card:hover .link-icon { transform: scale(1.08); }
+
+    .link-body { flex: 1; min-width: 0; }
+    .link-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .link-desc {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      display: block;
+      line-height: 1.5;
+    }
+
+    /* ── Expandable detail on hover (PC) ── */
+    .link-detail {
+      display: block;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.25s, margin-top 0.25s;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+      margin-top: 0;
+    }
+    .link-card:hover .link-detail {
+      max-height: 80px;
+      opacity: 1;
+      margin-top: 8px;
+    }
+
+    .link-arrow {
+      color: var(--text-soft);
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: all 0.25s;
+      align-self: center;
+      opacity: 0.4;
+    }
+    .link-card:hover .link-arrow {
+      color: var(--accent);
+      transform: translateX(4px);
+      opacity: 1;
+    }
+
+    /* ── Platform colors ── */
+    .ic-yt { background: #ff0000; }
+    .ic-x { background: #000000; }
+    .ic-dc { background: #5865f2; }
+    .ic-booth { background: #fc4d50; }
+    .ic-note { background: #41c9b4; }
+    .ic-vrchat { background: #00bcd4; }
+    .ic-github { background: #24292e; }
+    .ic-wish { background: #ff9800; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+    .footer-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .footer-home:hover {
+      background: var(--accent-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,188,212,0.25);
+    }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      margin-top: 16px;
+    }
+
+    /* ── Responsive: スマホ縦リスト ── */
+    @media (max-width: 640px) {
+      .page { padding: 20px 14px 60px; }
+      .profile { margin-bottom: 28px; }
+
+      .link-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .link-card {
+        padding: 14px 16px;
+      }
+
+      /* スマホではタップで展開（ホバーなし） */
+      .link-detail {
+        max-height: 80px;
+        opacity: 1;
+        margin-top: 6px;
+      }
+
+      .link-arrow { opacity: 0.6; }
+    }
+
+    /* ── Sponsor grid (smaller cards) ── */
+    .sponsor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .sponsor-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: var(--r-sm);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.25s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .sponsor-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+    .sponsor-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .sponsor-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .sponsor-arrow {
+      margin-left: auto;
+      color: var(--text-soft);
+      font-size: 0.85rem;
+      opacity: 0.3;
+      transition: all 0.2s;
+    }
+    .sponsor-card:hover .sponsor-arrow {
+      color: var(--accent);
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    @media (max-width: 640px) {
+      .sponsor-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+    }
+    @media (max-width: 400px) {
+      .sponsor-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== Back nav ====== -->
+  <div class="back-bar">
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      ポータルに戻る
+    </a>
+    <span class="back-bar-title">鮫月ナツネ Links</span>
+  </div>
+
+  <div class="page">
+
+    <!-- ====== Profile ====== -->
+    <div class="profile">
+      <div class="profile-avatar"><img src="images/avatar.png" alt="鮫月ナツネ" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;" /></div>
+      <div class="profile-name">鮫月ナツネ</div>
+      <div class="profile-handle">@natsune_vrc</div>
+      <p class="profile-bio">VRChatワールド制作 / ギミック開発 / YouTube / BOOTH / イベント / コミュニティ運営</p>
+    </div>
+
+    <!-- ====== Main Links ====== -->
+    <div class="section">
+      <div class="section-label">Main Links</div>
+      <div class="link-grid">
+
+        <a href="https://www.youtube.com/@natsune_vrc" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-yt">▶</div>
+          <div class="link-body">
+            <span class="link-title">YouTube</span>
+            <span class="link-desc">チュートリアル・制作ログ・ライブ</span>
+            <span class="link-detail">VRChatのワールド制作やギミック開発の過程を動画で公開。初心者向けの解説からライブ配信まで。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="https://x.com/natsune_vrc" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-x">𝕏</div>
+          <div class="link-body">
+            <span class="link-title">X / Twitter</span>
+            <span class="link-desc">更新告知・制作中のひとこと</span>
+            <span class="link-detail">新作の告知、制作途中のスクショ、VRChat関連の気づきなど。いちばんリアルタイムな発信場所。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-dc">DC</div>
+          <div class="link-body">
+            <span class="link-title">Discord — ナツネの作業部屋</span>
+            <span class="link-desc">質問・雑談・制作物の共有（230人）</span>
+            <span class="link-detail">ワールド制作の質問やVRChat雑談ができるコミュニティ。初心者歓迎。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-booth">BT</div>
+          <div class="link-body">
+            <span class="link-title">BOOTH ショップ</span>
+            <span class="link-desc">ギミック・アセット販売</span>
+            <span class="link-detail">ナツネが制作したVRChat向けギミックやアセットを販売。無料アイテムもあり。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-note">NT</div>
+          <div class="link-body">
+            <span class="link-title">note — 週刊ナツネ通信</span>
+            <span class="link-desc">制作の裏側・VRChat最新情報</span>
+            <span class="link-detail">動画や投稿では語りきれない制作の裏話、考え方、VRChat界隈の情報などを長文で。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-vrchat">VR</div>
+          <div class="link-body">
+            <span class="link-title">VRChat プロフィール</span>
+            <span class="link-desc">フレンド申請はお気軽に</span>
+            <span class="link-detail">ナツネのVRChatプロフィール。制作したワールドに直接飛べます。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-github">GH</div>
+          <div class="link-body">
+            <span class="link-title">GitHub</span>
+            <span class="link-desc">オープンソースのギミック・ツール</span>
+            <span class="link-detail">公開中のUdonSharpギミックやツールのソースコード。自由に使えます。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ====== Free Assets ====== -->
+    <div class="section">
+      <div class="section-label">Free Assets (BOOTH)</div>
+      <div class="link-grid">
+
+        <a href="https://booth.pm/wish_list_names/8kaTGWrX" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-wish">⚙</div>
+          <div class="link-body">
+            <span class="link-title">無料ギミック集</span>
+            <span class="link-desc">スイッチ・ドア・BGM系など 24アイテム</span>
+            <span class="link-detail">ナツネが実際に使って良かったVRChat向け無料ギミックをまとめたリスト。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="https://booth.pm/wish_list_names/KR6T4BRG" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-wish">🌍</div>
+          <div class="link-body">
+            <span class="link-title">無料ワールド素材</span>
+            <span class="link-desc">部屋・自然・スカイボックスなど 18アイテム</span>
+            <span class="link-detail">ワールド制作に使える背景やスカイボックス、部屋素材の無料セレクション。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="https://booth.pm/wish_list_names/p6kT6YgJ" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-wish">🪑</div>
+          <div class="link-body">
+            <span class="link-title">無料家具・小物</span>
+            <span class="link-desc">椅子・テーブル・照明など 32アイテム</span>
+            <span class="link-detail">ワールドの雰囲気を作る家具や小物。置くだけでクオリティが上がるアイテム集。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" target="_blank" rel="noopener" class="link-card">
+          <div class="link-icon ic-wish">🖊</div>
+          <div class="link-body">
+            <span class="link-title">QVペン関連</span>
+            <span class="link-desc">差し替えモデル・カスタム 8アイテム</span>
+            <span class="link-detail">QVペンの見た目を変えるモデルやカスタムパーツのコレクション。</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ====== Sponsor Shops ====== -->
+    <div class="section">
+      <div class="section-label">Sponsor Shops</div>
+      <div class="sponsor-grid">
+        <a href="https://levan-ira.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#6c63ff;">XA</div>
+          <span class="sponsor-name">XOR Architecture</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+        <a href="https://harusamenozakka.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#4caf50;">🌿</div>
+          <span class="sponsor-name">はるさめ雑貨店</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+        <a href="https://harunami-0819.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#e91e63;">🌸</div>
+          <span class="sponsor-name">美州春波屋</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+        <a href="https://han-noko.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#ff9800;">🔨</div>
+          <span class="sponsor-name">HANの工房</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+        <a href="https://mallta00.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#9c27b0;">👻</div>
+          <span class="sponsor-name">おばけの雑貨屋さん</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+        <a href="https://dragonmaide.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#f44336;">🐉</div>
+          <span class="sponsor-name">ドラゴンメイド工房</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+        <a href="https://tanakaumai.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
+          <div class="sponsor-icon" style="background:#607d8b;">🏪</div>
+          <span class="sponsor-name">無人STORE</span>
+          <span class="sponsor-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ====== Footer ====== -->
+    <div class="footer">
+      <a href="index.html" class="footer-home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        ポータルサイトへ戻る
+      </a>
+      <p class="footer-copy">&copy; 2026 鮫月ナツネ</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
