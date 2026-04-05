@@ -1344,6 +1344,125 @@
 
 </div>
 
+<script>
+/* ── Fカード文字インタラクション ──
+   ホバー: カーソル近くの文字が逃げる（プッシュ）
+   ドラッグ: 文字を掴んで引っ張れる → 離すとバネで戻る
+*/
+(function(){
+  const PUSH_RADIUS = 60;   // ホバー影響半径(px)
+  const PUSH_FORCE  = 15;   // ホバー押し出し強さ(px)
+  const SPRING      = 0.15; // バネ戻り速度
+  const DAMPING     = 0.75; // 減衰
+  const cards = document.querySelectorAll('.fcard');
+
+  // 各spanに物理状態を持たせる
+  cards.forEach(card => {
+    const spans = card.querySelectorAll('.fname span');
+    spans.forEach(sp => {
+      sp._phys = { x:0, y:0, vx:0, vy:0, dragX:null, dragY:null };
+      sp.style.position = 'relative';
+      sp.style.cursor = 'grab';
+    });
+
+    let grabbed = null;
+    let grabOffX = 0, grabOffY = 0;
+
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const mx = e.clientX;
+      const my = e.clientY;
+
+      spans.forEach(sp => {
+        if (sp === grabbed) return; // ドラッグ中は別処理
+        const sr = sp.getBoundingClientRect();
+        const cx = sr.left + sr.width/2;
+        const cy = sr.top + sr.height/2;
+        const dx = cx - mx;
+        const dy = cy - my;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist < PUSH_RADIUS && dist > 0) {
+          const force = (1 - dist/PUSH_RADIUS) * PUSH_FORCE;
+          sp._phys.vx += (dx/dist) * force * 0.3;
+          sp._phys.vy += (dy/dist) * force * 0.3;
+        }
+      });
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (grabbed) {
+        grabbed.style.cursor = 'grab';
+        grabbed._phys.dragX = null;
+        grabbed._phys.dragY = null;
+        grabbed = null;
+      }
+    });
+
+    // ドラッグ
+    spans.forEach(sp => {
+      sp.addEventListener('mousedown', e => {
+        e.preventDefault();
+        grabbed = sp;
+        sp.style.cursor = 'grabbing';
+        const sr = sp.getBoundingClientRect();
+        grabOffX = e.clientX - (sr.left + sr.width/2);
+        grabOffY = e.clientY - (sr.top + sr.height/2);
+      });
+    });
+
+    card.addEventListener('mousemove', e => {
+      if (!grabbed) return;
+      const sr = grabbed.getBoundingClientRect();
+      const baseX = sr.left + sr.width/2 - grabbed._phys.x;
+      const baseY = sr.top + sr.height/2 - grabbed._phys.y;
+      grabbed._phys.dragX = e.clientX - grabOffX - baseX;
+      grabbed._phys.dragY = e.clientY - grabOffY - baseY;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (grabbed) {
+        grabbed.style.cursor = 'grab';
+        grabbed._phys.dragX = null;
+        grabbed._phys.dragY = null;
+        grabbed = null;
+      }
+    });
+  });
+
+  // 物理ループ
+  function tick(){
+    document.querySelectorAll('.fname span').forEach(sp => {
+      if (!sp._phys) return;
+      const p = sp._phys;
+
+      if (p.dragX !== null) {
+        // ドラッグ中: ターゲットに追従
+        p.x += (p.dragX - p.x) * 0.4;
+        p.y += (p.dragY - p.y) * 0.4;
+        p.vx = 0; p.vy = 0;
+      } else {
+        // バネで原点に戻る
+        p.vx += -p.x * SPRING;
+        p.vy += -p.y * SPRING;
+        p.vx *= DAMPING;
+        p.vy *= DAMPING;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // ほぼ停止したらリセット
+        if (Math.abs(p.x) < 0.1 && Math.abs(p.y) < 0.1 && Math.abs(p.vx) < 0.05) {
+          p.x = 0; p.y = 0; p.vx = 0; p.vy = 0;
+        }
+      }
+
+      sp.style.left = p.x + 'px';
+      sp.style.top  = p.y + 'px';
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
 </script>
 </body>
 </html>
