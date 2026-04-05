@@ -702,45 +702,62 @@
   .fcard .flabel { position:absolute; bottom:10px; left:0; right:0; text-align:center; font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:.12em; color:var(--soft); text-transform:uppercase; }
   /* .fname-wrap はただのセンタリングコンテナ */
   .fname-wrap { display:inline-flex; flex-direction:column; align-items:center; }
-  /* .fname に background-clip:text を掛け、span は display:inline のまま上下アニメ */
   .fname { font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:30px; line-height:1.5; user-select:none; display:inline-block; letter-spacing:.05em; }
-  /* ── 一文字ウェーブ（display:inline + top で background-clip:text と共存） ── */
-  .fname span { display:inline; position:relative; top:0; }
+  /* ── N10と同じ仕組み: span=inline-block、グラデを各spanに直接適用 ── */
+  /* ※ background shorthandはbackground-clipをリセットするため、spanルールで必ず再宣言する */
+  .fname span { display:inline-block; }
   .fname.wave span { animation:charWave 2.8s ease-in-out infinite; }
   .fname.wave span:nth-child(1) { animation-delay:0s; }
   .fname.wave span:nth-child(2) { animation-delay:.18s; }
   .fname.wave span:nth-child(3) { animation-delay:.36s; }
   .fname.wave span:nth-child(4) { animation-delay:.54s; }
   .fname.wave span:nth-child(5) { animation-delay:.72s; }
-  @keyframes charWave { 0%,100%{top:0} 50%{top:-4px} }
+  @keyframes charWave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-  /* ── グラデカラーバリエーション ── */
+  /* ── グラデカラーバリエーション
+     ・グラデは span に静的適用 + background-clip:text 明示（background shorthandの後）
+     ・色アニメは親 .fname の filter:hue-rotate で実現（charWave と競合しない）
+  ── */
   /* F1: cyan→pink */
-  .f1 .fname { background:linear-gradient(135deg,#00bcd4,#ff4081); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 8px rgba(0,188,212,.45)); }
+  .f1 .fname { animation:hue1 10s linear infinite; }
+  @keyframes hue1 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 8px rgba(0,188,212,.45))} 100%{filter:hue-rotate(180deg) drop-shadow(0 0 8px rgba(0,188,212,.45))} }
+  .f1 .fname span { background:linear-gradient(135deg,#00bcd4,#ff4081); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F2: purple→cyan サイクル（ベース） */
-  .f2 .fname { background:linear-gradient(135deg,#7c4dff,#00e5ff,#b97dff,#7c4dff); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(124,77,255,.4)); animation:gradF2 6s linear infinite; }
-  @keyframes gradF2 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-  /* F3: pink→purple→cyan cycling */
-  .f3 .fname { background:linear-gradient(135deg,#ff4081,#7c4dff,#00bcd4,#ff4081); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(255,64,129,.35)); animation:gradF3 6s linear infinite; }
-  @keyframes gradF3 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+  .f2 .fname { animation:hue2 8s linear infinite; }
+  @keyframes hue2 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(124,77,255,.4))} 100%{filter:hue-rotate(180deg) drop-shadow(0 0 10px rgba(124,77,255,.4))} }
+  .f2 .fname span { background:linear-gradient(135deg,#7c4dff,#00e5ff); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* F3: pink→purple→cyan */
+  .f3 .fname { animation:hue3 6s linear infinite; }
+  @keyframes hue3 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(255,64,129,.35))} 100%{filter:hue-rotate(360deg) drop-shadow(0 0 12px rgba(255,64,129,.35))} }
+  .f3 .fname span { background:linear-gradient(135deg,#ff4081,#7c4dff,#00bcd4); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F4: ホワイト→cyan */
-  .f4 .fname { background:linear-gradient(135deg,#b2ebf2,#00bcd4,#006064); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(0,188,212,.55)); }
+  .f4 .fname { animation:hue4 12s linear infinite; }
+  @keyframes hue4 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 14px rgba(0,188,212,.55))} 100%{filter:hue-rotate(180deg) drop-shadow(0 0 14px rgba(0,188,212,.55))} }
+  .f4 .fname span { background:linear-gradient(135deg,#b2ebf2,#00bcd4,#006064); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F5: 全3色サイクル */
-  .f5 .fname { background:linear-gradient(90deg,#00bcd4,#7c4dff,#ff4081,#00bcd4); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(124,77,255,.4)); animation:gradF5 5s linear infinite; }
-  @keyframes gradF5 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+  .f5 .fname { animation:hue5 5s linear infinite; }
+  @keyframes hue5 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(124,77,255,.4))} 100%{filter:hue-rotate(360deg) drop-shadow(0 0 10px rgba(124,77,255,.4))} }
+  .f5 .fname span { background:linear-gradient(90deg,#00bcd4,#7c4dff,#ff4081); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F6: 深紫→ライトシアン */
-  .f6 .fname { background:linear-gradient(160deg,#4a148c,#7c4dff,#00bcd4,#e0f7fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(124,77,255,.5)); }
+  .f6 .fname { animation:hue6 9s linear infinite; }
+  @keyframes hue6 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(124,77,255,.5))} 100%{filter:hue-rotate(180deg) drop-shadow(0 0 12px rgba(124,77,255,.5))} }
+  .f6 .fname span { background:linear-gradient(160deg,#4a148c,#7c4dff,#00bcd4,#e0f7fa); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F7: pink glow強め */
-  .f7 .fname { background:linear-gradient(135deg,#ff4081,#ce93d8,#7c4dff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 16px rgba(255,64,129,.5)) drop-shadow(0 0 4px rgba(124,77,255,.3)); }
+  .f7 .fname { animation:hue7 7s linear infinite; }
+  @keyframes hue7 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 16px rgba(255,64,129,.5)) drop-shadow(0 0 4px rgba(124,77,255,.3))} 100%{filter:hue-rotate(180deg) drop-shadow(0 0 16px rgba(255,64,129,.5)) drop-shadow(0 0 4px rgba(124,77,255,.3))} }
+  .f7 .fname span { background:linear-gradient(135deg,#ff4081,#ce93d8,#7c4dff); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F8: 夕暮れ cyan→pink→gold */
-  .f8 .fname { background:linear-gradient(135deg,#00bcd4,#ff4081,#c9993a,#00bcd4); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(201,153,58,.45)); animation:gradF8 8s linear infinite; }
-  @keyframes gradF8 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+  .f8 .fname { animation:hue8 8s linear infinite; }
+  @keyframes hue8 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(201,153,58,.45))} 100%{filter:hue-rotate(180deg) drop-shadow(0 0 10px rgba(201,153,58,.45))} }
+  .f8 .fname span { background:linear-gradient(135deg,#00bcd4,#ff4081,#c9993a); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   /* F9: パールホワイト→紫 */
-  .f9 .fname { background:linear-gradient(135deg,#ede7f6,#ce93d8,#7c4dff,#b2ebf2,#ede7f6); background-size:400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(124,77,255,.45)); animation:gradF9 10s linear infinite; }
-  @keyframes gradF9 { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
-  /* F10: 宝石グラデ (深め全色) */
-  .f10 .fname { background:linear-gradient(90deg,#006064,#00bcd4,#7c4dff,#ff4081,#b8860b,#006064); background-size:500%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 18px rgba(0,188,212,.5)) drop-shadow(0 0 6px rgba(255,64,129,.3)); animation:gradF10 7s linear infinite; }
-  @keyframes gradF10 { 0%{background-position:0% 50%} 100%{background-position:500% 50%} }
+  .f9 .fname { animation:hue9 10s linear infinite; }
+  @keyframes hue9 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 14px rgba(124,77,255,.45))} 100%{filter:hue-rotate(360deg) drop-shadow(0 0 14px rgba(124,77,255,.45))} }
+  .f9 .fname span { background:linear-gradient(135deg,#ede7f6,#ce93d8,#7c4dff,#b2ebf2); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  /* F10: 宝石グラデ */
+  .f10 .fname { animation:hue10 7s linear infinite; }
+  @keyframes hue10 { 0%{filter:hue-rotate(0deg) drop-shadow(0 0 18px rgba(0,188,212,.5)) drop-shadow(0 0 6px rgba(255,64,129,.3))} 100%{filter:hue-rotate(360deg) drop-shadow(0 0 18px rgba(0,188,212,.5)) drop-shadow(0 0 6px rgba(255,64,129,.3))} }
+  .f10 .fname span { background:linear-gradient(90deg,#006064,#00bcd4,#7c4dff,#ff4081,#b8860b); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 
   /* ── 暗背景カード ── */
   .fcard.dark { background:#0d0f18; border-color:rgba(0,188,212,.08); }
@@ -837,47 +854,17 @@
      横ウェーブ × グラデアニメ — 10バリエーション
 ════════════════════════════════════════════ -->
 <style>
-  /* ── F11-F20 グラデ × サイクルアニメ ── */
-
-  /* F11: シアン → ディープシアン (輝度バリエーション) */
-  .f11 .fname { background:linear-gradient(135deg,#e0f7fa,#00bcd4,#006064,#00bcd4); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(0,188,212,.5)); animation:gradF11 7s linear infinite; }
-  @keyframes gradF11 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F12: インディゴ → スカイブルー (爽やか) */
-  .f12 .fname { background:linear-gradient(135deg,#283593,#5c6bc0,#80deea,#283593); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(92,107,192,.45)); animation:gradF12 8s linear infinite; }
-  @keyframes gradF12 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F13: ディープパープル → バイオレット → ピンク (ロマンティック, dark) */
-  .f13 .fname { background:linear-gradient(135deg,#4a148c,#7c4dff,#e040fb,#ff80ab); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(224,64,251,.45)); animation:gradF13 6s linear infinite; }
-  @keyframes gradF13 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F14: ソフトミント → シアン → パープル (淡め F2) */
-  .f14 .fname { background:linear-gradient(135deg,#b2dfdb,#4dd0e1,#9575cd,#b2dfdb); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(149,117,205,.4)); animation:gradF14 9s linear infinite; }
-  @keyframes gradF14 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F15: ダークネイビー → エレクトリックブルー → ホワイトグロー (dark) */
-  .f15 .fname { background:linear-gradient(135deg,#0d47a1,#1976d2,#40c4ff,#e3f2fd,#40c4ff); background-size:400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 16px rgba(64,196,255,.5)); animation:gradF15 7s linear infinite; }
-  @keyframes gradF15 { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
-
-  /* F16: モーヴ → ライラック → アイスブルー (やわらか) */
-  .f16 .fname { background:linear-gradient(135deg,#ce93d8,#b39ddb,#80cbc4,#ce93d8); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(179,157,219,.4)); animation:gradF16 8s linear infinite; }
-  @keyframes gradF16 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F17: コバルト → ロイヤルブルー → シアン (クラシック blue) */
-  .f17 .fname { background:linear-gradient(135deg,#0288d1,#0097a7,#00e5ff,#0288d1); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(0,229,255,.5)); animation:gradF17 6s linear infinite; }
-  @keyframes gradF17 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F18: マゼンタ → パープル → インディゴ (dark bg) */
-  .f18 .fname { background:linear-gradient(135deg,#e91e63,#9c27b0,#3f51b5,#e91e63); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(233,30,99,.45)) drop-shadow(0 0 4px rgba(156,39,176,.3)); animation:gradF18 5s linear infinite; }
-  @keyframes gradF18 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F19: ティール → グリーンシアン → スカイ (清涼感) */
-  .f19 .fname { background:linear-gradient(135deg,#00897b,#26c6da,#81d4fa,#00897b); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(38,198,218,.45)); animation:gradF19 8s linear infinite; }
-  @keyframes gradF19 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
-
-  /* F20: ウルトラバイオレット → ブルー → シアン (dark bg, 最高彩度) */
-  .f20 .fname { background:linear-gradient(90deg,#6200ea,#651fff,#2979ff,#00e5ff,#2979ff,#651fff); background-size:500%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 18px rgba(101,31,255,.55)) drop-shadow(0 0 6px rgba(0,229,255,.35)); animation:gradF20 6s linear infinite; }
-  @keyframes gradF20 { 0%{background-position:0% 50%} 100%{background-position:500% 50%} }
+  /* ── F11-F20 グラデ × hue-rotate アニメ（charWaveと競合しない） ── */
+  /* F11 */ .f11 .fname{animation:hue11 7s linear infinite} @keyframes hue11{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(0,188,212,.5))}100%{filter:hue-rotate(180deg) drop-shadow(0 0 10px rgba(0,188,212,.5))}} .f11 .fname span{background:linear-gradient(135deg,#e0f7fa,#00bcd4,#006064);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F12 */ .f12 .fname{animation:hue12 8s linear infinite} @keyframes hue12{0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(92,107,192,.45))}100%{filter:hue-rotate(180deg) drop-shadow(0 0 12px rgba(92,107,192,.45))}} .f12 .fname span{background:linear-gradient(135deg,#283593,#5c6bc0,#80deea);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F13 */ .f13 .fname{animation:hue13 6s linear infinite} @keyframes hue13{0%{filter:hue-rotate(0deg) drop-shadow(0 0 14px rgba(224,64,251,.45))}100%{filter:hue-rotate(360deg) drop-shadow(0 0 14px rgba(224,64,251,.45))}} .f13 .fname span{background:linear-gradient(135deg,#4a148c,#7c4dff,#e040fb,#ff80ab);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F14 */ .f14 .fname{animation:hue14 9s linear infinite} @keyframes hue14{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(149,117,205,.4))}100%{filter:hue-rotate(180deg) drop-shadow(0 0 10px rgba(149,117,205,.4))}} .f14 .fname span{background:linear-gradient(135deg,#b2dfdb,#4dd0e1,#9575cd);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F15 */ .f15 .fname{animation:hue15 7s linear infinite} @keyframes hue15{0%{filter:hue-rotate(0deg) drop-shadow(0 0 16px rgba(64,196,255,.5))}100%{filter:hue-rotate(360deg) drop-shadow(0 0 16px rgba(64,196,255,.5))}} .f15 .fname span{background:linear-gradient(135deg,#0d47a1,#1976d2,#40c4ff,#e3f2fd);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F16 */ .f16 .fname{animation:hue16 8s linear infinite} @keyframes hue16{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(179,157,219,.4))}100%{filter:hue-rotate(180deg) drop-shadow(0 0 10px rgba(179,157,219,.4))}} .f16 .fname span{background:linear-gradient(135deg,#ce93d8,#b39ddb,#80cbc4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F17 */ .f17 .fname{animation:hue17 6s linear infinite} @keyframes hue17{0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(0,229,255,.5))}100%{filter:hue-rotate(180deg) drop-shadow(0 0 12px rgba(0,229,255,.5))}} .f17 .fname span{background:linear-gradient(135deg,#0288d1,#0097a7,#00e5ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F18 */ .f18 .fname{animation:hue18 5s linear infinite} @keyframes hue18{0%{filter:hue-rotate(0deg) drop-shadow(0 0 14px rgba(233,30,99,.45)) drop-shadow(0 0 4px rgba(156,39,176,.3))}100%{filter:hue-rotate(360deg) drop-shadow(0 0 14px rgba(233,30,99,.45)) drop-shadow(0 0 4px rgba(156,39,176,.3))}} .f18 .fname span{background:linear-gradient(135deg,#e91e63,#9c27b0,#3f51b5);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F19 */ .f19 .fname{animation:hue19 8s linear infinite} @keyframes hue19{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(38,198,218,.45))}100%{filter:hue-rotate(180deg) drop-shadow(0 0 10px rgba(38,198,218,.45))}} .f19 .fname span{background:linear-gradient(135deg,#00897b,#26c6da,#81d4fa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* F20 */ .f20 .fname{animation:hue20 6s linear infinite} @keyframes hue20{0%{filter:hue-rotate(0deg) drop-shadow(0 0 18px rgba(101,31,255,.55)) drop-shadow(0 0 6px rgba(0,229,255,.35))}100%{filter:hue-rotate(360deg) drop-shadow(0 0 18px rgba(101,31,255,.55)) drop-shadow(0 0 6px rgba(0,229,255,.35))}} .f20 .fname span{background:linear-gradient(90deg,#6200ea,#651fff,#2979ff,#00e5ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 </style>
 
 <h2>F11–F20 · F2ベース拡張 — 横ウェーブ × グラデアニメ × 10バリエーション</h2>
