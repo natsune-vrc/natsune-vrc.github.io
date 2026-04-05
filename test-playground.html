@@ -956,27 +956,49 @@
      F21〜F30: F11ベース 青×水色グラデアニメ
 ════════════════════════════════════════════ -->
 <style>
-  /* ── F21-F30: 青×水色 グラデ × hue-rotate（charWaveと共存） ── */
-  /* F21: ライトアイス→ディープティール（ゆっくり） */
-  .f21 .fname{animation:hue21 10s linear infinite} @keyframes hue21{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(0,188,212,.5))}100%{filter:hue-rotate(40deg) drop-shadow(0 0 10px rgba(0,188,212,.5))}} .f21 .fname span{background:linear-gradient(135deg,#e0f7fa,#00bcd4,#006064);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  /* F22: ネイビー→エレクトリックシアン（速め） */
-  .f22 .fname{animation:hue22 5s linear infinite} @keyframes hue22{0%{filter:hue-rotate(0deg) drop-shadow(0 0 14px rgba(0,229,255,.6))}100%{filter:hue-rotate(60deg) drop-shadow(0 0 14px rgba(0,229,255,.6))}} .f22 .fname span{background:linear-gradient(135deg,#0d47a1,#1565c0,#00e5ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  /* ── F21-F30: 青×水色 background-position cycling + charWave 両立
+     spanに animation: charWave + gradFN を両方列挙。nth-childのdelayが両方に適用される（シマー効果）
+  ── */
+  /* F21: ライトアイス→ディープティール */
+  .f21 .fname{filter:drop-shadow(0 0 10px rgba(0,188,212,.5))}
+  .f21 .fname span{background:linear-gradient(135deg,#e0f7fa,#00bcd4,#006064,#00bcd4);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g21 8s linear infinite}
+  @keyframes g21{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  /* F22: ネイビー→エレクトリックシアン */
+  .f22 .fname{filter:drop-shadow(0 0 14px rgba(0,229,255,.6))}
+  .f22 .fname span{background:linear-gradient(135deg,#0d47a1,#1565c0,#00b0ff,#00e5ff,#0d47a1);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g22 5s linear infinite}
+  @keyframes g22{0%{background-position:0% 50%}100%{background-position:300% 50%}}
   /* F23: スカイブルー→アクアマリン */
-  .f23 .fname{animation:hue23 8s linear infinite} @keyframes hue23{0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(41,182,246,.5))}100%{filter:hue-rotate(50deg) drop-shadow(0 0 12px rgba(41,182,246,.5))}} .f23 .fname span{background:linear-gradient(135deg,#81d4fa,#29b6f6,#00acc1,#26c6da);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  /* F24: ミッドナイトブルー→ネオンシアン（強発光） */
-  .f24 .fname{animation:hue24 6s linear infinite} @keyframes hue24{0%{filter:hue-rotate(0deg) drop-shadow(0 0 18px rgba(0,229,255,.7)) drop-shadow(0 0 6px rgba(30,136,229,.4))}100%{filter:hue-rotate(50deg) drop-shadow(0 0 18px rgba(0,229,255,.7)) drop-shadow(0 0 6px rgba(30,136,229,.4))}} .f24 .fname span{background:linear-gradient(135deg,#01003d,#0d47a1,#00b0ff,#00e5ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .f23 .fname{filter:drop-shadow(0 0 12px rgba(41,182,246,.5))}
+  .f23 .fname span{background:linear-gradient(135deg,#b3e5fc,#29b6f6,#00acc1,#26c6da,#b3e5fc);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g23 7s linear infinite}
+  @keyframes g23{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  /* F24: ミッドナイトブルー→ネオンシアン */
+  .f24 .fname{filter:drop-shadow(0 0 18px rgba(0,229,255,.7)) drop-shadow(0 0 6px rgba(30,136,229,.4))}
+  .f24 .fname span{background:linear-gradient(135deg,#0d47a1,#1565c0,#00b0ff,#00e5ff,#0d47a1);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g24 6s linear infinite}
+  @keyframes g24{0%{background-position:0% 50%}100%{background-position:400% 50%}}
   /* F25: インディゴ→ライトブルー */
-  .f25 .fname{animation:hue25 9s linear infinite} @keyframes hue25{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(92,107,192,.45))}100%{filter:hue-rotate(45deg) drop-shadow(0 0 10px rgba(92,107,192,.45))}} .f25 .fname span{background:linear-gradient(135deg,#283593,#5c6bc0,#64b5f6,#b3e5fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .f25 .fname{filter:drop-shadow(0 0 10px rgba(92,107,192,.45))}
+  .f25 .fname span{background:linear-gradient(135deg,#283593,#5c6bc0,#64b5f6,#b3e5fc,#283593);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g25 9s linear infinite}
+  @keyframes g25{0%{background-position:0% 50%}100%{background-position:300% 50%}}
   /* F26: ロイヤルブルー→ターコイズ */
-  .f26 .fname{animation:hue26 7s linear infinite} @keyframes hue26{0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(0,150,136,.45))}100%{filter:hue-rotate(40deg) drop-shadow(0 0 12px rgba(0,150,136,.45))}} .f26 .fname span{background:linear-gradient(135deg,#1565c0,#1976d2,#00897b,#4db6ac);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .f26 .fname{filter:drop-shadow(0 0 12px rgba(0,150,136,.45))}
+  .f26 .fname span{background:linear-gradient(135deg,#1565c0,#00897b,#4db6ac,#1565c0);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g26 7s linear infinite}
+  @keyframes g26{0%{background-position:0% 50%}100%{background-position:300% 50%}}
   /* F27: ディープオーシャン→フォームホワイト */
-  .f27 .fname{animation:hue27 11s linear infinite} @keyframes hue27{0%{filter:hue-rotate(0deg) drop-shadow(0 0 16px rgba(0,96,100,.5))}100%{filter:hue-rotate(50deg) drop-shadow(0 0 16px rgba(0,96,100,.5))}} .f27 .fname span{background:linear-gradient(135deg,#006064,#00838f,#26c6da,#e0f7fa);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  /* F28: スチールブルー→アイスシルバー */
-  .f28 .fname{animation:hue28 8s linear infinite} @keyframes hue28{0%{filter:hue-rotate(0deg) drop-shadow(0 0 10px rgba(96,125,139,.4))}100%{filter:hue-rotate(40deg) drop-shadow(0 0 10px rgba(96,125,139,.4))}} .f28 .fname span{background:linear-gradient(135deg,#37474f,#546e7a,#80cbc4,#b2ebf2);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  /* F29: コバルト→アクア→ミント */
-  .f29 .fname{animation:hue29 7s linear infinite} @keyframes hue29{0%{filter:hue-rotate(0deg) drop-shadow(0 0 12px rgba(38,198,218,.5))}100%{filter:hue-rotate(60deg) drop-shadow(0 0 12px rgba(38,198,218,.5))}} .f29 .fname span{background:linear-gradient(135deg,#0277bd,#0288d1,#26c6da,#80cbc4,#a5d6a7);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  /* F30: ウルトラマリン→ブリリアントシアン（最高彩度） */
-  .f30 .fname{animation:hue30 5s linear infinite} @keyframes hue30{0%{filter:hue-rotate(0deg) drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}100%{filter:hue-rotate(60deg) drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}} .f30 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#00b0ff,#0091ea);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .f27 .fname{filter:drop-shadow(0 0 16px rgba(0,96,100,.5))}
+  .f27 .fname span{background:linear-gradient(135deg,#006064,#00838f,#26c6da,#e0f7fa,#006064);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g27 10s linear infinite}
+  @keyframes g27{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  /* F28: スチールブルー→アイス */
+  .f28 .fname{filter:drop-shadow(0 0 10px rgba(96,125,139,.4))}
+  .f28 .fname span{background:linear-gradient(135deg,#37474f,#546e7a,#80cbc4,#b2ebf2,#37474f);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g28 8s linear infinite}
+  @keyframes g28{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  /* F29: コバルト→アクア */
+  .f29 .fname{filter:drop-shadow(0 0 12px rgba(38,198,218,.5))}
+  .f29 .fname span{background:linear-gradient(135deg,#0277bd,#0097a7,#26c6da,#80deea,#0277bd);background-size:300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g29 7s linear infinite}
+  @keyframes g29{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  /* F30: ウルトラマリン→ブリリアントシアン */
+  .f30 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f30 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g30 5s linear infinite}
+  @keyframes g30{0%{background-position:0% 50%}100%{background-position:400% 50%}}
 </style>
 
 <h2>F21–F30 · F11ベース拡張 — 青×水色グラデアニメ × 10バリエーション</h2>
@@ -989,7 +1011,7 @@
     <div class="flabel">F21 · Ice Cyan · 穏やかグラデ</div>
   </div>
 
-  <div class="fcard f22 dark">
+  <div class="fcard f22">
     <div class="fname-wrap">
       <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
@@ -1003,11 +1025,11 @@
     <div class="flabel">F23 · Sky Aqua · やわらか</div>
   </div>
 
-  <div class="fcard f24 dark">
+  <div class="fcard f24">
     <div class="fname-wrap">
       <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
-    <div class="flabel">F24 · Neon Cyan · 強発光ダーク</div>
+    <div class="flabel">F24 · Neon Cyan · 強発光</div>
   </div>
 
   <div class="fcard f25">
@@ -1024,7 +1046,7 @@
     <div class="flabel">F26 · Royal Teal · 深み</div>
   </div>
 
-  <div class="fcard f27 dark">
+  <div class="fcard f27">
     <div class="fname-wrap">
       <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
@@ -1042,10 +1064,10 @@
     <div class="fname-wrap">
       <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
-    <div class="flabel">F29 · Cobalt Mint · 爽快</div>
+    <div class="flabel">F29 · Cobalt Aqua · 爽快</div>
   </div>
 
-  <div class="fcard f30 dark">
+  <div class="fcard f30">
     <div class="fname-wrap">
       <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
