@@ -700,30 +700,19 @@
   }
   .fcard:hover { border-color:rgba(0,188,212,.25); box-shadow:0 6px 28px rgba(0,40,80,.09); }
   .fcard .flabel { position:absolute; bottom:10px; left:0; right:0; text-align:center; font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:.12em; color:var(--soft); text-transform:uppercase; }
-  /* .fname-wrap がウェーブするコンテナ / .fname がグラデテキスト */
+  /* .fname-wrap はただのセンタリングコンテナ */
   .fname-wrap { display:inline-flex; flex-direction:column; align-items:center; }
-  .fname { font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:30px; line-height:1.2; user-select:none; display:inline-block; letter-spacing:.05em; }
-
-  /* ── 横ウェーブ（楕円軌道、控えめ） ── */
-  /* 左 → 上 → 右 → 下 → 左 と描く小さな楕円。X:±3px Y:±1.5px */
-  @keyframes waveX {
-    0%   { transform: translateX(-3px) translateY(0); }
-    25%  { transform: translateX(0)    translateY(-1.5px); }
-    50%  { transform: translateX(3px)  translateY(0); }
-    75%  { transform: translateX(0)    translateY(1.5px); }
-    100% { transform: translateX(-3px) translateY(0); }
-  }
-  /* 各カードで微妙にタイミングをズラして自然に見せる */
-  .f1  .fname-wrap { animation: waveX 5.0s ease-in-out infinite; }
-  .f2  .fname-wrap { animation: waveX 5.5s ease-in-out infinite; }
-  .f3  .fname-wrap { animation: waveX 4.8s ease-in-out infinite; }
-  .f4  .fname-wrap { animation: waveX 6.0s ease-in-out infinite; }
-  .f5  .fname-wrap { animation: waveX 5.2s ease-in-out infinite; }
-  .f6  .fname-wrap { animation: waveX 4.6s ease-in-out infinite; }
-  .f7  .fname-wrap { animation: waveX 5.8s ease-in-out infinite; }
-  .f8  .fname-wrap { animation: waveX 5.3s ease-in-out infinite; }
-  .f9  .fname-wrap { animation: waveX 6.2s ease-in-out infinite; }
-  .f10 .fname-wrap { animation: waveX 4.9s ease-in-out infinite; }
+  /* .fname に background-clip:text を掛け、span は display:inline のまま上下アニメ */
+  .fname { font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:30px; line-height:1.5; user-select:none; display:inline-block; letter-spacing:.05em; }
+  /* ── 一文字ウェーブ（display:inline + top で background-clip:text と共存） ── */
+  .fname span { display:inline; position:relative; top:0; }
+  .fname.wave span { animation:charWave 2.8s ease-in-out infinite; }
+  .fname.wave span:nth-child(1) { animation-delay:0s; }
+  .fname.wave span:nth-child(2) { animation-delay:.18s; }
+  .fname.wave span:nth-child(3) { animation-delay:.36s; }
+  .fname.wave span:nth-child(4) { animation-delay:.54s; }
+  .fname.wave span:nth-child(5) { animation-delay:.72s; }
+  @keyframes charWave { 0%,100%{top:0} 50%{top:-4px} }
 
   /* ── グラデカラーバリエーション ── */
   /* F1: cyan→pink */
@@ -764,7 +753,7 @@
   <!-- F1: cyan→pink / gold shimmer / gentle float -->
   <div class="fcard f1">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F1 · Cyan→Pink · シマーライン</div>
   </div>
@@ -772,7 +761,7 @@
   <!-- F2: purple→cyan / gold double / drift float -->
   <div class="fcard f2">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F2 · Purple→Cyan · ダブルライン</div>
   </div>
@@ -780,7 +769,7 @@
   <!-- F3: pink→purple→cyan cycling / gold pulse / rotate float -->
   <div class="fcard f3">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F3 · 3色サイクル · パルスライン</div>
   </div>
@@ -788,7 +777,7 @@
   <!-- F4: 清潔感 white→cyan / gold solid / slow breathe -->
   <div class="fcard f4">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F4 · Ice Cyan · ソリッドライン</div>
   </div>
@@ -796,7 +785,7 @@
   <!-- F5: 全3色 fast cycle / gold shimmer / float -->
   <div class="fcard f5">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F5 · Rainbow · ハイスピードサイクル</div>
   </div>
@@ -804,7 +793,7 @@
   <!-- F6: 深紫→ライトシアン / dark bg / gold thick -->
   <div class="fcard f6 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F6 · Deep Violet · ダークベース</div>
   </div>
@@ -812,7 +801,7 @@
   <!-- F7: pink→purple / strong glow / dark bg / gold double -->
   <div class="fcard f7 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F7 · Pink Glow · 強発光ダーク</div>
   </div>
@@ -820,7 +809,7 @@
   <!-- F8: 夕暮れ cyan→pink→gold / gold shimmer -->
   <div class="fcard f8">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F8 · Sunset · ゴールドアクセント</div>
   </div>
@@ -828,7 +817,7 @@
   <!-- F9: パール→紫 / pale bg / gold pulse -->
   <div class="fcard f9">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F9 · Pearl · ペールパープル</div>
   </div>
@@ -836,7 +825,7 @@
   <!-- F10: 宝石フル / dark bg / gold thick -->
   <div class="fcard f10 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F10 · Jewel · フル宝石グラデ</div>
   </div>
@@ -851,52 +840,42 @@
   /* ── F11-F20 グラデ × サイクルアニメ ── */
 
   /* F11: シアン → ディープシアン (輝度バリエーション) */
-  .f11 .fname-wrap { animation: waveX 5.4s ease-in-out infinite; }
   .f11 .fname { background:linear-gradient(135deg,#e0f7fa,#00bcd4,#006064,#00bcd4); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(0,188,212,.5)); animation:gradF11 7s linear infinite; }
   @keyframes gradF11 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F12: インディゴ → スカイブルー (爽やか) */
-  .f12 .fname-wrap { animation: waveX 5.1s ease-in-out infinite; }
   .f12 .fname { background:linear-gradient(135deg,#283593,#5c6bc0,#80deea,#283593); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(92,107,192,.45)); animation:gradF12 8s linear infinite; }
   @keyframes gradF12 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F13: ディープパープル → バイオレット → ピンク (ロマンティック, dark) */
-  .f13 .fname-wrap { animation: waveX 4.7s ease-in-out infinite; }
   .f13 .fname { background:linear-gradient(135deg,#4a148c,#7c4dff,#e040fb,#ff80ab); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(224,64,251,.45)); animation:gradF13 6s linear infinite; }
   @keyframes gradF13 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F14: ソフトミント → シアン → パープル (淡め F2) */
-  .f14 .fname-wrap { animation: waveX 6.1s ease-in-out infinite; }
   .f14 .fname { background:linear-gradient(135deg,#b2dfdb,#4dd0e1,#9575cd,#b2dfdb); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(149,117,205,.4)); animation:gradF14 9s linear infinite; }
   @keyframes gradF14 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F15: ダークネイビー → エレクトリックブルー → ホワイトグロー (dark) */
-  .f15 .fname-wrap { animation: waveX 5.7s ease-in-out infinite; }
   .f15 .fname { background:linear-gradient(135deg,#0d47a1,#1976d2,#40c4ff,#e3f2fd,#40c4ff); background-size:400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 16px rgba(64,196,255,.5)); animation:gradF15 7s linear infinite; }
   @keyframes gradF15 { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
 
   /* F16: モーヴ → ライラック → アイスブルー (やわらか) */
-  .f16 .fname-wrap { animation: waveX 6.3s ease-in-out infinite; }
   .f16 .fname { background:linear-gradient(135deg,#ce93d8,#b39ddb,#80cbc4,#ce93d8); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(179,157,219,.4)); animation:gradF16 8s linear infinite; }
   @keyframes gradF16 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F17: コバルト → ロイヤルブルー → シアン (クラシック blue) */
-  .f17 .fname-wrap { animation: waveX 5.0s ease-in-out infinite; }
   .f17 .fname { background:linear-gradient(135deg,#0288d1,#0097a7,#00e5ff,#0288d1); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(0,229,255,.5)); animation:gradF17 6s linear infinite; }
   @keyframes gradF17 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F18: マゼンタ → パープル → インディゴ (dark bg) */
-  .f18 .fname-wrap { animation: waveX 4.5s ease-in-out infinite; }
   .f18 .fname { background:linear-gradient(135deg,#e91e63,#9c27b0,#3f51b5,#e91e63); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(233,30,99,.45)) drop-shadow(0 0 4px rgba(156,39,176,.3)); animation:gradF18 5s linear infinite; }
   @keyframes gradF18 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F19: ティール → グリーンシアン → スカイ (清涼感) */
-  .f19 .fname-wrap { animation: waveX 5.6s ease-in-out infinite; }
   .f19 .fname { background:linear-gradient(135deg,#00897b,#26c6da,#81d4fa,#00897b); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(38,198,218,.45)); animation:gradF19 8s linear infinite; }
   @keyframes gradF19 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
   /* F20: ウルトラバイオレット → ブルー → シアン (dark bg, 最高彩度) */
-  .f20 .fname-wrap { animation: waveX 4.8s ease-in-out infinite; }
   .f20 .fname { background:linear-gradient(90deg,#6200ea,#651fff,#2979ff,#00e5ff,#2979ff,#651fff); background-size:500%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 18px rgba(101,31,255,.55)) drop-shadow(0 0 6px rgba(0,229,255,.35)); animation:gradF20 6s linear infinite; }
   @keyframes gradF20 { 0%{background-position:0% 50%} 100%{background-position:500% 50%} }
 </style>
@@ -907,7 +886,7 @@
   <!-- F11: シアン輝度バリエーション -->
   <div class="fcard f11">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F11 · Ice Cyan · 輝度グラデ</div>
   </div>
@@ -915,7 +894,7 @@
   <!-- F12: インディゴ → スカイブルー -->
   <div class="fcard f12">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F12 · Indigo Sky · 爽やか</div>
   </div>
@@ -923,7 +902,7 @@
   <!-- F13: ディープパープル → ピンク / dark -->
   <div class="fcard f13 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F13 · Violet Pink · ロマンティック</div>
   </div>
@@ -931,7 +910,7 @@
   <!-- F14: ソフトミント → パープル -->
   <div class="fcard f14">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F14 · Mint Mauve · 淡めF2</div>
   </div>
@@ -939,7 +918,7 @@
   <!-- F15: ネイビー → エレクトリックブルー / dark -->
   <div class="fcard f15 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F15 · Electric Blue · 白グロー</div>
   </div>
@@ -947,7 +926,7 @@
   <!-- F16: モーヴ → ライラック -->
   <div class="fcard f16">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F16 · Lilac Mist · やわらか</div>
   </div>
@@ -955,7 +934,7 @@
   <!-- F17: コバルト → シアン -->
   <div class="fcard f17">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F17 · Cobalt Cyan · クラシック</div>
   </div>
@@ -963,7 +942,7 @@
   <!-- F18: マゼンタ → インディゴ / dark -->
   <div class="fcard f18 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F18 · Magenta Indigo · ダーク</div>
   </div>
@@ -971,7 +950,7 @@
   <!-- F19: ティール → スカイ -->
   <div class="fcard f19">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F19 · Teal Sky · 清涼感</div>
   </div>
@@ -979,7 +958,7 @@
   <!-- F20: ウルトラバイオレット → シアン / dark -->
   <div class="fcard f20 dark">
     <div class="fname-wrap">
-      <div class="fname">鮫月ナツネ</div>
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
     </div>
     <div class="flabel">F20 · Ultra Violet · 最高彩度</div>
   </div>
