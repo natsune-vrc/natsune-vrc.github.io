@@ -1076,6 +1076,145 @@
 
 </div>
 
+<!-- ══════════════════════════════════════════
+     F31〜F40: F30ベース 速度・振幅・グラデ方向バリエーション
+════════════════════════════════════════════ -->
+<style>
+  /* ── F31-F40: F30ベース（ウルトラマリン→ブリリアントシアン）速度・振幅調整 ── */
+
+  /* 振幅バリエーション用キーフレーム */
+  @keyframes cw2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
+  @keyframes cw4 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  @keyframes cw8 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  @keyframes cw10 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes cwBounce { 0%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} 50%{transform:translateY(-2px)} 70%{transform:translateY(-7px)} }
+
+  /* F31: スピード全振り（波1.6s / グラデ3s） */
+  .f31 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f31 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 1.6s ease-in-out infinite,g31 3s linear infinite}
+  @keyframes g31{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F32: 瞑想（波4s / グラデ12s） */
+  .f32 .fname{filter:drop-shadow(0 0 16px rgba(0,229,255,.45)) drop-shadow(0 0 6px rgba(0,145,234,.3))}
+  .f32 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 4s ease-in-out infinite,g32 12s linear infinite}
+  @keyframes g32{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F33: ダイナミック（振幅-8px / グラデ5s） */
+  .f33 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f33 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw8 2.8s ease-in-out infinite,g33 5s linear infinite}
+  @keyframes g33{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F34: ほぼ静止（振幅-2px / グラデ8s） */
+  .f34 .fname{filter:drop-shadow(0 0 14px rgba(0,229,255,.5)) drop-shadow(0 0 6px rgba(0,145,234,.3))}
+  .f34 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g34 8s linear infinite}
+  @keyframes g34{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F35: 速グラデ＋ゆっくり波（波3.5s / グラデ3s） */
+  .f35 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f35 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw4 3.5s ease-in-out infinite,g35 3s linear infinite}
+  @keyframes g35{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F36: ゆっくりグラデ＋速い波（波1.8s / グラデ10s） */
+  .f36 .fname{filter:drop-shadow(0 0 18px rgba(0,229,255,.6)) drop-shadow(0 0 7px rgba(0,145,234,.35))}
+  .f36 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 1.8s ease-in-out infinite,g36 10s linear infinite}
+  @keyframes g36{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F37: 逆方向グラデ（position 100%→0%） */
+  .f37 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f37 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g37 6s linear infinite}
+  @keyframes g37{0%{background-position:400% 50%}100%{background-position:0% 50%}}
+
+  /* F38: ワイドグラデ（size 600% / 速度8s） */
+  .f38 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f38 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#00b0ff,#0091ea,#2962ff);background-size:600%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g38 8s linear infinite}
+  @keyframes g38{0%{background-position:0% 50%}100%{background-position:600% 50%}}
+
+  /* F39: 斜めグラデ（45deg / 速度5s） */
+  .f39 .fname{filter:drop-shadow(0 0 20px rgba(0,229,255,.65)) drop-shadow(0 0 8px rgba(0,145,234,.4))}
+  .f39 .fname span{background:linear-gradient(45deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:charWave 2.8s ease-in-out infinite,g39 5s linear infinite}
+  @keyframes g39{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F40: バウンス波（不規則な上下 / グラデ4s） */
+  .f40 .fname{filter:drop-shadow(0 0 22px rgba(0,229,255,.7)) drop-shadow(0 0 10px rgba(0,145,234,.45))}
+  .f40 .fname span{background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cwBounce 2.4s ease-in-out infinite,g40 4s linear infinite}
+  @keyframes g40{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+</style>
+
+<h2>F31–F40 · F30ベース拡張 — 速度・振幅・方向バリエーション</h2>
+<div class="grid">
+
+  <div class="fcard f31 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F31 · Speed · 波1.6s 色3s</div>
+  </div>
+
+  <div class="fcard f32 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F32 · Zen · 波4s 色12s</div>
+  </div>
+
+  <div class="fcard f33 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F33 · Dynamic · 振幅8px</div>
+  </div>
+
+  <div class="fcard f34 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F34 · Still · 振幅2px</div>
+  </div>
+
+  <div class="fcard f35 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F35 · Fast Grad · 色3s 波3.5s</div>
+  </div>
+
+  <div class="fcard f36 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F36 · Fast Wave · 波1.8s 色10s</div>
+  </div>
+
+  <div class="fcard f37 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F37 · Reverse · 逆方向グラデ</div>
+  </div>
+
+  <div class="fcard f38 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F38 · Wide · size600% 8s</div>
+  </div>
+
+  <div class="fcard f39 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F39 · Diagonal · 45deg斜め</div>
+  </div>
+
+  <div class="fcard f40 dark">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F40 · Bounce · 不規則バウンス</div>
+  </div>
+
+</div>
+
 </script>
 </body>
 </html>
