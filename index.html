@@ -105,7 +105,7 @@
     .hero-role { font-family:var(--font-hand); font-size:14px; color:var(--purple); margin-bottom:10px; }
     .hero-name { font-size:clamp(48px,9vw,88px); font-weight:900; line-height:1.2; margin-bottom:28px; overflow:visible; font-family:'Zen Maru Gothic',sans-serif; letter-spacing:.05em; user-select:none; filter:drop-shadow(0 0 6px rgba(0,180,210,.18)) drop-shadow(0 0 2px rgba(0,120,180,.12)); }
     .hero-name span { display:inline-block; position:relative; cursor:grab; }
-    .hero-name.wave-active span { animation:heroWave 4s ease-in-out infinite, heroGrad 16s linear infinite; background:linear-gradient(90deg,#1e88e5,#039be5,#00acc1,#039be5,#1e88e5,#039be5); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero-name.wave-active span { animation:heroWave 4s ease-in-out infinite, heroGrad 16s linear infinite; background:linear-gradient(90deg,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
     .hero-name.wave-active span:nth-child(1){animation-delay:0s}
     .hero-name.wave-active span:nth-child(2){animation-delay:.18s}
     .hero-name.wave-active span:nth-child(3){animation-delay:.20s}
@@ -125,7 +125,7 @@
     .btn svg { width:16px; height:16px; }
 
     /* ── Avatar blob ── */
-    .avatar-wrap { position:relative; }
+    .avatar-wrap { position:relative; perspective:800px; }
     .avatar-blob { width:100%; aspect-ratio:0.85/1; overflow:hidden; animation:blobMorph 12s ease-in-out infinite; position:relative; }
     .avatar-blob img { width:100%; height:100%; object-fit:cover; object-position:center top; }
     .avatar-blob::after { content:''; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 60px rgba(0,229,255,0.12), inset 0 0 120px rgba(255,64,129,0.06); }
@@ -1215,6 +1215,24 @@
 
     // ── Parallax avatar ──
     gsap.to('.avatar-blob', { y: -40, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+    // ── Avatar 3D tilt interaction ──
+    const avatarWrap = document.querySelector('.avatar-wrap');
+    if (avatarWrap) {
+      const avatarBlob = avatarWrap.querySelector('.avatar-blob');
+      const avatarGlow = avatarWrap.querySelector('.avatar-glow');
+      avatarWrap.addEventListener('mousemove', e => {
+        const r = avatarWrap.getBoundingClientRect();
+        const cx = (e.clientX - r.left) / r.width - 0.5;  // -0.5 ~ 0.5
+        const cy = (e.clientY - r.top) / r.height - 0.5;
+        gsap.to(avatarBlob, { rotateY: cx * 12, rotateX: -cy * 12, scale: 1.03, duration: 0.4, ease: 'power2.out' });
+        if (avatarGlow) gsap.to(avatarGlow, { x: cx * 15, y: cy * 15, duration: 0.4 });
+      });
+      avatarWrap.addEventListener('mouseleave', () => {
+        gsap.to(avatarBlob, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.8, ease: 'elastic.out(1,0.4)' });
+        if (avatarGlow) gsap.to(avatarGlow, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1,0.4)' });
+      });
+    }
 
     // ── World tabs ──
     document.querySelectorAll('.world-tab').forEach(tab => {
