@@ -103,15 +103,15 @@
     .hero-status i { width:6px; height:6px; border-radius:50%; background:var(--cyan); animation:blink 1.5s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
     .hero-role { font-family:var(--font-hand); font-size:14px; color:var(--purple); margin-bottom:10px; }
-    .hero-name { font-size:clamp(48px,9vw,88px); font-weight:900; line-height:1; margin-bottom:28px; font-family:'Zen Maru Gothic',sans-serif; letter-spacing:.05em; user-select:none; filter:drop-shadow(0 0 16px rgba(0,229,255,.45)) drop-shadow(0 0 6px rgba(0,145,234,.3)); }
+    .hero-name { font-size:clamp(48px,9vw,88px); font-weight:900; line-height:1; margin-bottom:28px; font-family:'Zen Maru Gothic',sans-serif; letter-spacing:.05em; user-select:none; filter:drop-shadow(0 0 6px rgba(0,180,210,.18)) drop-shadow(0 0 2px rgba(0,120,180,.12)); }
     .hero-name span { display:inline-block; position:relative; cursor:grab; }
-    .hero-name.wave-active span { animation:heroWave 4s ease-in-out infinite, heroGrad 12s linear infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; background:linear-gradient(90deg,#2962ff,#0091ea,#00b0ff,#00e5ff,#0091ea,#2962ff); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero-name.wave-active span { animation:heroWave 4s ease-in-out infinite, heroGrad 16s linear infinite; background:linear-gradient(90deg,#4a7ccc,#3a8dbf,#5a9ec4,#6ab4cc,#3a8dbf,#4a7ccc); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
     .hero-name.wave-active span:nth-child(1){animation-delay:0s}
     .hero-name.wave-active span:nth-child(2){animation-delay:.18s}
     .hero-name.wave-active span:nth-child(3){animation-delay:.20s}
     .hero-name.wave-active span:nth-child(4){animation-delay:.38s}
     .hero-name.wave-active span:nth-child(5){animation-delay:.56s}
-    @keyframes heroWave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    @keyframes heroWave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
     @keyframes heroGrad { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
     .hero-desc { font-size:15px; color:var(--text-soft); line-height:2; margin-bottom:36px; font-family:var(--font-hand); max-width:480px; }
     .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
