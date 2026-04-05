@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Playground | Glitch × Cursor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Shippori+Mincho+B1:wght@800&family=Zen+Old+Mincho:wght@900&family=Dela+Gothic+One&family=Noto+Serif+JP:wght@900&family=DotGothic16&family=Klee+One:wght@600&family=Noto+Sans+JP:wght@900&family=Zen+Maru+Gothic:wght@900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#f4f9ff; --text:#1a2a3a; --soft:#5a7088;
+      --cyan:#00bcd4; --pink:#ff4081; --purple:#7c4dff;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Zen Maru Gothic',sans-serif; background:var(--bg); color:var(--text); }
+    h1 { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:.2em; padding:20px 32px 0; color:var(--soft); text-transform:uppercase; }
+    h2 { font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:.15em; color:var(--cyan); margin:40px 32px 16px; text-transform:uppercase; border-bottom:1px solid rgba(0,188,212,.1); padding-bottom:8px; }
+
+    /* ── GRID ── */
+    .grid { display:flex; flex-wrap:wrap; gap:16px; padding:0 32px 40px; }
+    .card {
+      width:200px; height:140px; border-radius:16px; background:#fff;
+      border:1px solid rgba(0,188,212,.1); box-shadow:0 2px 12px rgba(0,40,80,.04);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:12px; cursor:none; overflow:hidden; position:relative;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .card:hover { border-color:rgba(0,188,212,.3); box-shadow:0 4px 24px rgba(0,40,80,.08); }
+    .card-label { font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:.1em; color:var(--soft); text-transform:uppercase; position:absolute; bottom:10px; left:0; right:0; text-align:center; }
+    .demo-text { font-family:'Orbitron',sans-serif; font-size:22px; font-weight:900; letter-spacing:.1em; user-select:none; }
+
+    /* ════════════════════════════════
+       GLITCH PATTERNS
+    ════════════════════════════════ */
+
+    /* G1: RGB Split (slice) */
+    .g1 .demo-text { color:var(--text); position:relative; }
+    .g1 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:-2px; color:var(--cyan); animation:g1a .4s infinite; clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%); }
+    .g1 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left: 2px; color:var(--pink); animation:g1b .4s infinite; clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%); }
+    @keyframes g1a { 0%,90%{transform:none} 91%{transform:translateX(-3px)} 94%{transform:translateX(2px)} 100%{transform:none} }
+    @keyframes g1b { 0%,85%{transform:none} 86%{transform:translateX(3px)} 89%{transform:translateX(-1px)} 100%{transform:none} }
+
+    /* G2: Scanline flicker */
+    .g2 .demo-text { position:relative; animation:g2txt .06s infinite; }
+    .g2 .demo-text::after { content:''; position:absolute; inset:0;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,188,212,.12) 2px,rgba(0,188,212,.12) 4px);
+      pointer-events:none; animation:g2scan .8s linear infinite; }
+    @keyframes g2txt { 0%,96%{opacity:1} 97%{opacity:.6} 99%{opacity:1} }
+    @keyframes g2scan { from{background-position:0 0} to{background-position:0 20px} }
+
+    /* G3: Shake / Jitter */
+    .g3 .demo-text { animation:g3shake .5s infinite; }
+    @keyframes g3shake {
+      0%,100%{transform:none}
+      10%{transform:translate(-2px,1px) skewX(-1deg)}
+      20%{transform:translate(2px,-1px)}
+      30%{transform:translate(-1px,2px) skewX(2deg)}
+      50%{transform:translate(1px,-2px)}
+      70%{transform:translate(-2px,0) skewX(-2deg)}
+      90%{transform:translate(0,1px)}
+    }
+
+    /* G4: Block scramble */
+    .g4 .demo-text { position:relative; overflow:hidden; }
+    .g4 .demo-text::before,.g4 .demo-text::after {
+      content:attr(data-t); position:absolute; top:0; left:0; width:100%; color:var(--text);
+    }
+    .g4 .demo-text::before { clip-path:polygon(0 0,100% 0,100% 40%,0 40%); animation:g4a .7s infinite steps(1); }
+    .g4 .demo-text::after  { clip-path:polygon(0 65%,100% 65%,100% 85%,0 85%); animation:g4b .7s infinite steps(1); color:var(--cyan); }
+    @keyframes g4a { 0%{transform:none} 20%{transform:translateX(-8px)} 40%{transform:translateX(4px)} 60%,100%{transform:none} }
+    @keyframes g4b { 0%,50%{transform:none} 55%{transform:translateX(6px)} 70%{transform:translateX(-3px)} 80%,100%{transform:none} }
+
+    /* G5: Chromatic abberation (filter) */
+    .g5 .demo-text { animation:g5ca .6s infinite; }
+    @keyframes g5ca {
+      0%,85%{filter:none}
+      86%{filter:drop-shadow(-3px 0 0 rgba(0,188,212,.9)) drop-shadow(3px 0 0 rgba(255,64,129,.9))}
+      88%{filter:none}
+      92%{filter:drop-shadow(2px 0 0 rgba(0,188,212,.7)) drop-shadow(-2px 0 0 rgba(255,64,129,.7))}
+      94%{filter:none}
+    }
+
+    /* G6: Strobe / Flash */
+    .g6 .demo-text { animation:g6strobe .4s infinite; }
+    @keyframes g6strobe {
+      0%,100%{opacity:1; color:var(--text)}
+      8%{opacity:.1}
+      16%{opacity:1; color:var(--cyan)}
+      24%{opacity:.2}
+      32%{opacity:1}
+      85%{opacity:1}
+      86%{opacity:0}
+      88%{opacity:1}
+    }
+
+    /* G7: Wave distortion */
+    .g7 .demo-text { animation:g7wave 2s ease-in-out infinite; display:inline-block; }
+    @keyframes g7wave {
+      0%,100%{transform:skewX(0deg) skewY(0deg)}
+      25%{transform:skewX(-4deg) skewY(1deg)}
+      50%{transform:skewX(4deg) skewY(-1deg)}
+      75%{transform:skewX(-2deg) skewY(.5deg)}
+    }
+    /* G7 overlay scanline noise */
+    .g7 .card-bg { position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(0,188,212,.04) 3px,rgba(0,188,212,.04) 4px); pointer-events:none; }
+
+    /* G8: VHS rewind (horizontal tear) */
+    .g8 .demo-text { position:relative; }
+    .g8 .demo-text::before {
+      content:attr(data-t); position:absolute; top:0; left:0; color:var(--cyan); opacity:.7;
+      clip-path:polygon(0 25%,100% 25%,100% 35%,0 35%);
+      animation:g8vhs .9s infinite steps(1);
+    }
+    @keyframes g8vhs {
+      0%,70%{transform:none;opacity:0}
+      71%{transform:translateX(-10px);opacity:.8}
+      73%{transform:translateX(6px);opacity:.6}
+      75%{transform:none;opacity:0}
+      90%{opacity:0}
+      91%{transform:translateX(12px);opacity:.7}
+      93%{transform:none;opacity:0}
+    }
+
+    /* G9: Pixel corruption (box flashes) */
+    .g9 { position:relative; }
+    .g9 .demo-text { position:relative; z-index:1; }
+    .g9::before,.g9::after {
+      content:''; position:absolute; background:var(--cyan); opacity:0;
+      animation:g9px .5s infinite steps(1);
+    }
+    .g9::before { width:30px; height:4px; top:30%; left:20%; }
+    .g9::after  { width:18px; height:4px; top:55%; right:25%; background:var(--pink); animation-delay:.15s; }
+    @keyframes g9px {
+      0%,80%{opacity:0}
+      81%{opacity:.9}
+      83%{opacity:0}
+      90%{opacity:0}
+      91%{opacity:.7}
+      93%{opacity:0}
+    }
+
+    /* G10: Neon flicker */
+    .g10 .demo-text {
+      color:transparent; -webkit-text-stroke:.5px var(--cyan);
+      filter:drop-shadow(0 0 6px var(--cyan)) drop-shadow(0 0 16px var(--cyan));
+      animation:g10neon 3s infinite;
+    }
+    @keyframes g10neon {
+      0%,100%{opacity:1;filter:drop-shadow(0 0 6px var(--cyan)) drop-shadow(0 0 16px var(--cyan))}
+      4%{opacity:.9}
+      8%{opacity:1}
+      40%{opacity:1}
+      41%{opacity:.4;filter:none}
+      42%{opacity:1;filter:drop-shadow(0 0 6px var(--cyan)) drop-shadow(0 0 16px var(--cyan))}
+      70%{opacity:1}
+      71%{opacity:.3;filter:none}
+      72%{opacity:1}
+    }
+
+    /* ── Demo progress bar ── */
+    .demo-bar { width:120px; height:3px; border-radius:2px; overflow:hidden; background:rgba(0,40,80,.05); }
+    .demo-bar-fill { height:100%; width:0; border-radius:2px; animation:barAnim 2s ease-out infinite; }
+    @keyframes barAnim { 0%{width:0;opacity:1} 70%{width:100%} 88%{width:100%;opacity:1} 100%{width:100%;opacity:0} }
+    .bar-yc { background:linear-gradient(90deg,#ffd600,#00bcd4); box-shadow:0 0 8px rgba(0,188,212,.4); }
+    .bar-cy { background:linear-gradient(90deg,#00bcd4,#ffd600); box-shadow:0 0 8px rgba(255,214,0,.4); }
+    .bar-3l { background:linear-gradient(90deg,#ffd600,#00bcd4,#7c4dff); box-shadow:0 0 8px rgba(0,188,212,.4); }
+    .bar-cb { background:linear-gradient(90deg,#00bcd4,white); box-shadow:0 0 8px rgba(0,188,212,.5); }
+
+    /* G11: Yellow × Cyan — standard width */
+    .g11 .demo-text { color:var(--text); position:relative; }
+    .g11 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g11a .4s infinite; clip-path:polygon(0 25%,100% 25%,100% 50%,0 50%); }
+    .g11 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g11b .4s infinite; clip-path:polygon(0 55%,100% 55%,100% 80%,0 80%); }
+    @keyframes g11a { 0%,90%{transform:none} 91%{transform:translateX(-6px)} 94%{transform:translateX(4px)} 100%{transform:none} }
+    @keyframes g11b { 0%,85%{transform:none} 86%{transform:translateX(6px)} 89%{transform:translateX(-3px)} 100%{transform:none} }
+
+    /* G12: Yellow × Cyan — wide offsets */
+    .g12 .demo-text { color:var(--text); position:relative; }
+    .g12 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g12a .35s infinite; clip-path:polygon(0 20%,100% 20%,100% 45%,0 45%); }
+    .g12 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g12b .35s infinite; clip-path:polygon(0 50%,100% 50%,100% 80%,0 80%); }
+    @keyframes g12a { 0%,86%{transform:none} 87%{transform:translateX(-10px)} 91%{transform:translateX(7px)} 95%{transform:translateX(-4px)} 100%{transform:none} }
+    @keyframes g12b { 0%,80%{transform:none} 81%{transform:translateX(10px)} 85%{transform:translateX(-6px)} 89%{transform:translateX(3px)} 100%{transform:none} }
+
+    /* G13: Yellow × Cyan — fast burst */
+    .g13 .demo-text { color:var(--text); position:relative; }
+    .g13 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g13a .16s infinite; clip-path:polygon(0 30%,100% 30%,100% 55%,0 55%); }
+    .g13 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g13b .16s infinite; clip-path:polygon(0 60%,100% 60%,100% 85%,0 85%); }
+    @keyframes g13a { 0%{transform:none} 25%{transform:translateX(-6px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-3px)} 100%{transform:none} }
+    @keyframes g13b { 0%{transform:none} 30%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(2px)} 100%{transform:none} }
+
+    /* G14: Yellow × Cyan — slow drift */
+    .g14 .demo-text { color:var(--text); position:relative; }
+    .g14 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; opacity:.85; animation:g14a 2s ease-in-out infinite; clip-path:polygon(0 18%,100% 18%,100% 50%,0 50%); }
+    .g14 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; opacity:.85; animation:g14b 2s ease-in-out infinite .5s; clip-path:polygon(0 52%,100% 52%,100% 84%,0 84%); }
+    @keyframes g14a { 0%,100%{transform:translateX(0)} 35%{transform:translateX(-6px)} 70%{transform:translateX(5px)} }
+    @keyframes g14b { 0%,100%{transform:translateX(0)} 30%{transform:translateX(6px)} 65%{transform:translateX(-4px)} }
+
+    /* G15: 3-layer (base=yellow, mid=base text, top=cyan) */
+    .g15 .demo-text { color:#ffd600; position:relative; }
+    .g15 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g15a .4s infinite; clip-path:polygon(0 0,100% 0,100% 35%,0 35%); }
+    .g15 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:var(--text); animation:g15b .4s infinite; clip-path:polygon(0 36%,100% 36%,100% 65%,0 65%); }
+    @keyframes g15a { 0%,88%{transform:none} 89%{transform:translateX(-7px)} 93%{transform:translateX(5px)} 100%{transform:none} }
+    @keyframes g15b { 0%,82%{transform:none} 83%{transform:translateX(5px)} 88%{transform:translateX(-3px)} 100%{transform:none} }
+
+    /* G16: Wide band */
+    .g16 .demo-text { color:var(--text); position:relative; }
+    .g16 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g16a .5s infinite; clip-path:polygon(0 10%,100% 10%,100% 52%,0 52%); }
+    .g16 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g16b .5s infinite; clip-path:polygon(0 48%,100% 48%,100% 90%,0 90%); }
+    @keyframes g16a { 0%,84%{transform:none} 85%{transform:translateX(-8px)} 89%{transform:translateX(6px)} 93%{transform:translateX(-4px)} 100%{transform:none} }
+    @keyframes g16b { 0%,78%{transform:none} 79%{transform:translateX(8px)} 83%{transform:translateX(-5px)} 87%{transform:translateX(3px)} 100%{transform:none} }
+
+    /* G17: Shock burst — sudden large offset */
+    .g17 .demo-text { color:var(--text); position:relative; }
+    .g17 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g17a .7s infinite steps(1); clip-path:polygon(0 38%,100% 38%,100% 65%,0 65%); }
+    .g17 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g17b .7s infinite steps(1); clip-path:polygon(0 0,100% 0,100% 36%,0 36%); }
+    @keyframes g17a { 0%,76%{transform:none;opacity:0} 77%{transform:translateX(-14px);opacity:1} 79%{transform:translateX(10px);opacity:1} 81%{transform:none;opacity:0} }
+    @keyframes g17b { 0%,70%{transform:none;opacity:0} 71%{transform:translateX(13px);opacity:1} 73%{transform:translateX(-8px);opacity:1} 75%{transform:none;opacity:0} }
+
+    /* G18: Cyan glow + yellow accent */
+    .g18 .demo-text { color:#00bcd4; position:relative; filter:drop-shadow(0 0 5px rgba(0,188,212,.5)); }
+    .g18 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g18a .45s infinite; clip-path:polygon(0 28%,100% 28%,100% 55%,0 55%); opacity:.9; }
+    .g18 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:white; animation:g18b .45s infinite; clip-path:polygon(0 58%,100% 58%,100% 82%,0 82%); opacity:.7; }
+    @keyframes g18a { 0%,86%{transform:none} 87%{transform:translateX(-6px)} 91%{transform:translateX(4px)} 100%{transform:none} }
+    @keyframes g18b { 0%,81%{transform:none} 82%{transform:translateX(7px)} 86%{transform:translateX(-3px)} 100%{transform:none} }
+
+    /* G19: Sparse random burst */
+    .g19 .demo-text { color:var(--text); position:relative; }
+    .g19 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g19a .9s infinite steps(1); clip-path:polygon(0 25%,100% 25%,100% 52%,0 52%); }
+    .g19 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g19b .9s infinite steps(1); clip-path:polygon(0 55%,100% 55%,100% 80%,0 80%); }
+    @keyframes g19a { 0%,58%{transform:none;opacity:0} 59%{transform:translateX(-5px);opacity:1} 61%{transform:none;opacity:0} 74%{opacity:0} 75%{transform:translateX(8px);opacity:1} 77%{transform:none;opacity:0} 90%{opacity:0} 91%{transform:translateX(-9px);opacity:1} 93%{transform:none;opacity:0} }
+    @keyframes g19b { 0%,62%{transform:none;opacity:0} 63%{transform:translateX(6px);opacity:1} 65%{transform:none;opacity:0} 78%{opacity:0} 79%{transform:translateX(-7px);opacity:1} 81%{transform:none;opacity:0} 93%{opacity:0} 94%{transform:translateX(9px);opacity:1} 96%{transform:none;opacity:0} }
+
+    /* G20: Maximum impact */
+    .g20 .demo-text { color:var(--text); position:relative; }
+    .g20 .demo-text::before { content:attr(data-t); position:absolute; top:0; left:0; color:#ffd600; animation:g20a .5s infinite; clip-path:polygon(0 8%,100% 8%,100% 46%,0 46%); }
+    .g20 .demo-text::after  { content:attr(data-t); position:absolute; top:0; left:0; color:#00bcd4; animation:g20b .5s infinite; clip-path:polygon(0 50%,100% 50%,100% 92%,0 92%); }
+    @keyframes g20a { 0%,80%{transform:none} 81%{transform:translateX(-16px)} 84%{transform:translateX(12px)} 87%{transform:translateX(-8px)} 91%{transform:translateX(4px)} 100%{transform:none} }
+    @keyframes g20b { 0%,76%{transform:none} 77%{transform:translateX(16px)} 80%{transform:translateX(-11px)} 83%{transform:translateX(7px)} 87%{transform:translateX(-3px)} 100%{transform:none} }
+
+    /* ════════════════════════════════
+       CURSOR PATTERNS
+    ════════════════════════════════ */
+    .cursor-demo { position:relative; cursor:none; }
+    .cursor-demo:hover .cdot { display:block; }
+
+    /* shared cursor base */
+    .cdot { display:none; position:absolute; pointer-events:none; z-index:10; }
+
+    /* C1: Diamond + kira (current) */
+    .c1 .cdot {
+      width:10px; height:10px; background:var(--cyan); rotate:45deg;
+      box-shadow:0 0 8px rgba(0,188,212,.9),0 0 20px rgba(0,188,212,.3);
+    }
+    .c1 .cdot::before,.c1 .cdot::after {
+      content:''; position:absolute; top:50%; left:50%;
+    }
+    .c1 .cdot::before { width:1px; height:22px; transform:translate(-50%,-50%);
+      background:linear-gradient(to bottom,transparent,var(--cyan),transparent);
+      animation:kira 2.4s ease-in-out infinite; }
+    .c1 .cdot::after { width:22px; height:1px; transform:translate(-50%,-50%);
+      background:linear-gradient(to right,transparent,var(--cyan),transparent);
+      animation:kira 2.4s ease-in-out infinite .2s; }
+    @keyframes kira {
+      0%{opacity:0;scale:.2} 25%{opacity:.85;scale:1} 60%{opacity:.4} 100%{opacity:0;scale:.3}
+    }
+
+    /* C2: Dot only */
+    .c2 .cdot { width:7px; height:7px; background:var(--cyan); border-radius:50%; box-shadow:0 0 6px rgba(0,188,212,.7); }
+
+    /* C3: Ring only */
+    .c3 .cdot { width:28px; height:28px; border:1.5px solid var(--cyan); border-radius:50%; background:transparent; opacity:.7; transition:transform .15s; }
+
+    /* C4: Crosshair thin */
+    .c4 .cdot { width:24px; height:24px; position:relative; }
+    .c4 .cdot::before,.c4 .cdot::after { content:''; position:absolute; background:var(--cyan); }
+    .c4 .cdot::before { width:1px; height:100%; top:0; left:50%; }
+    .c4 .cdot::after  { width:100%; height:1px; top:50%; left:0; }
+
+    /* C5: Crosshair + center dot */
+    .c5 .cdot { width:24px; height:24px; position:relative; }
+    .c5 .cdot::before,.c5 .cdot::after { content:''; position:absolute; background:var(--cyan); }
+    .c5 .cdot::before { width:1px; height:100%; top:0; left:50%; }
+    .c5 .cdot::after  { width:100%; height:1px; top:50%; left:0; }
+    .c5 .cdot-inner { position:absolute; width:4px; height:4px; background:var(--pink); border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
+
+    /* C6: Square */
+    .c6 .cdot { width:10px; height:10px; border:1.5px solid var(--cyan); background:transparent; }
+
+    /* C7: Large ring slow follow */
+    .c7 .cdot { width:36px; height:36px; border:1px solid var(--cyan); border-radius:50%; opacity:.5; }
+    .c7 .cdot-inner { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:4px; height:4px; background:var(--cyan); border-radius:50%; }
+
+    /* C8: Star (4-point via clip-path) */
+    .c8 .cdot {
+      width:14px; height:14px; background:var(--cyan);
+      clip-path:polygon(50% 0%,55% 40%,100% 50%,55% 60%,50% 100%,45% 60%,0% 50%,45% 40%);
+      animation:c8spin 4s linear infinite;
+      box-shadow:0 0 8px rgba(0,188,212,.6);
+    }
+    @keyframes c8spin { to{rotate:360deg} }
+
+    /* C9: Dot + trailing ring */
+    .c9 .cdot { width:6px; height:6px; background:var(--cyan); border-radius:50%; }
+    .c9 .cdot-ring { position:absolute; width:32px; height:32px; border:1px solid var(--cyan); border-radius:50%; opacity:.4; }
+
+    /* C10: Blinking bracket */
+    .c10 .cdot { width:16px; height:16px; position:relative; }
+    .c10 .cdot::before,.c10 .cdot::after { content:''; position:absolute; width:5px; height:5px; border-color:var(--cyan); border-style:solid; }
+    .c10 .cdot::before { top:0; left:0; border-width:1.5px 0 0 1.5px; }
+    .c10 .cdot::after  { bottom:0; right:0; border-width:0 1.5px 1.5px 0; }
+    .c10 .cdot-inner2 { position:absolute; top:0; right:0; width:5px; height:5px; border-top:1.5px solid var(--cyan); border-right:1.5px solid var(--cyan); }
+    .c10 .cdot-inner3 { position:absolute; bottom:0; left:0; width:5px; height:5px; border-bottom:1.5px solid var(--cyan); border-left:1.5px solid var(--cyan); }
+    .c10 .cdot { animation:c10blink 1.6s ease-in-out infinite; }
+    @keyframes c10blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* hover bg */
+    .cursor-demo:hover { background:rgba(0,188,212,.02); }
+
+    /* ════════════════════════════════
+       NAME DISPLAY PATTERNS
+    ════════════════════════════════ */
+    .name-grid { display:flex; flex-wrap:wrap; gap:16px; padding:0 32px 60px; }
+    .name-card {
+      width:280px; height:150px; border-radius:16px; background:#fff;
+      border:1px solid rgba(0,188,212,.1); box-shadow:0 2px 12px rgba(0,40,80,.04);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:6px; overflow:hidden; position:relative;
+    }
+    .name-label { font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:.1em; color:var(--soft); text-transform:uppercase; position:absolute; bottom:10px; left:0; right:0; text-align:center; }
+    .ndemo { user-select:none; }
+
+    /* N1: Shippori Mincho — エレガント明朝 + ゴールドライン */
+    .n1 .ndemo { font-family:'Shippori Mincho B1',serif; font-size:34px; font-weight:800; color:#1a2a3a; position:relative; padding-bottom:8px; }
+    .n1 .ndemo::after { content:''; position:absolute; bottom:0; left:0; height:1.5px; width:100%; background:linear-gradient(90deg,#c9a227,transparent); transform-origin:left; animation:n1ul 2.5s ease-in-out infinite; }
+    @keyframes n1ul { 0%,100%{transform:scaleX(0.3);opacity:.4} 50%{transform:scaleX(1);opacity:1} }
+
+    /* N2: Zen Old Mincho — クラシック縦書き風 */
+    .n2 .ndemo { font-family:'Zen Old Mincho',serif; font-size:30px; font-weight:900; color:#1a2a3a; letter-spacing:0.12em; animation:n2breathe 3s ease-in-out infinite; }
+    @keyframes n2breathe { 0%,100%{letter-spacing:0.06em;opacity:.8} 50%{letter-spacing:0.18em;opacity:1} }
+
+    /* N3: Dela Gothic One — インパクト + シアングロー */
+    .n3 { background:#0d0f18; }
+    .n3 .ndemo { font-family:'Dela Gothic One',sans-serif; font-size:28px; color:white; animation:n3glow 2s ease-in-out infinite; }
+    @keyframes n3glow { 0%,100%{text-shadow:0 0 16px rgba(0,188,212,.7),0 0 32px rgba(0,188,212,.2)} 50%{text-shadow:0 0 24px rgba(0,188,212,1),0 0 56px rgba(0,188,212,.5),0 0 80px rgba(0,188,212,.2)} }
+
+    /* N4: Orbitron — ネオンアウトライン (ローマ字) */
+    .n4 { background:#0a0a1a; }
+    .n4 .ndemo { font-family:'Orbitron',sans-serif; font-size:17px; font-weight:900; color:transparent; -webkit-text-stroke:1px #00bcd4; letter-spacing:0.12em; animation:n4neon 2.8s ease-in-out infinite; }
+    @keyframes n4neon { 0%,100%{filter:drop-shadow(0 0 4px #00bcd4);-webkit-text-stroke-color:#00bcd4} 50%{filter:drop-shadow(0 0 12px #00bcd4) drop-shadow(0 0 28px rgba(0,188,212,.5));-webkit-text-stroke-color:#7ffff4} }
+    .n4 .ndemo-sub { font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:0.3em; color:rgba(0,188,212,.4); margin-top:4px; }
+
+    /* N5: Noto Serif JP — グラデーションシマー */
+    .n5 .ndemo { font-family:'Noto Serif JP',serif; font-size:30px; font-weight:900; background:linear-gradient(90deg,#7c4dff,#00bcd4,#ff4081,#7c4dff); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:n5shimmer 4s linear infinite; }
+    @keyframes n5shimmer { to{background-position:300% 0} }
+
+    /* N6: Klee One — フロートウェーブ */
+    .n6 .ndemo { font-family:'Klee One',cursive; font-size:32px; font-weight:600; color:#1a2a3a; display:inline-block; animation:n6float 3s ease-in-out infinite; }
+    @keyframes n6float { 0%,100%{transform:translateY(0) rotate(-0.5deg)} 50%{transform:translateY(-8px) rotate(0.5deg)} }
+
+    /* N7: DotGothic16 — タイプライター */
+    .n7 .ndemo { font-family:'DotGothic16',sans-serif; font-size:24px; color:#1a2a3a; overflow:hidden; white-space:nowrap; border-right:2px solid #00bcd4; display:inline-block; animation:n7type 4s steps(5,end) infinite, n7cur .7s step-end infinite; }
+    @keyframes n7type { 0%,8%{width:0} 55%,88%{width:5em} 96%{width:0} }
+    @keyframes n7cur { 50%{border-color:transparent} }
+
+    /* N8: Shippori Mincho — ゴールドメタリック */
+    .n8 .ndemo { font-family:'Shippori Mincho B1',serif; font-size:32px; font-weight:800; background:linear-gradient(120deg,#8b6914 0%,#ffd700 35%,#fffbea 55%,#c9a227 70%,#8b6914 100%); background-size:400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:n8gold 3s ease-in-out infinite; }
+    @keyframes n8gold { 0%,100%{background-position:0%} 50%{background-position:100%} }
+
+    /* N9: Noto Sans JP — 3Dデプス */
+    .n9 .ndemo { font-family:'Noto Sans JP',sans-serif; font-size:30px; font-weight:900; color:#1a2a3a; text-shadow:1px 1px 0 rgba(0,188,212,.35),2px 2px 0 rgba(0,188,212,.28),3px 3px 0 rgba(0,188,212,.2),4px 4px 0 rgba(0,188,212,.12),5px 5px 10px rgba(0,40,80,.18); animation:n9tilt 5s ease-in-out infinite; display:inline-block; }
+    @keyframes n9tilt { 0%,100%{transform:rotate(-0.8deg) translateX(0)} 50%{transform:rotate(0.8deg) translateX(2px)} }
+
+    /* N10: Zen Maru Gothic — キャラクターウェーブ */
+    .n10 .ndemo { display:inline-flex; }
+    .n10 .ndemo span { font-family:'Zen Maru Gothic',sans-serif; font-size:30px; font-weight:900; display:inline-block; animation:n10wave 2s ease-in-out infinite; }
+    .n10 .ndemo span:nth-child(1){animation-delay:0s;   color:#1a2a3a}
+    .n10 .ndemo span:nth-child(2){animation-delay:.18s; color:#00bcd4}
+    .n10 .ndemo span:nth-child(3){animation-delay:.36s; color:#7c4dff}
+    .n10 .ndemo span:nth-child(4){animation-delay:.54s; color:#ff4081}
+    .n10 .ndemo span:nth-child(5){animation-delay:.72s; color:#00c853}
+    @keyframes n10wave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+  </style>
+</head>
+<body>
+
+<h1>// Design Playground — Glitch × Cursor</h1>
+
+<h2>// Glitch Effects (10 patterns)</h2>
+<div class="grid">
+
+  <div class="card g1">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="card-label">G1 · RGB Split</div>
+  </div>
+
+  <div class="card g2">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="card-label">G2 · Scanline</div>
+  </div>
+
+  <div class="card g3">
+    <div class="demo-text">NATSUNE</div>
+    <div class="card-label">G3 · Shake / Jitter</div>
+  </div>
+
+  <div class="card g4">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="card-label">G4 · Block Scramble</div>
+  </div>
+
+  <div class="card g5">
+    <div class="demo-text">NATSUNE</div>
+    <div class="card-label">G5 · Chromatic Aber.</div>
+  </div>
+
+  <div class="card g6">
+    <div class="demo-text">NATSUNE</div>
+    <div class="card-label">G6 · Strobe Flash</div>
+  </div>
+
+  <div class="card g7">
+    <div class="card-bg"></div>
+    <div class="demo-text">NATSUNE</div>
+    <div class="card-label">G7 · Wave Distort</div>
+  </div>
+
+  <div class="card g8">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="card-label">G8 · VHS Tear</div>
+  </div>
+
+  <div class="card g9">
+    <div class="demo-text">NATSUNE</div>
+    <div class="card-label">G9 · Pixel Corrupt</div>
+  </div>
+
+  <div class="card g10" style="background:#0a0f1a;">
+    <div class="demo-text">NATSUNE</div>
+    <div class="card-label" style="color:rgba(0,188,212,.4);">G10 · Neon Flicker</div>
+  </div>
+
+</div>
+
+<h2>// Glitch G1 Variations — Yellow × Cyan (10 patterns)</h2>
+<div class="grid">
+
+  <div class="card g11" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-yc"></div></div>
+    <div class="card-label">G11 · Y×C Standard</div>
+  </div>
+
+  <div class="card g12" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-yc" style="animation-delay:.3s"></div></div>
+    <div class="card-label">G12 · Y×C Wide</div>
+  </div>
+
+  <div class="card g13" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-yc" style="animation-delay:.6s"></div></div>
+    <div class="card-label">G13 · Y×C Fast</div>
+  </div>
+
+  <div class="card g14" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-cy" style="animation-delay:.9s"></div></div>
+    <div class="card-label">G14 · Y×C Slow Drift</div>
+  </div>
+
+  <div class="card g15" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-3l" style="animation-delay:.2s"></div></div>
+    <div class="card-label">G15 · Triple Layer</div>
+  </div>
+
+  <div class="card g16" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-yc" style="animation-delay:.5s"></div></div>
+    <div class="card-label">G16 · Wide Band</div>
+  </div>
+
+  <div class="card g17" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-cy" style="animation-delay:.7s"></div></div>
+    <div class="card-label">G17 · Shock Burst</div>
+  </div>
+
+  <div class="card g18" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-cb" style="animation-delay:.1s"></div></div>
+    <div class="card-label">G18 · Cyan Glow</div>
+  </div>
+
+  <div class="card g19" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-yc" style="animation-delay:.4s"></div></div>
+    <div class="card-label">G19 · Sparse Random</div>
+  </div>
+
+  <div class="card g20" style="height:160px">
+    <div class="demo-text" data-t="NATSUNE">NATSUNE</div>
+    <div class="demo-bar"><div class="demo-bar-fill bar-cy" style="animation-delay:.8s"></div></div>
+    <div class="card-label">G20 · Max Impact</div>
+  </div>
+
+</div>
+
+<h2>// Cursor Designs (10 patterns) — ホバーで確認</h2>
+<div class="grid">
+
+  <!-- C1 -->
+  <div class="card cursor-demo c1">
+    <div class="cdot" id="c1dot"></div>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--cyan)" opacity=".15"><path d="M12 2 L12 22 M2 12 L22 12" stroke="var(--cyan)" stroke-width="1.5" fill="none"/></svg>
+    <div class="card-label">C1 · ◆ Diamond Kira</div>
+  </div>
+
+  <!-- C2 -->
+  <div class="card cursor-demo c2">
+    <div class="cdot" id="c2dot"></div>
+    <svg width="8" height="8" viewBox="0 0 8 8" fill="var(--cyan)"><circle cx="4" cy="4" r="4"/></svg>
+    <div class="card-label">C2 · Dot Only</div>
+  </div>
+
+  <!-- C3 -->
+  <div class="card cursor-demo c3">
+    <div class="cdot" id="c3dot"></div>
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--cyan)" stroke-width="1.5" opacity=".4"><circle cx="14" cy="14" r="12"/></svg>
+    <div class="card-label">C3 · Ring Only</div>
+  </div>
+
+  <!-- C4 -->
+  <div class="card cursor-demo c4">
+    <div class="cdot" id="c4dot"></div>
+    <svg width="24" height="24" viewBox="0 0 24 24" stroke="var(--cyan)" stroke-width="1" opacity=".3" fill="none"><line x1="12" y1="0" x2="12" y2="24"/><line x1="0" y1="12" x2="24" y2="12"/></svg>
+    <div class="card-label">C4 · Crosshair</div>
+  </div>
+
+  <!-- C5 -->
+  <div class="card cursor-demo c5">
+    <div class="cdot" id="c5dot"><div class="cdot-inner"></div></div>
+    <svg width="24" height="24" viewBox="0 0 24 24" stroke="var(--cyan)" stroke-width="1" opacity=".3" fill="none"><line x1="12" y1="0" x2="12" y2="24"/><line x1="0" y1="12" x2="24" y2="12"/><circle cx="12" cy="12" r="2.5" fill="var(--pink)" opacity="1"/></svg>
+    <div class="card-label">C5 · Crosshair + Dot</div>
+  </div>
+
+  <!-- C6 -->
+  <div class="card cursor-demo c6">
+    <div class="cdot" id="c6dot"></div>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--cyan)" stroke-width="1.5" opacity=".4"><rect x="1" y="1" width="10" height="10"/></svg>
+    <div class="card-label">C6 · Square</div>
+  </div>
+
+  <!-- C7 -->
+  <div class="card cursor-demo c7">
+    <div class="cdot" id="c7dot"><div class="cdot-inner"></div></div>
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="var(--cyan)" stroke-width="1" opacity=".25"><circle cx="18" cy="18" r="16"/><circle cx="18" cy="18" r="2" fill="var(--cyan)"/></svg>
+    <div class="card-label">C7 · Ring + Center</div>
+  </div>
+
+  <!-- C8 -->
+  <div class="card cursor-demo c8">
+    <div class="cdot" id="c8dot"></div>
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="var(--cyan)" opacity=".3"><polygon points="7,0 8,5.5 14,7 8,8.5 7,14 6,8.5 0,7 6,5.5"/></svg>
+    <div class="card-label">C8 · Star Spin</div>
+  </div>
+
+  <!-- C9 -->
+  <div class="card cursor-demo c9">
+    <div class="cdot-ring" id="c9ring"></div>
+    <div class="cdot" id="c9dot"></div>
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="var(--cyan)" stroke-width="1" opacity=".2"><circle cx="16" cy="16" r="14"/><circle cx="16" cy="16" r="3" fill="var(--cyan)"/></svg>
+    <div class="card-label">C9 · Dot + Ring</div>
+  </div>
+
+  <!-- C10 -->
+  <div class="card cursor-demo c10">
+    <div class="cdot" id="c10dot">
+      <div class="cdot-inner2"></div>
+      <div class="cdot-inner3"></div>
+    </div>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--cyan)" stroke-width="1.5" opacity=".3">
+      <polyline points="0,4 0,0 4,0"/>
+      <polyline points="12,0 16,0 16,4"/>
+      <polyline points="16,12 16,16 12,16"/>
+      <polyline points="4,16 0,16 0,12"/>
+    </svg>
+    <div class="card-label">C10 · Bracket Blink</div>
+  </div>
+
+</div>
+
+<h2>// Name Display — 鮫月ナツネ (10 patterns)</h2>
+<div class="name-grid">
+
+  <div class="name-card n1">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N1 · Shippori Mincho · ゴールドライン</div>
+  </div>
+
+  <div class="name-card n2">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N2 · Zen Old Mincho · クラシック</div>
+  </div>
+
+  <div class="name-card n3">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label" style="color:rgba(0,188,212,.35)">N3 · Dela Gothic · シアングロー</div>
+  </div>
+
+  <div class="name-card n4">
+    <div class="ndemo">SAMETUKI NATSUNE</div>
+    <div class="ndemo-sub">鮫月ナツネ</div>
+    <div class="name-label" style="color:rgba(0,188,212,.3)">N4 · Orbitron · ネオンアウトライン</div>
+  </div>
+
+  <div class="name-card n5">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N5 · Noto Serif JP · グラデ</div>
+  </div>
+
+  <div class="name-card n6">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N6 · Klee One · フロート</div>
+  </div>
+
+  <div class="name-card n7">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N7 · DotGothic16 · タイプライター</div>
+  </div>
+
+  <div class="name-card n8">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N8 · Shippori · ゴールドメタリック</div>
+  </div>
+
+  <div class="name-card n9">
+    <div class="ndemo">鮫月ナツネ</div>
+    <div class="name-label">N9 · Noto Sans JP · 3Dデプス</div>
+  </div>
+
+  <div class="name-card n10">
+    <div class="ndemo"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    <div class="name-label">N10 · Zen Maru · キャラウェーブ</div>
+  </div>
+
+</div>
+
+<script>
+  // カーソル追従
+  document.querySelectorAll('.cursor-demo').forEach(demo => {
+    const id = demo.className.match(/c(\d+)/)?.[1];
+    if (!id) return;
+
+    const dot  = demo.querySelector('.cdot');
+    const ring = demo.querySelector('.cdot-ring');
+
+    demo.addEventListener('mousemove', e => {
+      const r = demo.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+
+      const hw = dot ? dot.offsetWidth / 2 : 5;
+      const hh = dot ? dot.offsetHeight / 2 : 5;
+
+      if (dot) { dot.style.display = 'block'; dot.style.left = (x - hw) + 'px'; dot.style.top = (y - hh) + 'px'; }
+
+      if (ring) {
+        const rw = ring.offsetWidth / 2;
+        ring.style.display = 'block';
+        ring.style.position = 'absolute';
+        ring.style.borderRadius = '50%';
+        ring.style.border = '1px solid var(--cyan)';
+        ring.style.opacity = '.35';
+        ring.style.zIndex = '9';
+        // delayed via CSS transition
+        ring.style.transition = 'left .12s,top .12s';
+        ring.style.left = (x - rw) + 'px';
+        ring.style.top  = (y - rw) + 'px';
+      }
+    });
+
+    demo.addEventListener('mouseleave', () => {
+      if (dot) dot.style.display = 'none';
+      if (ring) ring.style.display = 'none';
+    });
+  });
+</script>
+
+<!-- ══════════════════════════════════════════
+     F1〜F10: 融合ネームパターン
+     丸ゴシック × グラデ発光 × ゴールドライン × ふわふわ × キャラウェーブ
+════════════════════════════════════════════ -->
+<style>
+  /* ── 共通ベース ── */
+  .fcard {
+    width:280px; min-height:140px; border-radius:20px; background:#fff;
+    border:1px solid rgba(0,188,212,.1); box-shadow:0 2px 12px rgba(0,40,80,.04);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; padding:24px 20px 36px; position:relative; overflow:hidden;
+    transition:border-color .25s, box-shadow .25s;
+  }
+  .fcard:hover { border-color:rgba(0,188,212,.25); box-shadow:0 6px 28px rgba(0,40,80,.09); }
+  .fcard .flabel { position:absolute; bottom:10px; left:0; right:0; text-align:center; font-family:'Orbitron',sans-serif; font-size:9px; letter-spacing:.12em; color:var(--soft); text-transform:uppercase; }
+  .fname { font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:30px; line-height:1.2; user-select:none; position:relative; display:inline-block; }
+  .fname span { display:inline-block; }
+
+  /* ── ゴールドライン ── */
+  .gold-line { position:absolute; bottom:-4px; left:0; right:0; height:2px; border-radius:2px; }
+  .gold-solid     { background:linear-gradient(90deg,transparent,#c9993a,#f5d06b,#c9993a,transparent); }
+  .gold-shimmer   { background:linear-gradient(90deg,transparent,#c9993a,#f5d06b,#fff9c0,#f5d06b,#c9993a,transparent); background-size:200% 100%; animation:goldShimmer 2s linear infinite; }
+  .gold-pulse     { background:linear-gradient(90deg,transparent,#c9993a,#f5d06b,#c9993a,transparent); animation:goldPulse 2.5s ease-in-out infinite; }
+  .gold-double    { height:1px; background:linear-gradient(90deg,transparent,#c9993a,#f5d06b,#c9993a,transparent); box-shadow:0 3px 0 0 rgba(201,153,58,.3); }
+  .gold-thick     { height:3px; background:linear-gradient(90deg,transparent,#b8860b,#f5d06b,#fff8dc,#f5d06b,#b8860b,transparent); background-size:200%; animation:goldShimmer 3s linear infinite; }
+  @keyframes goldShimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+  @keyframes goldPulse   { 0%,100%{opacity:.5;transform:scaleX(.7)} 50%{opacity:1;transform:scaleX(1)} }
+
+  /* ── グラデカラーバリエーション ── */
+  /* F1: cyan→pink */
+  .f1 .fname { background:linear-gradient(135deg,#00bcd4,#ff4081); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 8px rgba(0,188,212,.45)); animation:fFloat1 4s ease-in-out infinite; }
+  /* F2: purple→cyan */
+  .f2 .fname { background:linear-gradient(135deg,#7c4dff,#00e5ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(124,77,255,.4)); animation:fFloat2 5s ease-in-out infinite; }
+  /* F3: pink→purple */
+  .f3 .fname { background:linear-gradient(135deg,#ff4081,#7c4dff,#00bcd4); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(255,64,129,.35)); animation:fFloat3 3.5s ease-in-out infinite, gradCycle 6s linear infinite; }
+  /* F4: ホワイト→cyan (清潔感) */
+  .f4 .fname { background:linear-gradient(135deg,#b2ebf2,#00bcd4,#006064); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(0,188,212,.55)); animation:fFloat4 6s ease-in-out infinite; }
+  /* F5: 全3色サイクル */
+  .f5 .fname { background:linear-gradient(90deg,#00bcd4,#7c4dff,#ff4081,#00bcd4); background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(124,77,255,.4)); animation:fFloat1 4.5s ease-in-out infinite, gradCycle3 5s linear infinite; }
+  /* F6: 深紫→ライトシアン */
+  .f6 .fname { background:linear-gradient(160deg,#4a148c,#7c4dff,#00bcd4,#e0f7fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 12px rgba(124,77,255,.5)); animation:fFloat5 5.5s ease-in-out infinite; }
+  /* F7: pink glow強め */
+  .f7 .fname { background:linear-gradient(135deg,#ff4081,#ce93d8,#7c4dff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 16px rgba(255,64,129,.5)) drop-shadow(0 0 4px rgba(124,77,255,.3)); animation:fFloat2 4s ease-in-out infinite; }
+  /* F8: 夕暮れ cyan→pink→gold */
+  .f8 .fname { background:linear-gradient(135deg,#00bcd4,#ff4081,#c9993a); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 10px rgba(201,153,58,.45)); animation:fFloat3 5s ease-in-out infinite, gradCycle 8s linear infinite; }
+  /* F9: パールホワイト→紫 */
+  .f9 .fname { background:linear-gradient(135deg,#ede7f6,#ce93d8,#7c4dff,#b2ebf2); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 14px rgba(124,77,255,.45)); animation:fFloat4 6.5s ease-in-out infinite, gradCycle 10s linear infinite; }
+  /* F10: 宝石グラデ (深め全色) */
+  .f10 .fname { background:linear-gradient(90deg,#006064,#00bcd4,#7c4dff,#ff4081,#b8860b); background-size:400%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 0 18px rgba(0,188,212,.5)) drop-shadow(0 0 6px rgba(255,64,129,.3)); animation:fFloat5 4s ease-in-out infinite, gradCycle5 7s linear infinite; }
+
+  /* ── フロートアニメーション ── */
+  @keyframes fFloat1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes fFloat2 { 0%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} 70%{transform:translateY(-3px)} }
+  @keyframes fFloat3 { 0%,100%{transform:translateY(0) rotate(-.3deg)} 50%{transform:translateY(-5px) rotate(.3deg)} }
+  @keyframes fFloat4 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-7px) scale(1.01)} }
+  @keyframes fFloat5 { 0%,100%{transform:translateY(0)} 25%{transform:translateY(-4px)} 75%{transform:translateY(-9px)} }
+  @keyframes gradCycle  { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+  @keyframes gradCycle3 { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+  @keyframes gradCycle5 { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
+
+  /* ── キャラウェーブ（各文字ディレイ） ── */
+  .wave span { animation:charWave 3s ease-in-out infinite; }
+  .wave span:nth-child(1) { animation-delay:0s; }
+  .wave span:nth-child(2) { animation-delay:.15s; }
+  .wave span:nth-child(3) { animation-delay:.3s; }
+  .wave span:nth-child(4) { animation-delay:.45s; }
+  .wave span:nth-child(5) { animation-delay:.6s; }
+  @keyframes charWave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+  /* ── 暗背景カード ── */
+  .fcard.dark { background:#0d0f18; border-color:rgba(0,188,212,.08); }
+  .fcard.dark .flabel { color:rgba(255,255,255,.2); }
+</style>
+
+<h2>F1–F10 · 融合ネームパターン — 丸ゴシック × グラデ発光 × ゴールドライン × ふわふわ × キャラウェーブ</h2>
+<div class="grid">
+
+  <!-- F1: cyan→pink / gold shimmer / gentle float -->
+  <div class="fcard f1">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-shimmer"></div>
+    </div>
+    <div class="flabel">F1 · Cyan→Pink · シマーライン</div>
+  </div>
+
+  <!-- F2: purple→cyan / gold double / drift float -->
+  <div class="fcard f2">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-double"></div>
+    </div>
+    <div class="flabel">F2 · Purple→Cyan · ダブルライン</div>
+  </div>
+
+  <!-- F3: pink→purple→cyan cycling / gold pulse / rotate float -->
+  <div class="fcard f3">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-pulse"></div>
+    </div>
+    <div class="flabel">F3 · 3色サイクル · パルスライン</div>
+  </div>
+
+  <!-- F4: 清潔感 white→cyan / gold solid / slow breathe -->
+  <div class="fcard f4">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-solid"></div>
+    </div>
+    <div class="flabel">F4 · Ice Cyan · ソリッドライン</div>
+  </div>
+
+  <!-- F5: 全3色 fast cycle / gold shimmer / float -->
+  <div class="fcard f5">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-shimmer"></div>
+    </div>
+    <div class="flabel">F5 · Rainbow · ハイスピードサイクル</div>
+  </div>
+
+  <!-- F6: 深紫→ライトシアン / dark bg / gold thick -->
+  <div class="fcard f6 dark">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-thick"></div>
+    </div>
+    <div class="flabel">F6 · Deep Violet · ダークベース</div>
+  </div>
+
+  <!-- F7: pink→purple / strong glow / dark bg / gold double -->
+  <div class="fcard f7 dark">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-double"></div>
+    </div>
+    <div class="flabel">F7 · Pink Glow · 強発光ダーク</div>
+  </div>
+
+  <!-- F8: 夕暮れ cyan→pink→gold / gold shimmer -->
+  <div class="fcard f8">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-shimmer"></div>
+    </div>
+    <div class="flabel">F8 · Sunset · ゴールドアクセント</div>
+  </div>
+
+  <!-- F9: パール→紫 / pale bg / gold pulse -->
+  <div class="fcard f9">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-pulse"></div>
+    </div>
+    <div class="flabel">F9 · Pearl · ペールパープル</div>
+  </div>
+
+  <!-- F10: 宝石フル / dark bg / gold thick -->
+  <div class="fcard f10 dark">
+    <div class="fname wave">
+      <span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span>
+      <div class="gold-line gold-thick"></div>
+    </div>
+    <div class="flabel">F10 · Jewel · フル宝石グラデ</div>
+  </div>
+
+</div>
+
+</script>
+</body>
+</html>
