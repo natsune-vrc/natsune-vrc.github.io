@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>鮫月ナツネ | Official Portal</title>
-  <meta name="description" content="鮫月ナツネの個人ポータルサイト。VRChatワールド制作・ギミック開発・YouTube・BOOTH・イベント・コミュニティ。" />
+  <meta name="description" content="鮫月ナツネの個人ポータルサイト。VRChatワールド制作・イベント運営・YouTube・BOOTH・イラスト・コミュニティ。" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
@@ -14,9 +14,10 @@
 
     :root {
       --bg: #f4f9ff; --text: #1a2a3a; --text-soft: #5a7088; --dim: #e8f0f8;
-      --cyan: #00bcd4; --pink: #ff4081; --purple: #7c4dff; --blue: #2979ff;
-      --green: #00c853; --orange: #ff9100; --red: #ff1744;
-      --font-ui: 'Orbitron', sans-serif; --font-hand: 'Klee One', cursive; --font-body: 'Zen Maru Gothic', sans-serif;
+      --cyan: #00bcd4; --pink: #ff4081; --purple: #7c4dff;
+      --font-ui: 'Orbitron', sans-serif;
+      --font-hand: 'Klee One', cursive;
+      --font-body: 'Zen Maru Gothic', sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: auto; }
@@ -25,18 +26,11 @@
     img { max-width: 100%; display: block; }
     ::selection { background: var(--cyan); color: var(--bg); }
 
-    /* ── Custom cursor ── */
     /* ── LOADER ── */
     .loader { position:fixed; inset:0; z-index:99999; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
     .loader.done { pointer-events:none; }
-
-    .loader-name {
-      font-family:var(--font-ui); font-size:clamp(28px,6vw,48px); font-weight:900;
-      letter-spacing:0.2em; color:var(--text); position:relative;
-    }
-    .loader-name::before, .loader-name::after {
-      content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden;
-    }
+    .loader-name { font-family:var(--font-ui); font-size:clamp(28px,6vw,48px); font-weight:900; letter-spacing:0.2em; color:var(--text); position:relative; }
+    .loader-name::before, .loader-name::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; }
     .loader-name::before { color:var(--cyan); animation:loaderGlitch1 0.3s infinite; }
     .loader-name::after { color:var(--pink); animation:loaderGlitch2 0.3s infinite; }
     @keyframes loaderGlitch1 {
@@ -49,193 +43,317 @@
       40%{clip-path:inset(30% 0 40% 0);transform:translate(1px,-1px)} 60%{clip-path:inset(50% 0 20% 0);transform:translate(-1px,1px)}
       80%{clip-path:inset(10% 0 50% 0);transform:translate(2px,-2px)} 100%{clip-path:inset(40% 0 30% 0);transform:translate(-2px,1px)}
     }
-
-    .loader-bar-wrap {
-      width:min(320px, 80vw); height:4px; background:rgba(0,188,212,0.06); border-radius:2px; overflow:hidden; position:relative;
-    }
-    .loader-bar {
-      height:100%; width:0; background:linear-gradient(90deg,var(--cyan),var(--pink)); border-radius:2px;
-      box-shadow:0 0 12px var(--cyan);
-      transition:width 0.1s;
-    }
-
-    .loader-pct {
-      font-family:var(--font-ui); font-size:12px; letter-spacing:0.2em; color:var(--text-soft);
-    }
-    .loader-sub {
-      font-family:var(--font-hand); font-size:13px; color:var(--text-soft); opacity:0.5;
-    }
-
-    /* Curtain panels */
+    .loader-bar-wrap { width:min(320px,80vw); height:4px; background:rgba(0,188,212,0.06); border-radius:2px; overflow:hidden; }
+    .loader-bar { height:100%; width:0; background:linear-gradient(90deg,var(--cyan),var(--pink)); border-radius:2px; box-shadow:0 0 12px var(--cyan); }
+    .loader-pct { font-family:var(--font-ui); font-size:12px; letter-spacing:0.2em; color:var(--text-soft); }
+    .loader-sub { font-family:var(--font-hand); font-size:13px; color:var(--text-soft); opacity:0.5; }
     .curtain-top, .curtain-bot { position:fixed; left:0; width:100%; height:50vh; z-index:99998; background:#fff; }
     .curtain-top { top:0; } .curtain-bot { bottom:0; }
 
-    .cursor { position: fixed; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); pointer-events: none; z-index: 10000; transition: transform 0.1s; }
-    .cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid var(--cyan); border-radius: 50%; pointer-events: none; z-index: 10000; transition: all 0.15s ease-out; opacity: 0.5; }
-    .cursor-ring.hover { width: 60px; height: 60px; border-color: var(--pink); opacity: 0.8; }
+    /* ── Cursor (SVG Arrow) ── */
+    .cursor {
+      position:fixed; top:0; left:0; overflow:visible;
+      pointer-events:none; z-index:10000;
+      filter:drop-shadow(0 0 4px rgba(0,188,212,0.6));
+      transition:filter 0.15s;
+    }
+    .cursor .cur-shape {
+      fill:white; stroke:#00bcd4; stroke-width:1.3; stroke-linejoin:round;
+      transition:stroke 0.15s;
+    }
+    .cursor.hover { filter:drop-shadow(0 0 5px rgba(255,64,129,0.7)); }
+    .cursor.hover .cur-shape { stroke:#ff4081; }
 
     /* ── Noise ── */
     body::after { content:''; position:fixed; inset:0; z-index:9998; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:0.018; mix-blend-mode:multiply; }
 
-    /* ── Canvas BG ── */
-    #bgCanvas { position: fixed; inset: 0; z-index: 0; }
-
-    /* ── Scroll progress ── */
+    #bgCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
     .scroll-bar { position:fixed; top:0; left:0; height:2px; z-index:200; background:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple)); transform-origin:left; transform:scaleX(0); }
 
-    .wrap { position: relative; z-index: 1; }
-    .container { width: min(calc(100% - 40px), 1080px); margin: 0 auto; }
+    .wrap { position:relative; z-index:1; }
+    .container { width:min(calc(100% - 40px), 1080px); margin:0 auto; }
 
     /* ── Header ── */
-    .hdr { position:sticky; top:0; z-index:100; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; background:rgba(244,249,255,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(0,188,212,0.1); }
-    .hdr-logo { display:flex; align-items:center; gap:10px; }
-    .hdr-logo svg { width:28px; height:28px; }
+    .hdr { position:sticky; top:0; z-index:100; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; background:rgba(244,249,255,0.88); backdrop-filter:blur(20px); border-bottom:1px solid rgba(0,188,212,0.1); gap:12px; }
+    .hdr-logo { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .hdr-logo img { width:28px; height:28px; border-radius:50%; object-fit:cover; }
     .hdr-logo span { font-family:var(--font-ui); font-size:12px; font-weight:700; letter-spacing:0.12em; }
-    .hdr-nav { display:flex; gap:4px; }
-    .hdr-nav a { padding:6px 14px; border-radius:6px; font-size:11px; font-weight:600; color:var(--text-soft); letter-spacing:0.05em; transition:all 0.2s; }
+    .hdr-nav { display:flex; gap:2px; flex-wrap:wrap; }
+    .hdr-nav a { padding:5px 10px; border-radius:6px; font-size:10px; font-weight:600; color:var(--text-soft); letter-spacing:0.04em; transition:all 0.2s; white-space:nowrap; }
     .hdr-nav a:hover { color:var(--cyan); background:rgba(0,229,255,0.06); }
+    .hdr-actions { display:flex; gap:6px; flex-shrink:0; }
+    .hdr-actions a { padding:6px 14px; border-radius:8px; font-size:10px; font-weight:700; letter-spacing:0.06em; white-space:nowrap; transition:all 0.2s; }
+    .hdr-btn-support { background:rgba(124,77,255,0.08); color:var(--purple); border:1px solid rgba(124,77,255,0.2); }
+    .hdr-btn-support:hover { background:rgba(124,77,255,0.15); }
+    .hdr-btn-contact { background:rgba(0,188,212,0.08); color:var(--cyan); border:1px solid rgba(0,188,212,0.2); }
+    .hdr-btn-contact:hover { background:rgba(0,188,212,0.14); }
 
     /* ── Marquee ── */
-    .marquee { overflow:hidden; white-space:nowrap; padding:16px 0; border-top:1px solid rgba(0,188,212,0.04); border-bottom:1px solid rgba(0,188,212,0.04); }
+    .marquee { overflow:hidden; white-space:nowrap; padding:14px 0; border-top:1px solid rgba(0,188,212,0.04); border-bottom:1px solid rgba(0,188,212,0.04); }
     .m-track { display:inline-flex; gap:3rem; animation:m 30s linear infinite; }
-    .m-track span { font-family:var(--font-ui); font-size:12px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-soft); opacity:0.35; }
+    .m-track span { font-family:var(--font-ui); font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-soft); opacity:0.35; }
     .m-track .hi { color:var(--cyan); opacity:0.7; }
     .marquee:hover .m-track { animation-play-state:paused; }
     @keyframes m { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
     /* ── Hero ── */
-    .hero { padding:100px 0 80px; }
-    .hero-grid { display:grid; grid-template-columns:1fr 420px; gap:60px; align-items:center; }
-    .hero-status { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:6px; border:1px solid rgba(105,240,174,0.3); color:var(--green); font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:24px; }
-    .hero-status i { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.5s infinite; }
+    .hero { padding:80px 0 70px; }
+    .hero-grid { display:grid; grid-template-columns:1fr 380px; gap:60px; align-items:center; }
+    .hero-status { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:6px; border:1px solid rgba(0,188,212,0.3); color:var(--cyan); font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:24px; }
+    .hero-status i { width:6px; height:6px; border-radius:50%; background:var(--cyan); animation:blink 1.5s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
     .hero-role { font-family:var(--font-hand); font-size:14px; color:var(--purple); margin-bottom:10px; }
-
-    .hero-name { font-size:clamp(56px,10vw,96px); font-weight:900; line-height:1; margin-bottom:28px; position:relative; }
-    .hero-name .char { display:inline-block; }
-
-    .hero-desc { font-size:15px; color:var(--text-soft); line-height:2; margin-bottom:36px; font-family:var(--font-hand); max-width:500px; }
+    .hero-name { font-size:clamp(48px,9vw,88px); font-weight:900; line-height:1; margin-bottom:28px; }
+    .hero-desc { font-size:15px; color:var(--text-soft); line-height:2; margin-bottom:36px; font-family:var(--font-hand); max-width:480px; }
     .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
-
-    .btn { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:12px; font-size:14px; font-weight:700; border:none; cursor:none; transition:all 0.3s; position:relative; overflow:hidden; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 26px; border-radius:12px; font-size:14px; font-weight:700; border:none; cursor:none; transition:all 0.3s; position:relative; overflow:hidden; }
     .btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent); opacity:0; transition:opacity 0.3s; }
     .btn:hover::before { opacity:1; }
-    .btn-p { background:linear-gradient(135deg,var(--cyan),var(--blue)); color:#fff; box-shadow:0 0 30px rgba(0,229,255,0.25); }
+    .btn-p { background:linear-gradient(135deg,var(--cyan),var(--purple)); color:#fff; box-shadow:0 0 30px rgba(0,229,255,0.25); }
     .btn-p:hover { box-shadow:0 0 50px rgba(0,229,255,0.45); transform:translateY(-2px); }
     .btn-s { background:transparent; color:var(--pink); border:1.5px solid var(--pink); }
     .btn-s:hover { background:rgba(255,64,129,0.08); box-shadow:0 0 25px rgba(255,64,129,0.2); }
     .btn svg { width:16px; height:16px; }
 
-    /* ── Blob avatar ── */
+    /* ── Avatar blob ── */
     .avatar-wrap { position:relative; }
     .avatar-blob { width:100%; aspect-ratio:0.85/1; overflow:hidden; animation:blobMorph 12s ease-in-out infinite; position:relative; }
     .avatar-blob img { width:100%; height:100%; object-fit:cover; object-position:center top; }
-    .avatar-blob::after { content:''; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 60px rgba(0,229,255,0.15), inset 0 0 120px rgba(255,64,129,0.08); }
+    .avatar-blob::after { content:''; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 60px rgba(0,229,255,0.12), inset 0 0 120px rgba(255,64,129,0.06); }
     @keyframes blobMorph {
       0%,100% { border-radius:30% 70% 70% 30% / 30% 30% 70% 70%; }
-      20% { border-radius:58% 42% 55% 45% / 52% 28% 72% 48%; }
-      40% { border-radius:42% 58% 35% 65% / 38% 62% 38% 62%; }
-      60% { border-radius:65% 35% 48% 52% / 48% 52% 48% 52%; }
-      80% { border-radius:38% 62% 62% 38% / 62% 38% 38% 62%; }
+      25% { border-radius:58% 42% 55% 45% / 52% 28% 72% 48%; }
+      50% { border-radius:42% 58% 35% 65% / 38% 62% 38% 62%; }
+      75% { border-radius:65% 35% 48% 52% / 48% 52% 48% 52%; }
     }
-    /* Glow ring behind avatar */
-    .avatar-glow { position:absolute; inset:-20px; border-radius:inherit; animation:blobMorph 12s ease-in-out infinite; background:conic-gradient(from var(--angle), var(--cyan), var(--purple), var(--pink), var(--orange), var(--cyan)); filter:blur(30px); opacity:0.25; z-index:-1; }
+    .avatar-glow { position:absolute; inset:-20px; border-radius:inherit; animation:blobMorph 12s ease-in-out infinite, rotateBorder 6s linear infinite; background:conic-gradient(from var(--angle), var(--cyan), var(--purple), var(--pink), var(--cyan)); filter:blur(30px); opacity:0.2; z-index:-1; }
     @keyframes rotateBorder { to{--angle:360deg} }
-    .avatar-glow { animation: blobMorph 12s ease-in-out infinite, rotateBorder 6s linear infinite; }
 
-    /* ── Section ── */
-    .sec { padding:100px 0; }
-    .sec-tag { display:inline-block; padding:4px 12px; border-radius:4px; font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:16px; border:1px solid; }
-    .sec-title { font-size:clamp(24px,4vw,38px); font-weight:900; line-height:1.25; margin-bottom:12px; }
-    .sec-desc { color:var(--text-soft); font-size:14px; max-width:560px; margin-bottom:40px; }
+    /* ── Section common ── */
+    .sec { padding:90px 0; }
+    .sec + .sec { border-top:1px solid rgba(0,188,212,0.05); }
+    .sec-tag { display:inline-block; padding:4px 12px; border-radius:4px; font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:14px; border:1px solid; }
+    .sec-title { font-size:clamp(22px,3.5vw,34px); font-weight:900; line-height:1.3; margin-bottom:10px; }
+    .sec-desc { color:var(--text-soft); font-size:14px; max-width:540px; margin-bottom:36px; line-height:1.9; }
 
-    /* ── About: asymmetric layout ── */
-    #about .sec-tag { color:var(--cyan); border-color:rgba(0,229,255,0.25); }
-    .about-layout { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-    .about-text { font-size:14px; color:var(--text-soft); line-height:2; }
-    .about-text p { margin-bottom:16px; }
-    .values { display:flex; flex-direction:column; gap:12px; }
-    .val { padding:20px; border-radius:16px; background:rgba(0,188,212,0.03); border:1px solid rgba(0,188,212,0.06); transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1); position:relative; overflow:hidden; }
-    .val::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; }
-    .val:nth-child(1)::before { background:var(--cyan); } .val:nth-child(2)::before { background:var(--orange); }
-    .val:nth-child(3)::before { background:var(--pink); } .val:nth-child(4)::before { background:var(--purple); }
-    .val:hover { transform:translateX(8px); background:rgba(0,188,212,0.04); }
-    .val h3 { font-family:var(--font-ui); font-size:11px; font-weight:700; letter-spacing:0.1em; margin-bottom:6px; }
-    .val:nth-child(1) h3{color:var(--cyan)} .val:nth-child(2) h3{color:var(--orange)}
-    .val:nth-child(3) h3{color:var(--pink)} .val:nth-child(4) h3{color:var(--purple)}
-    .val p { font-size:13px; color:var(--text-soft); }
+    /* ── Profile ── */
+    #profile .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    .profile-grid { display:grid; grid-template-columns:200px 1fr; gap:48px; align-items:start; }
+    .profile-avatar { width:200px; height:200px; border-radius:24px; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.08),rgba(124,77,255,0.08)); flex-shrink:0; }
+    .profile-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+    .profile-name-ja { font-size:32px; font-weight:900; margin-bottom:4px; }
+    .profile-name-en { font-family:var(--font-ui); font-size:12px; letter-spacing:0.2em; color:var(--text-soft); margin-bottom:20px; }
+    .profile-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .profile-tag { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; background:rgba(0,188,212,0.07); color:var(--cyan); border:1px solid rgba(0,188,212,0.15); }
+    .profile-bio { font-size:14px; color:var(--text-soft); line-height:2; font-family:var(--font-hand); }
+    @media(max-width:600px) { .profile-grid { grid-template-columns:1fr; } .profile-avatar { width:140px; height:140px; } }
 
-    /* ── Activities: scattered cards ── */
-    #acts .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
-    .acts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .act { display:block; padding:28px; border-radius:20px; background:rgba(0,188,212,0.03); border:1px solid rgba(0,188,212,0.06); text-decoration:none; transition:all 0.4s; perspective:600px; transform-style:preserve-3d; }
-    .act:hover { background:rgba(0,188,212,0.06); }
-    .act-icon { width:48px; height:48px; border-radius:14px; display:grid; place-items:center; margin-bottom:16px; }
-    .act-icon svg { width:22px; height:22px; }
-    .act:nth-child(1) .act-icon { background:rgba(255,64,129,0.1); } .act:nth-child(1) .act-icon svg { fill:var(--pink); }
-    .act:nth-child(2) .act-icon { background:rgba(0,229,255,0.1); } .act:nth-child(2) .act-icon svg { fill:var(--cyan); }
-    .act:nth-child(3) .act-icon { background:rgba(105,240,174,0.1); } .act:nth-child(3) .act-icon svg { fill:var(--green); }
-    .act:nth-child(4) .act-icon { background:rgba(255,171,64,0.1); } .act:nth-child(4) .act-icon svg { fill:var(--orange); }
-    .act:nth-child(5) .act-icon { background:rgba(179,136,255,0.1); } .act:nth-child(5) .act-icon svg { fill:var(--purple); }
-    .act:nth-child(6) .act-icon { background:rgba(68,138,255,0.1); } .act:nth-child(6) .act-icon svg { fill:var(--blue); }
-    .act h3 { font-size:16px; font-weight:700; margin-bottom:8px; }
-    .act p { font-size:13px; color:var(--text-soft); margin-bottom:14px; }
-    .act-go { font-size:11px; font-weight:700; font-family:var(--font-ui); letter-spacing:0.08em; }
-    .act:nth-child(1) .act-go{color:var(--pink)} .act:nth-child(2) .act-go{color:var(--cyan)}
-    .act:nth-child(3) .act-go{color:var(--green)} .act:nth-child(4) .act-go{color:var(--orange)}
-    .act:nth-child(5) .act-go{color:var(--purple)} .act:nth-child(6) .act-go{color:var(--blue)}
-    /* Hover glow per card */
-    .act:nth-child(1):hover{box-shadow:0 0 40px rgba(255,64,129,0.1);border-color:rgba(255,64,129,0.2)}
-    .act:nth-child(2):hover{box-shadow:0 0 40px rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.2)}
-    .act:nth-child(3):hover{box-shadow:0 0 40px rgba(105,240,174,0.1);border-color:rgba(105,240,174,0.2)}
-    .act:nth-child(4):hover{box-shadow:0 0 40px rgba(255,171,64,0.1);border-color:rgba(255,171,64,0.2)}
-    .act:nth-child(5):hover{box-shadow:0 0 40px rgba(179,136,255,0.1);border-color:rgba(179,136,255,0.2)}
-    .act:nth-child(6):hover{box-shadow:0 0 40px rgba(68,138,255,0.1);border-color:rgba(68,138,255,0.2)}
+    /* ── WIP Projects ── */
+    #wip .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
+    .wip-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .wip-card { padding:24px; border-radius:20px; background:#fff; border:1px solid rgba(124,77,255,0.1); box-shadow:0 2px 16px rgba(0,40,80,0.04); transition:all 0.3s; position:relative; overflow:hidden; }
+    .wip-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--cyan),var(--purple)); }
+    .wip-card:hover { transform:translateY(-3px); box-shadow:0 8px 36px rgba(0,40,80,0.08); }
+    .wip-cat { font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; color:var(--text-soft); margin-bottom:10px; }
+    .wip-name { font-size:16px; font-weight:700; margin-bottom:8px; }
+    .wip-desc { font-size:13px; color:var(--text-soft); line-height:1.8; margin-bottom:14px; font-family:var(--font-hand); }
+    .wip-status { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.1em; padding:3px 10px; border-radius:4px; background:rgba(124,77,255,0.08); color:var(--purple); }
+    .wip-status i { width:5px; height:5px; border-radius:50%; background:var(--purple); animation:blink 1.5s infinite; }
 
-    /* ── Pickup ── */
-    #pickup .sec-tag { color:var(--green); border-color:rgba(105,240,174,0.25); }
-    .pickup-layout { display:grid; grid-template-columns:1.2fr 0.8fr; gap:20px; }
-    .pickup-main { padding:32px; border-radius:24px; background:linear-gradient(135deg,rgba(0,229,255,0.04),rgba(255,64,129,0.04)); border:1px solid rgba(0,188,212,0.06); }
-    .pickup-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:6px; background:var(--green); color:var(--bg); font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; margin-bottom:16px; }
-    .pickup-badge i { width:4px; height:4px; border-radius:50%; background:var(--bg); animation:blink 1.2s infinite; }
-    .pickup-title { font-size:22px; font-weight:900; line-height:1.4; margin-bottom:14px; }
-    .pickup-text { font-size:13px; color:var(--text-soft); margin-bottom:16px; }
-    .tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
-    .tags span { padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600; background:rgba(0,188,212,0.04); border:1px solid rgba(0,188,212,0.06); color:var(--text-soft); }
+    /* ── ぶいちゃすと！ ── */
+    #buichasuto .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
+    .bvc-hero { display:flex; align-items:center; gap:32px; padding:32px; border-radius:24px; background:#fff; border:1px solid rgba(255,64,129,0.1); box-shadow:0 4px 24px rgba(0,40,80,0.05); margin-bottom:32px; }
+    .bvc-logo { width:80px; height:80px; border-radius:20px; background:linear-gradient(135deg,var(--pink),var(--purple)); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--font-ui); font-size:10px; font-weight:700; color:#fff; text-align:center; letter-spacing:0.05em; line-height:1.4; }
+    .bvc-name { font-size:24px; font-weight:900; margin-bottom:6px; }
+    .bvc-sub { font-size:13px; color:var(--text-soft); font-family:var(--font-hand); margin-bottom:14px; }
+    .bvc-link { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:8px; font-size:11px; font-weight:700; background:rgba(255,64,129,0.08); color:var(--pink); border:1px solid rgba(255,64,129,0.2); transition:all 0.2s; }
+    .bvc-link:hover { background:var(--pink); color:#fff; }
+    @media(max-width:600px) { .bvc-hero { flex-direction:column; align-items:flex-start; gap:16px; } }
 
-    .news { display:flex; flex-direction:column; gap:12px; }
-    .news-card { padding:20px; border-radius:16px; background:rgba(0,188,212,0.03); border:1px solid rgba(0,188,212,0.06); border-left:3px solid; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-    .news-card:nth-child(1){border-left-color:var(--cyan)} .news-card:nth-child(2){border-left-color:var(--pink)} .news-card:nth-child(3){border-left-color:var(--orange)}
-    .news-card:hover { transform:translateX(8px); background:rgba(0,188,212,0.04); }
-    .news-card small { font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; color:var(--cyan); }
-    .news-card h4 { font-size:14px; font-weight:700; margin:4px 0; }
-    .news-card p { font-size:12px; color:var(--text-soft); }
+    /* ── World section ── */
+    #worlds .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    .world-tabs { display:flex; gap:8px; margin-bottom:32px; }
+    .world-tab { padding:8px 20px; border-radius:8px; font-family:var(--font-ui); font-size:11px; font-weight:700; letter-spacing:0.08em; border:1px solid rgba(0,188,212,0.15); color:var(--text-soft); cursor:none; transition:all 0.25s; }
+    .world-tab.active { background:var(--cyan); color:#fff; border-color:var(--cyan); box-shadow:0 0 20px rgba(0,188,212,0.3); }
+    .world-tab:hover:not(.active) { border-color:var(--cyan); color:var(--cyan); }
+    .world-panel { display:none; }
+    .world-panel.active { display:block; }
+    .world-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .world-card { border-radius:20px; overflow:hidden; background:#fff; border:1px solid rgba(0,188,212,0.08); transition:all 0.35s; box-shadow:0 2px 20px rgba(0,40,80,0.04); }
+    .world-card:hover { transform:translateY(-4px); box-shadow:0 8px 40px rgba(0,188,212,0.12); border-color:rgba(0,188,212,0.2); }
+    .world-thumb { aspect-ratio:16/9; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.06),rgba(124,77,255,0.06)); display:flex; align-items:center; justify-content:center; }
+    .world-thumb img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
+    .world-card:hover .world-thumb img { transform:scale(1.04); }
+    .world-thumb-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+    .world-thumb-placeholder svg { width:40px; height:40px; opacity:0.2; }
+    .world-body { padding:20px; }
+    .world-name { font-size:16px; font-weight:700; margin-bottom:6px; }
+    .world-desc { font-size:13px; color:var(--text-soft); margin-bottom:16px; line-height:1.7; }
+    .world-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .world-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; transition:all 0.2s; }
+    .world-btn-intro { background:rgba(0,188,212,0.08); color:var(--cyan); border:1px solid rgba(0,188,212,0.2); }
+    .world-btn-intro:hover { background:rgba(0,188,212,0.15); }
+    .world-btn-open { background:rgba(124,77,255,0.08); color:var(--purple); border:1px solid rgba(124,77,255,0.2); }
+    .world-btn-open:hover { background:rgba(124,77,255,0.15); }
+    .world-btn svg { width:13px; height:13px; }
+
+    /* ── Events ── */
+    #events .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
+    .event-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+    .ev-sub-head { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+    .ev-sub-head + .ev-sub-head { margin-top:48px; }
+    .ev-sub-tag { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; }
+    .ev-sub-tag-org { background:rgba(255,64,129,0.1); color:var(--pink); }
+    .ev-sub-tag-cast { background:rgba(124,77,255,0.1); color:var(--purple); }
+    .ev-sub-title { font-size:15px; font-weight:700; color:var(--text-soft); }
+    .ev-divider { margin:40px 0 28px; border:none; border-top:1px solid rgba(0,188,212,0.08); }
+    .kanata-card { display:flex; align-items:center; gap:28px; padding:28px 32px; border-radius:20px; background:#fff; border:1px solid rgba(124,77,255,0.12); box-shadow:0 4px 24px rgba(0,40,80,0.05); transition:all 0.3s; position:relative; overflow:hidden; }
+    .kanata-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(124,77,255,0.03),rgba(0,188,212,0.03)); pointer-events:none; }
+    .kanata-card:hover { transform:translateY(-3px); box-shadow:0 8px 40px rgba(0,40,80,0.09); border-color:rgba(124,77,255,0.25); }
+    .kanata-icon { width:72px; height:72px; border-radius:16px; overflow:hidden; flex-shrink:0; background:linear-gradient(135deg,#0a0a1a,#1a1a3a); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.08); }
+    .kanata-icon img { width:100%; height:100%; object-fit:cover; }
+    .kanata-icon-fallback { font-family:var(--font-ui); font-size:11px; font-weight:700; color:rgba(255,255,255,0.6); text-align:center; letter-spacing:0.08em; line-height:1.4; }
+    .kanata-body { flex:1; min-width:0; }
+    .kanata-head { display:flex; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+    .kanata-name { font-size:20px; font-weight:900; letter-spacing:0.03em; }
+    .kanata-badge { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.1em; background:rgba(124,77,255,0.1); color:var(--purple); }
+    .kanata-desc { font-size:13px; color:var(--text-soft); line-height:1.9; margin-bottom:16px; font-family:var(--font-hand); }
+    .kanata-links { display:flex; gap:10px; flex-wrap:wrap; }
+    .kanata-link { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; font-size:11px; font-weight:700; border:1px solid; transition:all 0.2s; }
+    .kanata-link-x { color:#000; border-color:rgba(0,0,0,0.15); }
+    .kanata-link-x:hover { background:#000; color:#fff; border-color:#000; }
+    .kanata-link-vrc { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    .kanata-link-vrc:hover { background:var(--cyan); color:#fff; border-color:var(--cyan); }
+    .kanata-link svg { width:12px; height:12px; flex-shrink:0; }
+
+    /* ── Videos ── */
+    #videos .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
+    .video-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .ev-sub-tag-video { background:rgba(255,64,129,0.1); color:var(--pink); }
+    .ev-sub-tag-live  { background:rgba(255,64,129,0.1); color:var(--pink); }
+    .ev-sub-tag-shorts{ background:rgba(124,77,255,0.1); color:var(--purple); }
+    .ev-sub-tag-booth  { background:rgba(255,64,129,0.1); color:var(--pink); }
+    .ev-sub-tag-gimmick{ background:rgba(124,77,255,0.1); color:var(--purple); }
+    .vid-featured { display:flex; gap:28px; align-items:flex-start; background:#fff; border-radius:20px; padding:24px; border:1px solid rgba(255,64,129,0.08); box-shadow:0 4px 24px rgba(0,40,80,0.05); }
+    .vid-embed { flex:0 0 58%; position:relative; border-radius:12px; overflow:hidden; background:#000; }
+    .vid-embed::before { content:''; display:block; padding-top:56.25%; }
+    .vid-embed iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+    .vid-meta { flex:1; display:flex; flex-direction:column; gap:16px; padding-top:4px; }
+    .vid-meta-title { font-size:14px; font-weight:700; line-height:1.75; color:var(--text); }
+    .vid-meta-ch { font-size:11px; color:var(--text-soft); font-family:var(--font-ui); letter-spacing:0.06em; }
+    .vid-meta-link { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--pink); border:1px solid rgba(255,64,129,0.25); padding:7px 16px; border-radius:8px; transition:all 0.2s; margin-top:auto; }
+    .vid-meta-link:hover { background:var(--pink); color:#fff; }
+    @media(max-width:700px) { .vid-featured { flex-direction:column; } .vid-embed { flex:none; width:100%; } }
+
+    /* ── Illust ── */
+    #illust .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
+    .illust-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .illust-thumb { aspect-ratio:1/1; border-radius:16px; overflow:hidden; background:linear-gradient(135deg,rgba(124,77,255,0.06),rgba(255,64,129,0.06)); border:1px solid rgba(124,77,255,0.08); display:flex; align-items:center; justify-content:center; }
+    .illust-thumb svg { width:32px; height:32px; opacity:0.18; }
+
+    /* ── Album ── */
+    #album .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    .album-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .album-thumb { aspect-ratio:4/3; border-radius:16px; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.06),rgba(124,77,255,0.06)); border:1px solid rgba(0,188,212,0.08); display:flex; align-items:center; justify-content:center; }
+    .album-thumb svg { width:32px; height:32px; opacity:0.18; }
+
+    /* ── Booth ── */
+    #booth .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
+
+    /* ── News / Articles / Blog ── */
+    #news .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    #articles .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
+    #blog .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
+
+    .card-list { display:flex; flex-direction:column; gap:14px; }
+    .card-item { display:flex; align-items:flex-start; gap:20px; padding:22px; border-radius:16px; background:#fff; border:1px solid rgba(0,188,212,0.06); border-left:3px solid var(--cyan); transition:all 0.3s; }
+    .card-item:hover { transform:translateX(6px); background:rgba(0,188,212,0.015); }
+    #news .card-item { border-left-color:var(--cyan); }
+    #articles .card-item { border-left-color:var(--purple); }
+    #blog .card-item { border-left-color:var(--purple); }
+    .card-date { font-family:var(--font-ui); font-size:10px; letter-spacing:0.1em; color:var(--text-soft); white-space:nowrap; padding-top:3px; }
+    .card-body h4 { font-size:15px; font-weight:700; margin-bottom:5px; }
+    .card-body p { font-size:13px; color:var(--text-soft); }
+
+    /* ── Placeholder card ── */
+    .placeholder-card { padding:32px; border-radius:20px; background:rgba(0,188,212,0.02); border:1.5px dashed rgba(0,188,212,0.15); text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .placeholder-card svg { width:36px; height:36px; opacity:0.15; }
+    .placeholder-card p { font-size:13px; color:var(--text-soft); font-family:var(--font-hand); }
+    .placeholder-badge { display:inline-block; padding:3px 10px; border-radius:4px; background:rgba(0,188,212,0.08); color:var(--cyan); font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; }
+
+    .placeholder-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+    .placeholder-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 
     /* ── Links ── */
-    #links .sec-tag { color:var(--purple); border-color:rgba(179,136,255,0.25); }
-    .links-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-    .lnk { display:flex; align-items:center; gap:14px; padding:16px 20px; border-radius:14px; background:rgba(0,188,212,0.03); border:1px solid rgba(0,188,212,0.06); transition:all 0.3s; position:relative; z-index:0; }
-    .lnk::before { content:''; position:absolute; inset:-2px; border-radius:16px; z-index:-1; background:conic-gradient(from var(--angle),var(--cyan),var(--purple),var(--pink),var(--cyan)); animation:rotateBorder 4s linear infinite; opacity:0; transition:opacity 0.4s; }
-    .lnk::after { content:''; position:absolute; inset:0; border-radius:14px; background:var(--bg); z-index:-1; }
-    .lnk:hover::before { opacity:1; }
-    .lnk:hover { transform:translateY(-3px); }
-    .lnk-icon { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; flex-shrink:0; }
-    .lnk-icon svg { width:18px; height:18px; }
-    .lnk h4 { font-size:13px; font-weight:700; }
-    .lnk p { font-size:11px; color:var(--text-soft); }
+    #links .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    .links-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+    .link-card { display:flex; align-items:center; gap:16px; padding:20px 22px; border-radius:18px; background:#fff; border:1px solid rgba(0,188,212,0.08); box-shadow:0 2px 14px rgba(0,40,80,0.04); transition:all 0.25s; }
+    .link-card:hover { transform:translateY(-3px); box-shadow:0 8px 32px rgba(0,40,80,0.08); }
+    .link-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .link-icon svg { width:20px; height:20px; }
+    .link-info { flex:1; min-width:0; }
+    .link-name { font-size:14px; font-weight:700; margin-bottom:2px; }
+    .link-handle { font-size:11px; color:var(--text-soft); }
+    .link-arrow { font-size:16px; color:var(--text-soft); flex-shrink:0; opacity:0.5; }
+    .link-card:hover .link-arrow { opacity:1; color:var(--cyan); }
+    .link-x .link-icon { background:rgba(0,0,0,0.05); }
+    .link-x .link-icon svg { fill:#000; }
+    .link-x:hover { border-color:rgba(0,0,0,0.15); }
+    .link-yt .link-icon { background:rgba(255,0,0,0.07); }
+    .link-yt .link-icon svg { fill:#FF0000; }
+    .link-yt:hover { border-color:rgba(255,0,0,0.2); }
+    .link-vrc .link-icon { background:rgba(0,188,212,0.08); }
+    .link-vrc .link-icon svg { fill:var(--cyan); }
+    .link-vrc:hover { border-color:rgba(0,188,212,0.25); }
+    .link-booth .link-icon { background:rgba(255,64,129,0.07); }
+    .link-booth .link-icon svg { fill:var(--pink); }
+    .link-booth:hover { border-color:rgba(255,64,129,0.2); }
+    .link-discord .link-icon { background:rgba(88,101,242,0.08); }
+    .link-discord .link-icon svg { fill:#5865F2; }
+    .link-discord:hover { border-color:rgba(88,101,242,0.2); }
+    .link-fanbox .link-icon { background:rgba(255,84,33,0.07); }
+    .link-fanbox .link-icon svg { fill:#ff5421; }
+    .link-fanbox:hover { border-color:rgba(255,84,33,0.2); }
+    .link-support .link-icon { background:rgba(124,77,255,0.08); }
+    .link-support .link-icon svg { fill:var(--purple); }
+    .link-support:hover { border-color:rgba(124,77,255,0.25); }
+    .link-contact .link-icon { background:rgba(0,188,212,0.08); }
+    .link-contact .link-icon svg { fill:var(--cyan); }
+    .link-contact:hover { border-color:rgba(0,188,212,0.25); }
 
     /* ── Footer ── */
-    .foot { text-align:center; padding:60px 20px; border-top:1px solid rgba(0,188,212,0.04); position:relative; z-index:1; }
+    .foot { text-align:center; padding:60px 20px; border-top:1px solid rgba(0,188,212,0.06); position:relative; z-index:1; }
     .foot-msg { font-size:14px; color:var(--text-soft); margin-bottom:20px; font-family:var(--font-hand); }
-    .foot-row { display:flex; justify-content:center; gap:10px; margin-bottom:16px; }
-    .foot-link { padding:8px 16px; border-radius:8px; font-size:11px; font-weight:700; border:1px solid rgba(0,188,212,0.06); color:var(--text-soft); transition:all 0.3s; display:flex; align-items:center; gap:6px; }
+    .foot-row { display:flex; justify-content:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .foot-link { padding:8px 16px; border-radius:8px; font-size:11px; font-weight:700; border:1px solid rgba(0,188,212,0.08); color:var(--text-soft); transition:all 0.3s; display:flex; align-items:center; gap:6px; }
     .foot-link svg { width:14px; height:14px; }
     .foot-link:hover { color:var(--cyan); border-color:var(--cyan); }
     .foot-copy { font-size:10px; color:var(--text-soft); opacity:0.3; }
 
+    /* ── 3D tilt/magnetic ── */
+    .tilt { transform-style:preserve-3d; }
+
     /* ── Responsive ── */
-    @media(max-width:820px) { .hero-grid,.about-layout,.pickup-layout{grid-template-columns:1fr} .acts-grid,.links-row{grid-template-columns:1fr 1fr} .hdr-nav{display:none} body{cursor:auto} a{cursor:auto} .cursor,.cursor-ring{display:none} }
-    @media(max-width:560px) { .acts-grid,.links-row{grid-template-columns:1fr} .hero{padding:60px 0 40px} .hero-btns{flex-direction:column} .btn{width:100%;justify-content:center} }
+    @media(max-width:960px) {
+      .world-grid { grid-template-columns:repeat(2,1fr); }
+      .video-grid { grid-template-columns:repeat(2,1fr); }
+      .illust-grid { grid-template-columns:repeat(3,1fr); }
+    }
+    @media(max-width:820px) {
+      .hero-grid { grid-template-columns:1fr; }
+      .hdr-nav { display:none; }
+      body { cursor:auto; } a { cursor:auto; }
+      .cursor { display:none; }
+      .world-grid, .event-grid, .video-grid, .album-grid { grid-template-columns:1fr; }
+      .illust-grid { grid-template-columns:repeat(2,1fr); }
+      .placeholder-grid-2, .placeholder-grid-3 { grid-template-columns:1fr; }
+    }
+    @media(max-width:560px) {
+      .hero { padding:60px 0 40px; }
+      .hero-btns { flex-direction:column; }
+      .btn { width:100%; justify-content:center; }
+      .hdr-actions { display:none; }
+    }
   </style>
 </head>
 <body>
@@ -251,26 +369,41 @@
   <div class="curtain-bot" id="curtainBot"></div>
 
   <canvas id="bgCanvas"></canvas>
-  <div class="cursor" id="cur"></div>
-  <div class="cursor-ring" id="curRing"></div>
+  <svg class="cursor" id="cur" width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
+    <polygon class="cur-shape" points="1,1 1,13.5 4.5,10.5 6.5,15.5 8.5,14.5 6.5,9.5 11,9.5"/>
+  </svg>
   <div class="scroll-bar" id="scrollBar"></div>
 
   <div class="wrap">
     <!-- Header -->
     <header class="hdr">
       <a href="#" class="hdr-logo">
-        <svg viewBox="0 0 32 32" fill="none"><path d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2Zm6.5 10.5c0 1.38-.56 2.63-1.46 3.54L16 21.07l-5.04-5.03A5.01 5.01 0 0 1 16 7.5a5.01 5.01 0 0 1 6.5 5Z" fill="var(--cyan)"/></svg>
+        <img src="images/icon.png" alt="鮫月ナツネ" />
         <span>NATSUNE</span>
       </a>
       <nav class="hdr-nav">
-        <a href="#about">ABOUT</a><a href="#acts">ACTIVITIES</a><a href="#pickup">PICKUP</a><a href="#links">LINKS</a><a href="links.html">ALL LINKS</a>
+        <a href="#profile">プロフィール</a>
+        <a href="#wip">進行中</a>
+        <a href="#worlds">ワールド</a>
+        <a href="#events">イベント</a>
+        <a href="#videos">動画</a>
+        <a href="#buichasuto">ぶいちゃすと</a>
+        <a href="#illust">イラスト</a>
+        <a href="#album">アルバム</a>
+        <a href="#booth">ブース</a>
+        <a href="#news">お知らせ</a>
+        <a href="#links">リンク</a>
       </nav>
+      <div class="hdr-actions">
+        <a href="shien.html" class="hdr-btn-support">支援</a>
+        <a href="contact.html" class="hdr-btn-contact">お問い合わせ</a>
+      </div>
     </header>
 
     <!-- Marquee -->
     <div class="marquee"><div class="m-track">
-      <span class="hi">World Creator</span><span>&mdash;</span><span>Gimmick Developer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>BOOTH</span><span>&mdash;</span><span class="hi">Event Organizer</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
-      <span class="hi">World Creator</span><span>&mdash;</span><span>Gimmick Developer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>BOOTH</span><span>&mdash;</span><span class="hi">Event Organizer</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
+      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Illustrator</span><span>&mdash;</span><span class="hi">BOOTH</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
+      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Illustrator</span><span>&mdash;</span><span class="hi">BOOTH</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
     </div></div>
 
     <!-- Hero -->
@@ -279,100 +412,543 @@
         <div class="hero-status"><i></i> PORTAL ACTIVE</div>
         <p class="hero-role">VRChat Creator / World Builder / Community Organizer</p>
         <h1 class="hero-name" id="heroName">鮫月ナツネ</h1>
-        <p class="hero-desc">ワールド制作も ギミック開発も 動画も イベントも<br>全部ひっくるめて "鮫月ナツネ" という活動。<br>このサイトは 技術の説明書ではなく<br>ナツネという人そのものに触れるための入口です。</p>
+        <p class="hero-desc">ワールド制作も イベントも 動画も イラストも<br>全部ひっくるめて "鮫月ナツネ" という活動。<br>このサイトは 技術の説明書ではなく<br>ナツネという人そのものに触れるための入口です。</p>
         <div class="hero-btns">
-          <a href="#about" class="btn btn-p magnetic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Enter Portal</a>
-          <a href="links.html" class="btn btn-s magnetic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> All Links</a>
+          <a href="#worlds" class="btn btn-p magnetic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            活動を見る
+          </a>
+          <a href="https://x.com/natsune_vrc" target="_blank" class="btn btn-s magnetic">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
+            X をフォロー
+          </a>
         </div>
       </div>
       <div class="avatar-wrap">
         <div class="avatar-glow"></div>
-        <div class="avatar-blob"><img src="images/avatar.png" alt="鮫月ナツネ" /></div>
+        <div class="avatar-blob"><img src="images/tate01.png" alt="鮫月ナツネ" /></div>
       </div>
     </div></section>
 
-    <!-- About -->
-    <section class="sec" id="about"><div class="container">
-      <div class="sec-tag">// ABOUT</div>
-      <h2 class="sec-title">何を作っているかより<br>どんな人かが先に伝わる場所へ</h2>
-      <p class="sec-desc">実績の羅列よりも「何を大事にして、どんな空気を作る人なのか」を先に感じてもらう構成。</p>
-      <div class="about-layout">
-        <div class="about-text">
-          <p>鮫月ナツネは、VRChatを中心に活動する個人クリエイター。ワールド制作、ギミック開発、動画発信、イベント企画、コミュニティ運営まで、表現の形をひとつに絞らず、その時いちばん面白いと思う方法で人と場をつないでいくタイプです。</p>
-          <p>技術だけを見せるのではなく、そこに集まる人の体験や空気感まで含めてデザインすることを大切にしています。作品単体ではなく、「この人の活動を追っていくと面白い」と思ってもらえる存在を目指しています。</p>
+    <!-- 0a. プロフィール -->
+    <section class="sec" id="profile"><div class="container">
+      <div class="sec-tag">// PROFILE</div>
+      <h2 class="sec-title">プロフィール</h2>
+      <div class="profile-grid">
+        <div class="profile-avatar">
+          <img src="images/icon.png" alt="鮫月ナツネ" />
         </div>
-        <div class="values">
-          <div class="val"><h3>CORE VALUE</h3><p>人が入りやすく、居たくなり、また来たくなる空気を作ること。</p></div>
-          <div class="val"><h3>AXIS</h3><p>作る、見せる、集めるを分けずに、ひとつの世界観として育てていく。</p></div>
-          <div class="val"><h3>DESIGN</h3><p>人物の魅力と温度感が伝わる公式ポータルとして設計。</p></div>
-          <div class="val"><h3>TARGET</h3><p>VRChatユーザー、作品を見たい人、活動を応援したい人。</p></div>
-        </div>
-      </div>
-    </div></section>
-
-    <!-- Activities -->
-    <section class="sec" id="acts"><div class="container">
-      <div class="sec-tag">// ACTIVITIES</div>
-      <h2 class="sec-title">全部が鮫月ナツネの活動</h2>
-      <div class="acts-grid">
-        <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="act tilt">
-          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/></svg></div>
-          <h3>YouTube</h3><p>動画で届ける活動の入り口。</p><span class="act-go">CHANNEL &rarr;</span>
-        </a>
-        <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" class="act tilt">
-          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg></div>
-          <h3>ワールド制作</h3><p>体験と居心地を設計するワールドづくり。</p><span class="act-go">WORLDS &rarr;</span>
-        </a>
-        <a href="#" class="act tilt">
-          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58ZM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2Z"/></svg></div>
-          <h3>ギミック開発</h3><p>遊び心と実用性の仕組みづくり。</p><span class="act-go">GIMMICK &rarr;</span>
-        </a>
-        <a href="#" class="act tilt">
-          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2ZM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1Zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2Z"/></svg></div>
-          <h3>BOOTH販売</h3><p>ナツネの世界観に触れられるショップ。</p><span class="act-go">SHOP &rarr;</span>
-        </a>
-        <a href="#" class="act tilt">
-          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2Zm3 18H5V8h14v11Z"/></svg></div>
-          <h3>イベント</h3><p>記憶に残る体験をデザインする。</p><span class="act-go">EVENT &rarr;</span>
-        </a>
-        <a href="#" class="act tilt">
-          <div class="act-icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2Zm-2 12H6v-2h12v2Zm0-3H6V9h12v2Zm0-3H6V6h12v2Z"/></svg></div>
-          <h3>コミュニティ</h3><p>人がつながり続ける場を育てる。</p><span class="act-go">COMMUNITY &rarr;</span>
-        </a>
-      </div>
-    </div></section>
-
-    <!-- Pickup -->
-    <section class="sec" id="pickup"><div class="container">
-      <div class="sec-tag">// LATEST</div>
-      <h2 class="sec-title">今、何をしている人なのか</h2>
-      <div class="pickup-layout">
-        <div class="pickup-main">
-          <div class="pickup-badge"><i></i> LIVE STATUS</div>
-          <h3 class="pickup-title">新しいワールド制作と発信を軸に<br>活動全体の見せ方を更新中</h3>
-          <p class="pickup-text">ワールド、動画、イベント、SNS、販売導線がひとつの流れとしてつながるように活動全体を再設計中。</p>
-          <div class="tags"><span>新作ワールド</span><span>発信強化</span><span>活動整理</span><span>ポータル更新</span></div>
-          <a href="#links" class="btn btn-p magnetic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 投稿先を見る</a>
-        </div>
-        <div class="news">
-          <div class="news-card"><small>PICKUP 01</small><h4>制作物をまとめて見られる導線を整備</h4><p>はじめて来た人が迷わず活動を追えるよう整理進行中。</p></div>
-          <div class="news-card"><small>PICKUP 02</small><h4>イベント・コミュニティの見せ方強化</h4><p>誰とどんな空気を作っているかまで伝わる構成へ。</p></div>
-          <div class="news-card"><small>PICKUP 03</small><h4>ビジュアル表現を拡張予定</h4><p>立ち絵・アバター・キービジュアルで人物感をさらに強く。</p></div>
+        <div>
+          <div class="profile-name-ja">鮫月ナツネ</div>
+          <div class="profile-name-en">SAMETSUKI NATSUNE</div>
+          <div class="profile-tags">
+            <span class="profile-tag">VRChat Creator</span>
+            <span class="profile-tag">World Builder</span>
+            <span class="profile-tag">Event Organizer</span>
+            <span class="profile-tag">YouTuber</span>
+            <span class="profile-tag">Illustrator</span>
+          </div>
+          <p class="profile-bio">VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。</p>
         </div>
       </div>
     </div></section>
 
-    <!-- Links -->
+    <!-- 0b. 現在進行中のプロジェクト -->
+    <section class="sec" id="wip"><div class="container">
+      <div class="sec-tag">// WORK IN PROGRESS</div>
+      <h2 class="sec-title">現在進行中のプロジェクト</h2>
+      <p class="sec-desc">今まさに動いているプロジェクトたち。</p>
+      <div class="wip-grid">
+        <div class="wip-card reveal-item">
+          <div class="wip-cat">WORLD</div>
+          <div class="wip-name">制作中ワールド</div>
+          <p class="wip-desc">新しいワールドを構想・制作中。詳細は近日公開予定。</p>
+          <div class="wip-status"><i></i> IN PROGRESS</div>
+        </div>
+        <div class="wip-card reveal-item">
+          <div class="wip-cat">EVENT</div>
+          <div class="wip-name">企画中イベント</div>
+          <p class="wip-desc">VRChat内での新しいイベントを企画中。続報をお待ちください。</p>
+          <div class="wip-status"><i></i> PLANNING</div>
+        </div>
+        <div class="wip-card reveal-item">
+          <div class="wip-cat">COMMUNITY</div>
+          <div class="wip-name">ぶいちゃすと！</div>
+          <p class="wip-desc">VRChat住民による動画投稿グループを運営中。メンバー拡充を検討中。</p>
+          <div class="wip-status"><i></i> RUNNING</div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 1. ワールド制作 -->
+    <section class="sec" id="worlds"><div class="container">
+      <div class="sec-tag">// WORLD</div>
+      <h2 class="sec-title">ワールド制作</h2>
+      <p class="sec-desc">体験と居心地を設計するワールドづくり。制作したワールドと、監修・協力したワールドを掲載しています。</p>
+
+      <div class="world-tabs">
+        <button class="world-tab active" data-panel="made">制作ワールド</button>
+        <button class="world-tab" data-panel="supervised">制作監修ワールド</button>
+      </div>
+
+      <!-- 制作ワールド -->
+      <div class="world-panel active" id="panel-made">
+        <div class="world-grid">
+          <!-- 君と白に眠る -->
+          <div class="world-card tilt">
+            <div class="world-thumb">
+              <img src="images/world-kimitoshiro.png" alt="君と白に眠る" />
+            </div>
+            <div class="world-body">
+              <h3 class="world-name">君と白に眠る</h3>
+              <p class="world-desc">雪と静寂の中で、誰かと過ごすためのワールド。</p>
+              <div class="world-actions">
+                <a href="worlds/kimitoshiro/index.html" class="world-btn world-btn-intro">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  紹介ページ
+                </a>
+                <a href="https://vrchat.com/home/world/wrld_placeholder_kimitoshiro" target="_blank" class="world-btn world-btn-open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                  VRChatで開く
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- 灯り巣-TOMORIS -->
+          <div class="world-card tilt">
+            <div class="world-thumb world-thumb-placeholder">
+              <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+            </div>
+            <div class="world-body">
+              <h3 class="world-name">灯り巣 -TOMORIS-</h3>
+              <p class="world-desc">温かな灯りが集まる、居場所のようなワールド。</p>
+              <div class="world-actions">
+                <a href="worlds/tomoris/index.html" class="world-btn world-btn-intro">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  紹介ページ
+                </a>
+                <a href="https://vrchat.com/home/world/wrld_placeholder_tomoris" target="_blank" class="world-btn world-btn-open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                  VRChatで開く
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 制作監修ワールド -->
+      <div class="world-panel" id="panel-supervised">
+        <div class="placeholder-grid-2">
+          <div class="placeholder-card">
+            <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+            <span class="placeholder-badge">COMING SOON</span>
+            <p>監修ワールドを順次追加予定</p>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 2. イベント -->
+    <section class="sec" id="events"><div class="container">
+      <div class="sec-tag">// EVENTS</div>
+      <h2 class="sec-title">イベント</h2>
+      <p class="sec-desc">VRChatを舞台にしたイベントへの関わりをまとめています。</p>
+
+      <!-- 運営イベント -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-org">ORGANIZER</span>
+        <h3 class="ev-sub-title">運営イベント</h3>
+      </div>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2Zm3 18H5V8h14v11Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>イベント情報を準備中です</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M17 12h-5v5h5v-5ZM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2Zm3 18H5V8h14v11Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>過去のイベントアーカイブも追加予定</p>
+        </div>
+      </div>
+
+      <hr class="ev-divider" />
+
+      <!-- 所属イベント -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-cast">CAST</span>
+        <h3 class="ev-sub-title">所属イベント</h3>
+      </div>
+      <div class="kanata-card reveal-item">
+        <div class="kanata-icon">
+          <div class="kanata-icon-fallback">彼方<br>BAR</div>
+        </div>
+        <div class="kanata-body">
+          <div class="kanata-head">
+            <span class="kanata-name">彼方BAR</span>
+            <span class="kanata-badge">キャスト</span>
+          </div>
+          <p class="kanata-desc">VRChat内で開催されるバーイベント。ゆっくりとした時間の中でお酒と会話を楽しめる空間づくりに、キャストとして参加しています。</p>
+          <div class="kanata-links">
+            <a href="https://x.com/KanataBar_VRC" target="_blank" class="kanata-link kanata-link-x">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
+              @KanataBar_VRC
+            </a>
+            <a href="https://vrchat.com/home/group/grp_6fd14174-f59b-4b4d-bb2c-1d1771422c74" target="_blank" class="kanata-link kanata-link-vrc">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+              VRChatグループ
+            </a>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 3. 動画コンテンツ -->
+    <section class="sec" id="videos"><div class="container">
+      <div class="sec-tag">// VIDEOS</div>
+      <h2 class="sec-title">動画コンテンツ</h2>
+      <p class="sec-desc">YouTubeで発信している動画コンテンツ。VRChatの楽しさや制作の裏側をお届けします。</p>
+
+      <!-- 最新動画 -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-video">LATEST</span>
+        <h3 class="ev-sub-title">最新動画</h3>
+      </div>
+      <div class="vid-featured reveal-item">
+        <div class="vid-embed">
+          <iframe src="https://www.youtube.com/embed/t-RJGCgLKQ0" title="最新動画" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="vid-meta">
+          <p class="vid-meta-ch">// @natsune_vrc</p>
+          <p class="vid-meta-title">【完全無料】 VRChatで自分だけのマイワールドの作り方を世界一わかりやすく解説！【超初心者向け】</p>
+          <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="vid-meta-link">
+            チャンネルを見る →
+          </a>
+        </div>
+      </div>
+
+      <hr class="ev-divider" />
+
+      <!-- ライブ配信 -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-live">LIVE</span>
+        <h3 class="ev-sub-title">ライブ配信</h3>
+      </div>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--pink)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>ライブ配信情報を掲載予定</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--pink)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>配信アーカイブも追加予定</p>
+        </div>
+      </div>
+
+      <hr class="ev-divider" />
+
+      <!-- ショート動画 -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-shorts">SHORTS</span>
+        <h3 class="ev-sub-title">ショート動画</h3>
+      </div>
+      <div class="placeholder-grid-3">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>ショート動画を掲載予定</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>VRChatショートクリップ</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>制作の裏側ダイジェスト</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 3b. ぶいちゃすと！ -->
+    <section class="sec" id="buichasuto"><div class="container">
+      <div class="sec-tag">// COMMUNITY</div>
+      <h2 class="sec-title">ぶいちゃすと！</h2>
+      <p class="sec-desc">VRChatの住民を中心とした動画投稿グループ。ナツネが運営しています。</p>
+      <div class="bvc-hero reveal-item">
+        <div class="bvc-logo">ぶいちゃ<br>すと！</div>
+        <div>
+          <div class="bvc-name">ぶいちゃすと！</div>
+          <p class="bvc-sub">VRChatを舞台に活動するクリエイターが集まる動画投稿グループ。<br>メンバーによる多彩なコンテンツを発信中。</p>
+          <a href="buichasuto.html" class="bvc-link">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 14-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8Z"/></svg>
+            詳しく見る
+          </a>
+        </div>
+      </div>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--pink)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>メンバー紹介</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--pink)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 14.5v-9l6 4.5-6 4.5Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>コンテンツ紹介</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 4. イラスト -->
+    <section class="sec" id="illust"><div class="container">
+      <div class="sec-tag">// ILLUSTRATION</div>
+      <h2 class="sec-title">イラスト</h2>
+      <p class="sec-desc">描いたイラストや、活動で使用したビジュアルを掲載します。</p>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M21 7h-3a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1h3v-2h-3V9h3V7Zm-5 10H4V7h12v10Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>イラストを順次掲載予定</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M21 7h-3a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1h3v-2h-3V9h3V7Zm-5 10H4V7h12v10Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>活動で使用したビジュアルも掲載予定</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 5. アルバム -->
+    <section class="sec" id="album"><div class="container">
+      <div class="sec-tag">// ALBUM</div>
+      <h2 class="sec-title">アルバム</h2>
+      <p class="sec-desc">VRChatでの思い出の写真、スクリーンショットギャラリー。</p>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2ZM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>スクリーンショットを順次掲載予定</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2ZM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>思い出の写真ギャラリー準備中</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 6. ブース -->
+    <section class="sec" id="booth"><div class="container">
+      <div class="sec-tag">// BOOTH</div>
+      <h2 class="sec-title">ブース</h2>
+      <p class="sec-desc">ナツネの世界観に触れられるショップ。VRChatアバター・アセット・グッズを販売中。</p>
+
+      <!-- BOOTHショップ -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-booth">BOOTH</span>
+        <h3 class="ev-sub-title">BOOTHショップ</h3>
+      </div>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--pink)"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2ZM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 4H5.21l-.94-2H1Zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2Z"/></svg>
+          <span class="placeholder-badge">BOOTH</span>
+          <p><a href="https://natsunevrc.booth.pm/" target="_blank" style="color:var(--pink);font-weight:700;">BOOTHショップを見る →</a></p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--pink)"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2ZM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 4H5.21l-.94-2H1Zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>商品ページを順次掲載予定</p>
+        </div>
+      </div>
+
+      <hr class="ev-divider" />
+
+      <!-- ブースギミック -->
+      <div class="ev-sub-head">
+        <span class="ev-sub-tag ev-sub-tag-gimmick">GIMMICK</span>
+        <h3 class="ev-sub-title">ブースギミック</h3>
+      </div>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>ギミックの詳細を準備中</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>動作サンプル動画も追加予定</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 7. お知らせ -->
+    <section class="sec" id="news"><div class="container">
+      <div class="sec-tag">// NEWS</div>
+      <h2 class="sec-title">お知らせ</h2>
+      <p class="sec-desc">活動の最新情報をお届けします。</p>
+      <div class="card-list">
+        <div class="card-item">
+          <div class="card-date">2026.04.05</div>
+          <div class="card-body">
+            <h4>ポータルサイトをリニューアルしました</h4>
+            <p>活動情報をまとめた新しいポータルサイトを公開しました。ワールド・イベント・動画など各セクションを順次更新していきます。</p>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-date">2026.04.01</div>
+          <div class="card-body">
+            <h4>BOOTHショップ・Fanbox 運営中</h4>
+            <p>BOOTHにてアセット販売、Fanboxにてコンテンツ発信を行っています。ご支援いただけると嬉しいです。</p>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-date">-</div>
+          <div class="card-body">
+            <h4>お知らせを順次追加予定</h4>
+            <p>イベント情報・ワールドアップデート・動画公開情報などをこちらに掲載していきます。</p>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 8. 記事 -->
+    <section class="sec" id="articles"><div class="container">
+      <div class="sec-tag">// ARTICLES</div>
+      <h2 class="sec-title">記事</h2>
+      <p class="sec-desc">VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。</p>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-5 14H7v-2h7v2Zm3-4H7v-2h10v2Zm0-4H7V7h10v2Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>記事を準備中です</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-5 14H7v-2h7v2Zm3-4H7v-2h10v2Zm0-4H7V7h10v2Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>制作Tipsなどを掲載予定</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 9. ブログ -->
+    <section class="sec" id="blog"><div class="container">
+      <div class="sec-tag">// BLOG</div>
+      <h2 class="sec-title">ブログ</h2>
+      <p class="sec-desc">活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。</p>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>ブログを書き始める予定です</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>日常の記録を残していきます</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 10. リンク -->
     <section class="sec" id="links"><div class="container">
       <div class="sec-tag">// LINKS</div>
-      <h2 class="sec-title">次の一歩を踏み出す導線</h2>
-      <div class="links-row">
-        <a href="https://x.com/natsune_vrc" target="_blank" class="lnk"><div class="lnk-icon" style="background:rgba(0,188,212,0.06)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></div><div><h4>X / Twitter</h4><p>日々の動きや告知</p></div></a>
-        <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="lnk"><div class="lnk-icon" style="background:rgba(255,0,0,0.1)"><svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/></svg></div><div><h4>YouTube</h4><p>動画コンテンツ</p></div></a>
-        <a href="#" class="lnk"><div class="lnk-icon" style="background:rgba(252,77,80,0.1)"><svg viewBox="0 0 24 24" fill="#fc4d50"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2ZM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 4H5.21l-.94-2H1Zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2Z"/></svg></div><div><h4>BOOTH</h4><p>作品・アセット販売</p></div></a>
-        <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" class="lnk"><div class="lnk-icon" style="background:rgba(0,229,255,0.1)"><svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg></div><div><h4>VRChat</h4><p>ワールド・プロフィール</p></div></a>
-        <a href="#" class="lnk"><div class="lnk-icon" style="background:rgba(88,101,242,0.1)"><svg viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg></div><div><h4>Discord</h4><p>コミュニティ</p></div></a>
-        <a href="links.html" class="lnk" style="border-color:rgba(0,229,255,0.2)"><div class="lnk-icon" style="background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(255,64,129,0.15))"><svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div><div><h4 style="color:var(--cyan)">All Links</h4><p>全リンク集を見る</p></div></a>
+      <h2 class="sec-title">リンク</h2>
+      <p class="sec-desc">各種SNSやプラットフォームへのリンクをまとめています。</p>
+      <div class="links-grid">
+        <!-- X / Twitter -->
+        <a href="https://x.com/natsune_vrc" target="_blank" class="link-card link-x reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">X / Twitter</div>
+            <div class="link-handle">@natsune_vrc</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="link-card link-yt reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">YouTube</div>
+            <div class="link-handle">@natsune_vrc</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- VRChat -->
+        <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" class="link-card link-vrc reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">VRChat</div>
+            <div class="link-handle">鮫月ナツネ</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- BOOTH -->
+        <a href="https://natsunevrc.booth.pm/" target="_blank" class="link-card link-booth reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2ZM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 4H5.21l-.94-2H1Zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">BOOTH</div>
+            <div class="link-handle">natsunevrc.booth.pm</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- Discord -->
+        <a href="contact.html" class="link-card link-discord reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">Discord</div>
+            <div class="link-handle">コミュニティサーバー</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- Pixiv Fanbox -->
+        <a href="https://natsunevrc.fanbox.cc/" target="_blank" class="link-card link-fanbox reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M6.135 0H1.22C.547 0 0 .547 0 1.22v21.56C0 23.453.547 24 1.22 24h4.916c.672 0 1.22-.547 1.22-1.22V1.22C7.355.547 6.807 0 6.135 0ZM22.78 9.56h-9.552c-.673 0-1.22.547-1.22 1.22v11.999c0 .674.547 1.221 1.22 1.221H22.78c.674 0 1.22-.547 1.22-1.22V10.78c0-.673-.546-1.22-1.22-1.22Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">Pixiv Fanbox</div>
+            <div class="link-handle">natsunevrc.fanbox.cc</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- 支援ページ -->
+        <a href="shien.html" class="link-card link-support reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 21.593c-.425-.394-8.3-7.73-8.3-12.298C3.7 4.678 7.378 1 12 1s8.3 3.678 8.3 8.295c0 4.568-7.875 11.904-8.3 12.298Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">支援する</div>
+            <div class="link-handle">BOOTH / Fanbox</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
+        <!-- お問い合わせ -->
+        <a href="contact.html" class="link-card link-contact reveal-item">
+          <div class="link-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+          </div>
+          <div class="link-info">
+            <div class="link-name">お問い合わせ</div>
+            <div class="link-handle">DM / Discord</div>
+          </div>
+          <div class="link-arrow">→</div>
+        </a>
       </div>
     </div></section>
   </div>
@@ -380,9 +956,20 @@
   <footer class="foot">
     <p class="foot-msg">ここまで見てくれてありがとう。</p>
     <div class="foot-row">
-      <a href="https://x.com/natsune_vrc" target="_blank" class="foot-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg> X</a>
-      <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="foot-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/></svg> YouTube</a>
-      <a href="links.html" class="foot-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</a>
+      <a href="https://x.com/natsune_vrc" target="_blank" class="foot-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
+        X / Twitter
+      </a>
+      <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="foot-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814ZM9.545 15.568V8.432L15.818 12l-6.273 3.568Z"/></svg>
+        YouTube
+      </a>
+      <a href="https://natsunevrc.booth.pm/" target="_blank" class="foot-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2ZM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 20 4H5.21l-.94-2H1Zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2Z"/></svg>
+        BOOTH
+      </a>
+      <a href="shien.html" class="foot-link">支援</a>
+      <a href="contact.html" class="foot-link">お問い合わせ</a>
     </div>
     <p class="foot-copy">&copy; 2026 鮫月ナツネ</p>
   </footer>
@@ -406,28 +993,23 @@
         pct.textContent = Math.floor(progress) + '%';
         if (progress >= 100) {
           clearInterval(interval);
-          // Glitch intensify then reveal
           setTimeout(() => {
             const tl = gsap.timeline();
             const cTop = document.getElementById('curtainTop');
             const cBot = document.getElementById('curtainBot');
-            // Flash glitch
             tl.to(loader, { opacity: 0, duration: 0.08 })
               .to(loader, { opacity: 1, duration: 0.04 })
               .to(loader, { opacity: 0, duration: 0.08 })
               .set(loader, { display: 'none' })
-              // Curtains open — world reveals
               .to(cTop, { yPercent: -100, duration: 1, ease: 'expo.inOut' }, '-=0.05')
               .to(cBot, { yPercent: 100, duration: 1, ease: 'expo.inOut' }, '<')
               .to(wrap, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, '-=0.7')
               .to('.foot', { opacity: 1, duration: 0.5 }, '-=0.4')
-              // Hero stagger
               .from('.hero-status', { y: 30, opacity: 0, duration: 0.5 }, '-=0.5')
               .from('.hero-role', { y: 30, opacity: 0, duration: 0.5 }, '-=0.4')
               .from('.hero-desc', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
               .from('.hero-btns', { y: 30, opacity: 0, duration: 0.5 }, '-=0.2')
               .from('.avatar-wrap', { scale: 0.85, opacity: 0, duration: 0.9, ease: 'back.out(1.4)' }, '-=0.5')
-              // Cleanup
               .set([cTop, cBot], { display: 'none' });
           }, 300);
         }
@@ -438,21 +1020,19 @@
     const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10*t)) });
     gsap.ticker.add(t => lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
     gsap.registerPlugin(ScrollTrigger);
+    lenis.on('scroll', ScrollTrigger.update);
 
-    // ── Custom cursor ──
-    const cur = document.getElementById('cur'), ring = document.getElementById('curRing');
-    let mx = 0, my = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    gsap.ticker.add(() => {
-      gsap.set(cur, { x: mx - 6, y: my - 6 });
-      gsap.to(ring, { x: mx - 20, y: my - 20, duration: 0.15 });
+    // ── Custom cursor (arrow) ──
+    const cur = document.getElementById('cur');
+    document.addEventListener('mousemove', e => {
+      cur.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
     });
-    document.querySelectorAll('a, .btn, .chip, .act, .lnk, .val').forEach(el => {
-      el.addEventListener('mouseenter', () => ring.classList.add('hover'));
-      el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+    document.querySelectorAll('a, .btn, .world-tab, .world-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
     });
 
-    // ── Interactive Canvas: Jellyfish + Sparkles + Particles ──
+    // ── Sparkle cursor trail ──
     (() => {
       const c = document.getElementById('bgCanvas'), ctx = c.getContext('2d');
       let w, h, mouse = { x: -999, y: -999 };
@@ -460,7 +1040,6 @@
       resize(); addEventListener('resize', resize);
       document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 
-      // ── Sparkle cursor trail ──
       const sparkles = [];
       document.addEventListener('mousemove', () => {
         for (let i = 0; i < 2; i++) {
@@ -473,107 +1052,8 @@
         }
       });
 
-      // ── Jellyfish ──
-      class Jellyfish {
-        constructor() { this.reset(); }
-        reset() {
-          this.x = Math.random() * w;
-          this.y = h + 60 + Math.random() * 200;
-          this.size = Math.random() * 30 + 18;
-          this.speed = Math.random() * 0.3 + 0.15;
-          this.wobble = Math.random() * Math.PI * 2;
-          this.wobbleSpeed = Math.random() * 0.015 + 0.008;
-          this.tentacles = 5 + ~~(Math.random() * 4);
-          this.hue = [185, 280, 330, 200][~~(Math.random()*4)]; // cyan, purple, pink, blue
-          this.alpha = Math.random() * 0.15 + 0.08;
-          this.pulsePhase = Math.random() * Math.PI * 2;
-        }
-        update() {
-          this.y -= this.speed;
-          this.wobble += this.wobbleSpeed;
-          this.x += Math.sin(this.wobble) * 0.5;
-          this.pulsePhase += 0.03;
-          // Mouse interaction: gently pushed away
-          const dx = this.x - mouse.x, dy = this.y - mouse.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < 150) {
-            const force = (150 - dist) / 150 * 0.8;
-            this.x += (dx / dist) * force;
-            this.y += (dy / dist) * force * 0.5;
-          }
-          if (this.y < -80) this.reset();
-        }
-        draw() {
-          const pulse = Math.sin(this.pulsePhase) * 0.15 + 1;
-          const sz = this.size * pulse;
-          ctx.save();
-          ctx.translate(this.x, this.y);
-          ctx.globalAlpha = this.alpha;
-
-          // Bell (dome)
-          ctx.beginPath();
-          ctx.ellipse(0, 0, sz, sz * 0.7, 0, Math.PI, 0);
-          const g = ctx.createRadialGradient(0, -sz*0.2, 0, 0, 0, sz);
-          g.addColorStop(0, `hsla(${this.hue},80%,75%,0.5)`);
-          g.addColorStop(1, `hsla(${this.hue},80%,60%,0.05)`);
-          ctx.fillStyle = g;
-          ctx.fill();
-
-          // Inner glow
-          ctx.beginPath();
-          ctx.ellipse(0, -sz*0.15, sz*0.5, sz*0.35, 0, Math.PI, 0);
-          ctx.fillStyle = `hsla(${this.hue},90%,80%,0.2)`;
-          ctx.fill();
-
-          // Tentacles
-          for (let i = 0; i < this.tentacles; i++) {
-            const tx = (i / (this.tentacles-1) - 0.5) * sz * 1.6;
-            const len = sz * (0.8 + Math.random() * 0.6);
-            ctx.beginPath();
-            ctx.moveTo(tx, 0);
-            const wave = Math.sin(this.wobble + i * 0.8) * 8;
-            ctx.quadraticCurveTo(tx + wave, len * 0.5, tx + wave * 1.5, len);
-            ctx.strokeStyle = `hsla(${this.hue},70%,70%,${this.alpha * 0.7})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-          ctx.restore();
-        }
-      }
-
-      const jellies = [];
-      for (let i = 0; i < 6; i++) {
-        const j = new Jellyfish();
-        j.y = Math.random() * h; // Start spread across screen
-        jellies.push(j);
-      }
-
-      // ── Particles (smaller, subtle) ──
-      const particles = [];
-      for (let i = 0; i < 40; i++) {
-        particles.push({
-          x: Math.random()*w, y: Math.random()*h,
-          vx: (Math.random()-0.5)*0.15, vy: (Math.random()-0.5)*0.15,
-          r: Math.random()*1.2+0.3,
-          color: ['0,188,212','200,200,220','124,77,255'][~~(Math.random()*3)]
-        });
-      }
-
       (function draw() {
         ctx.clearRect(0, 0, w, h);
-
-        // Particles
-        for (const p of particles) {
-          p.x += p.vx; p.y += p.vy;
-          if(p.x<0)p.x=w; if(p.x>w)p.x=0; if(p.y<0)p.y=h; if(p.y>h)p.y=0;
-          ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-          ctx.fillStyle=`rgba(${p.color},0.2)`; ctx.fill();
-        }
-
-        // Jellyfish
-        for (const j of jellies) { j.update(); j.draw(); }
-
-        // Sparkles
         for (let i = sparkles.length-1; i >= 0; i--) {
           const s = sparkles[i];
           s.x += s.vx; s.y += s.vy; s.life -= 0.025; s.size *= 0.97;
@@ -581,7 +1061,6 @@
           ctx.save();
           ctx.globalAlpha = s.life;
           ctx.translate(s.x, s.y);
-          // 4-point star shape
           ctx.beginPath();
           const r = s.size;
           for (let p = 0; p < 4; p++) {
@@ -592,15 +1071,12 @@
           ctx.strokeStyle = `rgba(${s.color},${s.life})`;
           ctx.lineWidth = 0.8;
           ctx.stroke();
-          // Center dot
           ctx.beginPath(); ctx.arc(0,0,r*0.3,0,Math.PI*2);
           ctx.fillStyle = `rgba(${s.color},${s.life*0.8})`;
           ctx.fill();
           ctx.restore();
         }
-        // Keep sparkle array manageable
         if (sparkles.length > 100) sparkles.splice(0, 20);
-
         requestAnimationFrame(draw);
       })();
     })();
@@ -608,25 +1084,41 @@
     // ── Scroll progress ──
     gsap.to('#scrollBar', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 0.3 } });
 
-    // ── Hero name: split & animate ──
+    // ── Hero name split ──
     const name = document.getElementById('heroName');
     const chars = name.textContent.split('');
-    name.innerHTML = chars.map((c,i) => `<span class="char" style="display:inline-block">${c}</span>`).join('');
-    gsap.from('.hero-name .char', {
-      y: 80, opacity: 0, rotateZ: -15, scale: 0.5,
-      duration: 0.7, stagger: 0.08, ease: 'back.out(1.7)', delay: 0.3
+    name.innerHTML = chars.map(c => `<span style="display:inline-block">${c}</span>`).join('');
+    gsap.from('#heroName span', { y: 80, opacity: 0, rotateZ: -15, scale: 0.5, duration: 0.7, stagger: 0.08, ease: 'back.out(1.7)', delay: 0.3 });
+
+    // ── Scroll reveals (Intersection Observer) ──
+    const revealCSS = `
+      .reveal-item { opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; }
+      .reveal-item.in { opacity: 1; transform: none; }
+      .reveal-head { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+      .reveal-head.in { opacity: 1; transform: none; }
+    `;
+    const styleEl = document.createElement('style');
+    styleEl.textContent = revealCSS;
+    document.head.appendChild(styleEl);
+
+    document.querySelectorAll('.world-card, .placeholder-card, .card-item, .illust-thumb, .album-thumb').forEach((el, i) => {
+      el.classList.add('reveal-item');
+      el.style.transitionDelay = (i % 6) * 0.07 + 's';
+    });
+    document.querySelectorAll('.sec-title, .sec-desc, .sec-tag').forEach(el => {
+      el.classList.add('reveal-head');
     });
 
-    // ── GSAP staggered reveals ──
-    gsap.utils.toArray('.sec').forEach(sec => {
-      const items = sec.querySelectorAll('.val, .act, .news-card, .lnk');
-      gsap.from(items, { y: 40, opacity: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out',
-        scrollTrigger: { trigger: sec, start: 'top 80%' } });
-    });
-    gsap.utils.toArray('.sec-title, .sec-desc, .sec-tag').forEach(el => {
-      gsap.from(el, { y: 30, opacity: 0, duration: 0.6, ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' } });
-    });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal-item, .reveal-head').forEach(el => observer.observe(el));
 
     // ── 3D tilt ──
     document.querySelectorAll('.tilt').forEach(card => {
@@ -634,7 +1126,7 @@
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
-        gsap.to(card, { rotateY: x*16, rotateX: -y*16, scale: 1.04, duration: 0.2, transformPerspective: 600 });
+        gsap.to(card, { rotateY: x*12, rotateX: -y*12, scale: 1.02, duration: 0.2, transformPerspective: 600 });
       });
       card.addEventListener('mouseleave', () => gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.4, ease: 'elastic.out(1,0.5)' }));
     });
@@ -650,6 +1142,16 @@
 
     // ── Parallax avatar ──
     gsap.to('.avatar-blob', { y: -40, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+    // ── World tabs ──
+    document.querySelectorAll('.world-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.world-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.world-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+      });
+    });
   </script>
 </body>
 </html>

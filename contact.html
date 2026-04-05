@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>お問い合わせ | 鮫月ナツネ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f9ff; --text: #1a2a3a; --text-soft: #5a7088;
+      --cyan: #00bcd4; --pink: #ff4081; --purple: #7c4dff;
+      --green: #00c853; --blue: #2979ff;
+      --font-ui: 'Orbitron', sans-serif;
+      --font-hand: 'Klee One', cursive;
+      --font-body: 'Zen Maru Gothic', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); color: var(--text); background: var(--bg); line-height: 1.7; min-height: 100vh; cursor: none; }
+    a { color: inherit; text-decoration: none; cursor: none; }
+
+    .cursor { position:fixed; width:12px; height:12px; border-radius:50%; background:var(--cyan); pointer-events:none; z-index:10000; }
+    .cursor-ring { position:fixed; width:40px; height:40px; border:1.5px solid var(--cyan); border-radius:50%; pointer-events:none; z-index:10000; opacity:0.5; transition:all 0.15s ease-out; }
+
+    .hdr { position:sticky; top:0; z-index:100; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; background:rgba(244,249,255,0.88); backdrop-filter:blur(20px); border-bottom:1px solid rgba(0,188,212,0.1); }
+    .hdr-logo { display:flex; align-items:center; gap:10px; }
+    .hdr-logo img { width:28px; height:28px; border-radius:50%; object-fit:cover; }
+    .hdr-logo span { font-family:var(--font-ui); font-size:12px; font-weight:700; letter-spacing:0.12em; }
+    .hdr-back { display:flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; font-size:11px; font-weight:700; color:var(--text-soft); border:1px solid rgba(0,188,212,0.15); transition:all 0.2s; }
+    .hdr-back:hover { color:var(--cyan); border-color:var(--cyan); }
+
+    .main { max-width: 640px; margin: 0 auto; padding: 80px 24px 120px; }
+    .page-tag { display:inline-block; padding:4px 12px; border-radius:4px; font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:14px; border:1px solid rgba(0,188,212,0.25); color:var(--cyan); }
+    .page-title { font-size:clamp(28px,5vw,40px); font-weight:900; margin-bottom:16px; }
+    .page-lead { font-size:15px; color:var(--text-soft); line-height:2; margin-bottom:48px; font-family:var(--font-hand); }
+
+    .contact-cards { display:flex; flex-direction:column; gap:16px; margin-bottom:40px; }
+    .contact-card { display:flex; align-items:center; gap:20px; padding:24px 28px; border-radius:20px; background:#fff; border:1px solid rgba(0,188,212,0.08); box-shadow:0 2px 16px rgba(0,40,80,0.04); transition:all 0.3s; }
+    .contact-card:hover { transform:translateY(-3px); box-shadow:0 8px 36px rgba(0,40,80,0.08); }
+    .contact-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .contact-icon svg { width:22px; height:22px; }
+    .contact-info { flex:1; }
+    .contact-name { font-size:16px; font-weight:700; margin-bottom:3px; }
+    .contact-desc { font-size:13px; color:var(--text-soft); }
+    .contact-arrow { font-size:18px; color:var(--text-soft); flex-shrink:0; }
+
+    /* X/Twitter */
+    .card-x .contact-icon { background:rgba(0,0,0,0.05); }
+    .card-x .contact-icon svg { fill:#000; }
+    .card-x:hover { border-color:rgba(0,0,0,0.15); }
+
+    /* Discord */
+    .card-discord .contact-icon { background:rgba(88,101,242,0.1); }
+    .card-discord .contact-icon svg { fill:#5865F2; }
+    .card-discord:hover { border-color:rgba(88,101,242,0.25); }
+
+    /* VRChat */
+    .card-vrchat .contact-icon { background:rgba(0,188,212,0.08); }
+    .card-vrchat .contact-icon svg { fill:var(--cyan); }
+    .card-vrchat:hover { border-color:rgba(0,188,212,0.25); }
+
+    /* Notes */
+    .contact-notes { padding:28px; border-radius:20px; background:rgba(0,188,212,0.03); border:1px solid rgba(0,188,212,0.08); }
+    .contact-notes h3 { font-size:14px; font-weight:700; margin-bottom:16px; color:var(--cyan); font-family:var(--font-ui); letter-spacing:0.06em; }
+    .note-list { display:flex; flex-direction:column; gap:12px; }
+    .note-item { display:flex; gap:12px; align-items:flex-start; }
+    .note-label { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.1em; white-space:nowrap; flex-shrink:0; }
+    .note-label-ok { background:rgba(0,200,83,0.1); color:var(--green); }
+    .note-label-ng { background:rgba(255,64,129,0.1); color:var(--pink); }
+    .note-text { font-size:13px; color:var(--text-soft); line-height:1.8; }
+
+    .foot { text-align:center; padding:40px 20px; border-top:1px solid rgba(0,188,212,0.06); }
+    .foot-copy { font-size:10px; color:var(--text-soft); opacity:0.3; }
+
+    @media(max-width:560px) { body { cursor:auto; } a { cursor:auto; } .cursor, .cursor-ring { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cur"></div>
+  <div class="cursor-ring" id="curRing"></div>
+
+  <header class="hdr">
+    <a href="index.html" class="hdr-logo">
+      <img src="images/icon.png" alt="鮫月ナツネ" />
+      <span>NATSUNE</span>
+    </a>
+    <a href="index.html" class="hdr-back">← トップへ戻る</a>
+  </header>
+
+  <main class="main">
+    <div class="page-tag">// CONTACT</div>
+    <h1 class="page-title">お問い合わせ</h1>
+    <p class="page-lead">ご連絡はX（Twitter）のDMが一番確実です。<br>お気軽にどうぞ。返信が遅れる場合もありますが、必ず読んでいます。</p>
+
+    <div class="contact-cards">
+      <!-- X / Twitter -->
+      <a href="https://x.com/natsune_vrc" target="_blank" class="contact-card card-x">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-name">X / Twitter DM</div>
+          <div class="contact-desc">@natsune_vrc — 最も確実な連絡手段です</div>
+        </div>
+        <div class="contact-arrow">→</div>
+      </a>
+
+      <!-- Discord -->
+      <a href="#" class="contact-card card-discord">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-name">Discord</div>
+          <div class="contact-desc">コミュニティサーバーに参加後、メンションでご連絡ください</div>
+        </div>
+        <div class="contact-arrow">→</div>
+      </a>
+
+      <!-- VRChat -->
+      <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" class="contact-card card-vrchat">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+        </div>
+        <div class="contact-info">
+          <div class="contact-name">VRChat</div>
+          <div class="contact-desc">VRChat内でフレンド申請・メッセージもお気軽に</div>
+        </div>
+        <div class="contact-arrow">→</div>
+      </a>
+    </div>
+
+    <div class="contact-notes">
+      <h3>// NOTES</h3>
+      <div class="note-list">
+        <div class="note-item">
+          <span class="note-label note-label-ok">OK</span>
+          <p class="note-text">ワールド制作・ギミック開発・イベント企画などのコラボ相談</p>
+        </div>
+        <div class="note-item">
+          <span class="note-label note-label-ok">OK</span>
+          <p class="note-text">ファンレター・感想メッセージ（とても嬉しいです）</p>
+        </div>
+        <div class="note-item">
+          <span class="note-label note-label-ok">OK</span>
+          <p class="note-text">作品・活動に関するご質問</p>
+        </div>
+        <div class="note-item">
+          <span class="note-label note-label-ng">NG</span>
+          <p class="note-text">営業・スパム・無関係な勧誘</p>
+        </div>
+        <div class="note-item">
+          <span class="note-label note-label-ng">NG</span>
+          <p class="note-text">返信を急かすような連続メッセージ</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p class="foot-copy">&copy; 2026 鮫月ナツネ</p>
+  </footer>
+
+  <script>
+    const cur = document.getElementById('cur'), ring = document.getElementById('curRing');
+    document.addEventListener('mousemove', e => {
+      cur.style.transform = `translate(${e.clientX-6}px,${e.clientY-6}px)`;
+      ring.style.transform = `translate(${e.clientX-20}px,${e.clientY-20}px)`;
+    });
+    document.querySelectorAll('a').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; ring.style.borderColor='var(--pink)'; });
+      el.addEventListener('mouseleave', () => { ring.style.width='40px'; ring.style.height='40px'; ring.style.borderColor='var(--cyan)'; });
+    });
+  </script>
+</body>
+</html>
