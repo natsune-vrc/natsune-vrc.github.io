@@ -1212,6 +1212,138 @@
 
 </div>
 
+<!-- ══════════════════════════════════════════
+     F41〜F50: F34ベース 色味バリエーション（振幅・速度はF34固定）
+════════════════════════════════════════════ -->
+<style>
+  /* ── F41-F50: F34完全ベース（cw2 3.2s / grad 8s / size400%）色のみ変更 ── */
+
+  /* F41: ペールブルー → 淡いアイス */
+  .f41 .fname{filter:drop-shadow(0 0 14px rgba(144,202,249,.4)) drop-shadow(0 0 6px rgba(100,181,246,.25))}
+  .f41 .fname span{background:linear-gradient(90deg,#90caf9,#64b5f6,#bbdefb,#e3f2fd,#64b5f6,#90caf9);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g41 8s linear infinite}
+  @keyframes g41{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F42: グレイッシュブルー → スモーク */
+  .f42 .fname{filter:drop-shadow(0 0 14px rgba(120,144,156,.4)) drop-shadow(0 0 6px rgba(96,125,139,.25))}
+  .f42 .fname span{background:linear-gradient(90deg,#78909c,#90a4ae,#b0bec5,#cfd8dc,#90a4ae,#78909c);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g42 8s linear infinite}
+  @keyframes g42{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F43: ダスティシアン → くすみ水色 */
+  .f43 .fname{filter:drop-shadow(0 0 14px rgba(128,203,196,.4)) drop-shadow(0 0 6px rgba(77,182,172,.25))}
+  .f43 .fname span{background:linear-gradient(90deg,#80cbc4,#b2dfdb,#4db6ac,#b2dfdb,#80cbc4,#b2dfdb);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g43 8s linear infinite}
+  @keyframes g43{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F44: ミストブルー → 霧 */
+  .f44 .fname{filter:drop-shadow(0 0 14px rgba(159,168,218,.4)) drop-shadow(0 0 6px rgba(121,134,203,.25))}
+  .f44 .fname span{background:linear-gradient(90deg,#9fa8da,#c5cae9,#7986cb,#c5cae9,#9fa8da,#c5cae9);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g44 8s linear infinite}
+  @keyframes g44{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F45: アイスラベンダー → 氷藤 */
+  .f45 .fname{filter:drop-shadow(0 0 14px rgba(179,157,219,.4)) drop-shadow(0 0 6px rgba(149,117,205,.25))}
+  .f45 .fname span{background:linear-gradient(90deg,#b39ddb,#d1c4e9,#9575cd,#d1c4e9,#b39ddb,#d1c4e9);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g45 8s linear infinite}
+  @keyframes g45{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F46: スモーキーティール → 渋緑青 */
+  .f46 .fname{filter:drop-shadow(0 0 14px rgba(0,121,107,.35)) drop-shadow(0 0 6px rgba(0,105,92,.2))}
+  .f46 .fname span{background:linear-gradient(90deg,#00897b,#4db6ac,#80cbc4,#b2dfdb,#4db6ac,#00897b);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g46 8s linear infinite}
+  @keyframes g46{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F47: ソフトネイビー → 柔海軍 */
+  .f47 .fname{filter:drop-shadow(0 0 14px rgba(92,107,192,.4)) drop-shadow(0 0 6px rgba(63,81,181,.25))}
+  .f47 .fname span{background:linear-gradient(90deg,#5c6bc0,#7986cb,#9fa8da,#c5cae9,#7986cb,#5c6bc0);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g47 8s linear infinite}
+  @keyframes g47{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F48: フロストブルー → 霜青 */
+  .f48 .fname{filter:drop-shadow(0 0 14px rgba(129,212,250,.4)) drop-shadow(0 0 6px rgba(79,195,247,.25))}
+  .f48 .fname span{background:linear-gradient(90deg,#81d4fa,#b3e5fc,#4fc3f7,#e1f5fe,#4fc3f7,#81d4fa);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g48 8s linear infinite}
+  @keyframes g48{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F49: セージブルー → 青鼠 */
+  .f49 .fname{filter:drop-shadow(0 0 14px rgba(96,125,139,.4)) drop-shadow(0 0 6px rgba(69,90,100,.25))}
+  .f49 .fname span{background:linear-gradient(90deg,#607d8b,#78909c,#b0bec5,#90a4ae,#78909c,#607d8b);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g49 8s linear infinite}
+  @keyframes g49{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+
+  /* F50: パウダーシアン → 粉水色 */
+  .f50 .fname{filter:drop-shadow(0 0 14px rgba(178,235,242,.4)) drop-shadow(0 0 6px rgba(128,222,234,.25))}
+  .f50 .fname span{background:linear-gradient(90deg,#b2ebf2,#e0f7fa,#80deea,#e0f7fa,#b2ebf2,#e0f7fa);background-size:400%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:cw2 3.2s ease-in-out infinite,g50 8s linear infinite}
+  @keyframes g50{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+</style>
+
+<h2>F41–F50 · F34ベース — 色味バリエーション（振幅・速度固定）</h2>
+<div class="grid">
+
+  <div class="fcard f41">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F41 · Pale Blue · ペールブルー</div>
+  </div>
+
+  <div class="fcard f42">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F42 · Smoke · グレイッシュブルー</div>
+  </div>
+
+  <div class="fcard f43">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F43 · Dusty · ダスティシアン</div>
+  </div>
+
+  <div class="fcard f44">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F44 · Mist · ミストブルー</div>
+  </div>
+
+  <div class="fcard f45">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F45 · Lavender · アイスラベンダー</div>
+  </div>
+
+  <div class="fcard f46">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F46 · Smoky Teal · 渋ティール</div>
+  </div>
+
+  <div class="fcard f47">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F47 · Soft Navy · ソフトネイビー</div>
+  </div>
+
+  <div class="fcard f48">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F48 · Frost · フロストブルー</div>
+  </div>
+
+  <div class="fcard f49">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F49 · Sage · セージブルー</div>
+  </div>
+
+  <div class="fcard f50">
+    <div class="fname-wrap">
+      <div class="fname wave"><span>鮫</span><span>月</span><span>ナ</span><span>ツ</span><span>ネ</span></div>
+    </div>
+    <div class="flabel">F50 · Powder · パウダーシアン</div>
+  </div>
+
+</div>
+
 </script>
 </body>
 </html>
