@@ -1,0 +1,3411 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鮫月ナツネ | Production Admin</title>
+  <style>
+    :root {
+      --bg: #eaf5f9;
+      --panel: #fbfeff;
+      --panel-strong: #ffffff;
+      --panel-soft: #eef8fb;
+      --edit-surface: #e3f1f6;
+      --section-surface: #fbfeff;
+      --field-surface: #edf7fb;
+      --field-surface-strong: #e5f2f7;
+      --input: #ffffff;
+      --input-soft: #fafeff;
+      --ink: #102532;
+      --text: #203d4b;
+      --muted: #667c88;
+      --line: #c7e0e8;
+      --line-strong: #9fcbd7;
+      --input-line: #9bcad7;
+      --cyan: #24adc4;
+      --cyan-dark: #08788c;
+      --cyan-soft: #e9f8fb;
+      --cyan-wash: rgba(36, 173, 196, .10);
+      --danger: #bd3d51;
+      --ok: #147b5d;
+      --warn: #9a6707;
+      --shadow: 0 18px 50px rgba(23, 82, 106, .08);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Yu Gothic UI", "Meiryo", "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1100px 520px at 74% -12%, rgba(36, 173, 196, .20), transparent 64%),
+        radial-gradient(900px 480px at -10% 18%, rgba(255, 255, 255, .72), transparent 62%),
+        linear-gradient(90deg, rgba(8, 120, 140, .055) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(8, 120, 140, .045) 1px, transparent 1px),
+        linear-gradient(180deg, #f9fdff 0%, var(--bg) 100%);
+      background-size: auto, auto, 44px 44px, 44px 44px, auto;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    a { color: var(--cyan-dark); }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .shell {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 24px;
+      min-height: 72px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(232, 249, 253, .92), rgba(255, 255, 255, .96) 38%, rgba(255, 255, 255, .94));
+      backdrop-filter: blur(18px);
+    }
+
+    .brand small {
+      display: block;
+      color: var(--cyan-dark);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+      margin-bottom: 2px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(24px, 2.5vw, 34px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .status.ok::before { background: var(--ok); }
+    .status.warn::before { background: var(--warn); }
+    .status.error::before { background: var(--danger); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 260px minmax(560px, 1fr) minmax(420px, 34vw);
+      gap: 16px;
+      padding: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: clip;
+    }
+
+    .connection-panel,
+    .inspector-panel {
+      position: sticky;
+      top: 88px;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+    }
+
+    .panel-head {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(235, 248, 252, .96), rgba(255, 255, 255, .92));
+    }
+
+    .panel-head h2,
+    .section h2,
+    .inspector-block h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .panel-head p,
+    .section > p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .panel-body { padding: 16px 18px 18px; }
+
+    .work-nav {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .tabs {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-section-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      margin: 6px 4px 2px;
+    }
+
+    .tab {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 58px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .46);
+      color: var(--text);
+      padding: 10px;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .tab::before {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--panel-soft);
+      color: var(--cyan-dark);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .tab[data-tab="news"]::before { content: "1"; }
+    .tab[data-tab="worlds"]::before { content: "2"; }
+    .tab[data-tab="profile"]::before { content: "3"; }
+    .tab[data-tab="links"]::before { content: "4"; }
+    .tab[data-tab="hero"]::before { content: "5"; }
+    .tab[data-tab="preview"]::before { content: "✓"; }
+
+    .tab small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    .tab.active {
+      background:
+        linear-gradient(135deg, rgba(233, 248, 251, .96), #fff);
+      border-color: var(--line-strong);
+      color: var(--cyan-dark);
+      box-shadow: inset 4px 0 0 var(--cyan), 0 8px 18px rgba(20, 111, 132, .08);
+    }
+
+    .tab.active::before {
+      background: #fff;
+      border: 1px solid var(--line-strong);
+    }
+
+    .settings-drawer {
+      margin-top: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .settings-drawer summary {
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .connection-panel .row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    label {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--input-line);
+      border-radius: 10px;
+      background: var(--input);
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 7px 14px rgba(12, 73, 94, .035);
+      transition: border-color .18s, box-shadow .18s, background .18s;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+      line-height: 1.75;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--cyan);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(36, 173, 196, .16), 0 10px 20px rgba(12, 73, 94, .07);
+    }
+
+    .hint {
+      margin: -3px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 9px 14px;
+      color: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s, background .15s, border-color .15s;
+    }
+
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--cyan); color: #fff; box-shadow: 0 10px 22px rgba(36, 173, 196, .20); }
+    .btn-primary:hover { background: var(--cyan-dark); }
+    .btn-secondary { background: #fff; color: var(--cyan-dark); border-color: var(--line-strong); }
+    .btn-secondary:hover { background: var(--cyan-soft); }
+    .btn-danger { background: #fff; color: var(--danger); border-color: rgba(189, 61, 81, .28); }
+    .btn-ghost { background: transparent; color: var(--muted); border-color: transparent; }
+    .btn-sm { min-height: 34px; padding: 7px 10px; font-size: 13px; }
+
+    .editor-panel {
+      min-height: calc(100vh - 104px);
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg, var(--edit-surface), #f2f9fc 52%, #f9fdff);
+    }
+
+    .editor-panel > .tabs { display: none; }
+
+    .section {
+      display: none;
+      margin: 0;
+      padding: 28px 28px 18px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .section.active { display: block; }
+    .section > p { margin-bottom: 22px; }
+
+    .section h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2::before {
+      content: "";
+      width: 9px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--cyan), #7ad9e8);
+      box-shadow: 0 0 18px rgba(36, 173, 196, .28);
+    }
+
+    .section-toolbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-toolbar p { margin: 6px 0 0; }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .section .field,
+    .item .field,
+    .settings-drawer .field {
+      border: 1px solid rgba(159, 203, 215, .70);
+      border-radius: 13px;
+      background:
+        linear-gradient(180deg, var(--field-surface), #f5fbfd);
+      padding: 10px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .78);
+    }
+
+    .section .row,
+    .item .row {
+      margin-bottom: 14px;
+    }
+
+    .section .row .field,
+    .item .row .field {
+      margin-bottom: 0;
+    }
+
+    .item {
+      border: 1px solid rgba(151, 198, 211, .78);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, #f9fdff, var(--field-surface-strong));
+      padding: 16px;
+      box-shadow: 0 12px 28px rgba(16, 77, 100, .055);
+    }
+
+    .item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .item-title {
+      color: var(--cyan-dark);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .news-manager {
+      padding-bottom: 24px;
+    }
+
+    .news-manager > p {
+      display: none;
+    }
+
+    .news-manager .field {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .content-admin-layout {
+      display: grid;
+      grid-template-columns: minmax(360px, .82fr) minmax(560px, 1.18fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .content-admin-layout:not(.editing) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .content-admin-layout:not(.editing) .record-editor-pane {
+      display: none;
+    }
+
+    .content-list-pane {
+      min-width: 0;
+    }
+
+    .record-editor-pane {
+      position: sticky;
+      top: 94px;
+      min-width: 0;
+      border-left: 1px solid var(--line);
+      padding-left: 24px;
+      max-height: calc(100vh - 116px);
+      overflow: auto;
+    }
+
+    .compact-settings {
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+
+    .compact-settings summary {
+      color: var(--text);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .compact-settings .row {
+      margin-top: 12px;
+    }
+
+    .list-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 150px 150px;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .list-controls.wide {
+      grid-template-columns: minmax(220px, 1fr) 150px 150px 150px;
+    }
+
+    .content-table {
+      border-top: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .52);
+    }
+
+    .content-table-head,
+    .news-row,
+    .world-row,
+    .link-row {
+      display: grid;
+      grid-template-columns: 110px 90px minmax(0, 1fr) 92px;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .world-manager .content-table-head,
+    .world-row {
+      grid-template-columns: 120px 90px minmax(0, 1fr) 92px;
+    }
+
+    .link-manager .content-table-head,
+    .link-row {
+      grid-template-columns: 110px 90px minmax(0, 1fr) 92px;
+    }
+
+    .content-table-head {
+      min-height: 42px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .news-row,
+    .world-row,
+    .link-row {
+      width: 100%;
+      min-height: 68px;
+      border: 0;
+      border-bottom: 1px solid rgba(199, 224, 232, .76);
+      background: transparent;
+      color: var(--text);
+      padding: 0;
+      text-align: left;
+    }
+
+    .news-row:hover,
+    .news-row.active,
+    .world-row:hover,
+    .world-row.active,
+    .link-row:hover,
+    .link-row.active {
+      background: rgba(233, 248, 251, .78);
+    }
+
+    .news-row.active,
+    .world-row.active,
+    .link-row.active {
+      box-shadow: inset 4px 0 0 var(--cyan);
+    }
+
+    .news-row:last-child,
+    .world-row:last-child,
+    .link-row:last-child {
+      border-bottom: 0;
+    }
+
+    .news-date,
+    .news-state,
+    .news-title-cell,
+    .news-action-cell {
+      min-width: 0;
+      padding: 13px 0;
+    }
+
+    .news-date {
+      color: var(--muted);
+      font-size: 13px;
+      padding-left: 12px;
+    }
+
+    .news-title-cell strong {
+      display: block;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .news-title-cell span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--cyan-dark);
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .state-badge.draft {
+      border-color: rgba(154, 103, 7, .28);
+      color: var(--warn);
+      background: rgba(255, 247, 230, .72);
+    }
+
+    .kind-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 8px;
+      background: rgba(233, 248, 251, .9);
+      color: var(--cyan-dark);
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .news-action-cell {
+      padding-right: 12px;
+      color: var(--cyan-dark);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .empty-list {
+      padding: 28px 12px;
+      color: var(--muted);
+      font-size: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .record-empty {
+      min-height: 320px;
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 24px 0;
+    }
+
+    .record-empty strong,
+    .record-editor-pane h3 {
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .record-editor-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .record-editor-form[hidden],
+    .record-empty[hidden] {
+      display: none;
+    }
+
+    .record-editor-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 2px;
+    }
+
+    .record-editor-head small {
+      display: block;
+      color: var(--cyan-dark);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .article-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 238px;
+      gap: 20px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, #ffffff, #f6fcfe);
+      box-shadow: 0 16px 34px rgba(16, 77, 100, .07);
+    }
+
+    .article-main,
+    .article-side {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .article-side {
+      padding-left: 18px;
+      border-left: 1px solid var(--line);
+    }
+
+    .article-side-block {
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .article-side-block:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .article-side-block.important label {
+      color: #075e70;
+    }
+
+    .article-side-block.important select {
+      border-color: var(--cyan);
+      background: linear-gradient(180deg, #ffffff, #ebf9fc);
+      box-shadow: 0 0 0 3px rgba(36, 173, 196, .10);
+      font-weight: 900;
+    }
+
+    .article-title-field input {
+      min-height: 54px;
+      padding: 13px 14px;
+      border-color: var(--cyan);
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.4;
+      background: #fff;
+    }
+
+    .article-excerpt-field textarea {
+      min-height: 92px;
+      background: var(--input-soft);
+    }
+
+    .field-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .field-label-row span {
+      color: var(--cyan-dark);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .markdown-editor {
+      border: 1px solid var(--input-line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 12px 26px rgba(12, 73, 94, .055);
+    }
+
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, #f5fbfd, #eaf7fb);
+    }
+
+    .tool-btn {
+      min-height: 32px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--cyan-dark);
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tool-btn:hover,
+    .tool-btn:focus {
+      border-color: var(--cyan);
+      background: var(--cyan-soft);
+    }
+
+    .article-textarea {
+      min-height: 340px;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      font-family: "Yu Gothic UI", "Meiryo", "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .article-textarea:focus {
+      box-shadow: inset 0 0 0 3px rgba(36, 173, 196, .14);
+    }
+
+    .media-preview {
+      display: grid;
+      place-items: center;
+      min-height: 112px;
+      margin-top: 9px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 12px;
+      background:
+        radial-gradient(150px 92px at 72% 12%, rgba(36, 173, 196, .18), transparent 70%),
+        linear-gradient(135deg, #eef9fc, #ffffff);
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .media-preview img {
+      width: 100%;
+      height: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .editor-action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding-top: 2px;
+    }
+
+    .editor-action-bar .btn-primary {
+      background: #08788c;
+      box-shadow: 0 12px 24px rgba(8, 120, 140, .22);
+    }
+
+    .preview {
+      min-height: 220px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        linear-gradient(180deg, #ffffff, #f5fbfe);
+      padding: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow: auto;
+    }
+
+    .checkline {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 11px 0 0;
+    }
+
+    .checkline input {
+      width: auto;
+      margin-top: 3px;
+    }
+
+    .notice {
+      border: 1px solid rgba(169, 111, 6, .24);
+      border-radius: 12px;
+      background: rgba(255, 247, 230, .72);
+      color: #664408;
+      padding: 11px 12px;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .import-box {
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, rgba(233, 248, 251, .94), #fff);
+      padding: 14px;
+      box-shadow: 0 12px 28px rgba(16, 77, 100, .055);
+    }
+
+    .import-box h4 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .import-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .import-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .import-status {
+      min-height: 24px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .import-status.ok { color: var(--ok); }
+    .import-status.error { color: var(--danger); }
+
+    .stats-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .log {
+      max-height: 150px;
+      overflow: auto;
+      border-radius: 12px;
+      background: #092432;
+      color: #c8f5ff;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .inspector-panel .panel-body {
+      display: grid;
+      gap: 14px;
+    }
+
+    .inspector-block {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, #ffffff, #f6fcfe);
+      padding: 14px;
+    }
+
+    .inspector-drawer {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .inspector-drawer summary {
+      color: var(--ink);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        linear-gradient(180deg, #eef9fc, #ffffff);
+      padding: 10px 8px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 5px;
+    }
+
+    .site-preview {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .site-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, #ffffff, #effbfe 64%, #e8f8fb);
+      padding: 13px;
+    }
+
+    .site-card small {
+      display: block;
+      color: var(--cyan-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0;
+      margin-bottom: 7px;
+    }
+
+    .site-card strong {
+      display: block;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.45;
+      margin-bottom: 4px;
+    }
+
+    .site-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .inspector-note {
+      margin: 6px 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .actual-preview-frame {
+      width: 100%;
+      height: min(62vh, 620px);
+      min-height: 420px;
+      border: 1px solid rgba(159, 203, 215, .78);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .92);
+    }
+
+    .actual-preview-block {
+      overflow: hidden;
+    }
+
+    .actual-preview-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+
+    .actual-preview-note {
+      border-left: 3px solid var(--cyan);
+      padding: 8px 0 8px 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+      background: rgba(233, 248, 251, .56);
+    }
+
+    .live-eyebrow {
+      color: var(--cyan-dark);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .live-preview h4,
+    .live-preview h5 {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .live-preview h4 { font-size: 20px; }
+    .live-preview h5 { font-size: 14px; }
+
+    .live-preview p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .live-hero {
+      display: grid;
+      gap: 14px;
+      min-height: 232px;
+      align-content: center;
+      border-radius: 14px;
+      background:
+        radial-gradient(260px 160px at 82% 18%, rgba(36, 173, 196, .18), transparent 70%),
+        linear-gradient(135deg, #f8fdff, #edf8fb);
+      padding: 18px;
+    }
+
+    .live-name {
+      color: #159fc0;
+      font-size: 34px;
+      line-height: 1.1;
+      font-weight: 900;
+    }
+
+    .live-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--cyan-dark);
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .live-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .live-card {
+      border: 1px solid rgba(159, 203, 215, .72);
+      border-radius: 13px;
+      background:
+        linear-gradient(180deg, #ffffff, #eef8fb);
+      padding: 11px;
+    }
+
+    .live-card small {
+      display: block;
+      color: var(--cyan-dark);
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .live-world-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .live-world {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 10px;
+      align-items: stretch;
+      border: 1px solid rgba(159, 203, 215, .72);
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .live-world-thumb {
+      min-height: 86px;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(36, 173, 196, .35), transparent 42%),
+        linear-gradient(135deg, #e2f5fb, #ffffff);
+    }
+
+    .live-world-thumb img {
+      width: 100%;
+      height: 100%;
+      min-height: 86px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .live-world-body { padding: 10px 10px 10px 0; }
+
+    .save-strip {
+      position: sticky;
+      bottom: 0;
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      background: rgba(248, 253, 255, .90);
+      backdrop-filter: blur(12px);
+      padding: 14px 24px 16px;
+    }
+
+    @media (max-width: 1320px) {
+      .grid { grid-template-columns: 300px minmax(560px, 1fr); }
+      .inspector-panel {
+        position: static;
+        grid-column: 1 / -1;
+        max-height: none;
+      }
+      .inspector-panel .panel-body {
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items: start;
+      }
+      .actual-preview-block {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 1600px) {
+      .content-admin-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .record-editor-pane {
+        position: static;
+        max-height: none;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding: 22px 0 0;
+      }
+      .content-admin-layout.editing .record-editor-pane {
+        order: -1;
+        border-top: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 0 0 22px;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .shell { padding: 14px 12px 18px; }
+      .topbar { grid-template-columns: 1fr; align-items: start; }
+      .grid { grid-template-columns: 1fr; }
+      .connection-panel,
+      .inspector-panel { position: static; max-height: none; }
+      .inspector-panel .panel-body { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      .section { padding: 18px 16px 8px; }
+      .save-strip { padding: 14px 16px 16px; }
+      .article-workspace { grid-template-columns: 1fr; padding: 14px; }
+      .article-side { border-left: 0; border-top: 1px solid var(--line); padding: 16px 0 0; }
+      .list-controls,
+      .list-controls.wide { grid-template-columns: 1fr; }
+      .content-table-head { display: none; }
+      .news-row,
+      .world-row,
+      .link-row { grid-template-columns: 1fr; gap: 0; padding: 12px; }
+      .news-date,
+      .news-state,
+      .news-title-cell,
+      .news-action-cell { padding: 3px 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <small>公式サイト管理</small>
+        <h1>鮫月ナツネ 公式サイト編集</h1>
+      </div>
+      <div class="status warn" id="status">未接続</div>
+    </div>
+
+    <div class="grid">
+      <aside class="panel connection-panel">
+        <div class="panel-head">
+          <h2>編集メニュー</h2>
+          <p>公開ページへ追加する情報を先に置いています。トップ文言やリンクは基本設定にまとめました。</p>
+        </div>
+        <nav class="work-nav" aria-label="編集対象">
+          <div class="tabs" role="tablist">
+            <div class="nav-section-label">追加・更新する公開情報</div>
+            <button class="tab active" data-tab="news" type="button"><span>お知らせ管理<small>履歴・新規作成・個別編集</small></span></button>
+            <button class="tab" data-tab="worlds" type="button"><span>ワールド情報<small>制作ワールドの追加・更新</small></span></button>
+            <div class="nav-section-label">サイトの基本設定</div>
+            <button class="tab" data-tab="profile" type="button"><span>プロフィール<small>人物説明とタグ</small></span></button>
+            <button class="tab" data-tab="links" type="button"><span>リンク・導線<small>SNS・販売・問い合わせ</small></span></button>
+            <button class="tab" data-tab="hero" type="button"><span>トップ文言・CTA<small>最初に見える名前と導線</small></span></button>
+            <div class="nav-section-label">公開前</div>
+            <button class="tab" data-tab="preview" type="button"><span>確認<small>保存前の検証とJSON</small></span></button>
+          </div>
+        </nav>
+        <div class="panel-body">
+          <div class="actions" style="margin-top:0">
+            <button class="btn btn-primary" id="loadLocalBtn">現在の公開内容を読み込む</button>
+            <a class="btn btn-secondary" href="../" target="_blank" rel="noopener noreferrer">サイトを見る</a>
+          </div>
+
+          <details class="settings-drawer">
+            <summary>公開設定 / GitHub接続</summary>
+            <div class="notice">
+              本番へ保存する時だけGitHub tokenが必要です。トークンはHTMLには保存しません。
+            </div>
+
+            <div class="field" style="margin-top:14px">
+              <label for="token">GitHub token</label>
+              <input id="token" type="password" autocomplete="off" placeholder="github_pat_...">
+              <p class="hint">対象リポジトリ限定、Contents: Read and write のfine-grained tokenを使います。</p>
+            </div>
+
+            <label class="checkline">
+              <input id="rememberToken" type="checkbox">
+              <span>このタブの間だけトークンを保持する</span>
+            </label>
+
+            <div class="row" style="margin-top:14px">
+              <div class="field">
+                <label for="owner">Owner</label>
+                <input id="owner" value="natsune-vrc">
+              </div>
+              <div class="field">
+                <label for="repo">Repo</label>
+                <input id="repo" value="natsune-vrc.github.io">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field">
+                <label for="branch">Branch</label>
+                <input id="branch" value="main">
+              </div>
+              <div class="field">
+                <label for="path">Path</label>
+                <input id="path" value="data/site.json">
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-secondary" id="loadBtn">GitHubから読み込み</button>
+              <button class="btn btn-secondary" id="downloadBtn">JSONを書き出し</button>
+              <label class="btn btn-secondary" for="importFile">JSONを読み込み</label>
+              <input id="importFile" type="file" accept="application/json,.json" hidden>
+            </div>
+
+            <div class="actions">
+              <a class="btn btn-ghost" href="https://github.com/natsune-vrc/natsune-vrc.github.io" target="_blank" rel="noopener noreferrer">GitHubを開く</a>
+            </div>
+          </details>
+
+          <div class="field" style="margin-top:16px">
+            <label>操作ログ</label>
+            <div class="log" id="log">ready</div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel editor-panel">
+        <form id="editor">
+          <section class="section active news-manager" data-section="news">
+            <div class="section-toolbar">
+              <div>
+                <h2>お知らせ管理</h2>
+                <p>履歴を一覧で確認し、新規作成または1件だけを選んで編集します。</p>
+              </div>
+              <button class="btn btn-primary" type="button" id="newsCreateBtn">新規作成</button>
+            </div>
+
+            <div class="content-admin-layout" id="newsAdminLayout">
+              <div class="content-list-pane">
+                <details class="compact-settings">
+                  <summary>お知らせセクション設定</summary>
+                  <div class="row">
+                    <div class="field">
+                      <label for="newsTitle">セクション見出し</label>
+                      <input id="newsTitle" data-path="news.title">
+                    </div>
+                    <div class="field">
+                      <label for="newsDescription">説明</label>
+                      <input id="newsDescription" data-path="news.description">
+                    </div>
+                  </div>
+                </details>
+
+                <div class="list-controls">
+                  <input id="newsSearch" type="search" placeholder="タイトル・本文で検索">
+                  <select id="newsStatusFilter">
+                    <option value="all">すべて</option>
+                    <option value="published">公開中</option>
+                    <option value="draft">下書き</option>
+                  </select>
+                  <select id="newsSort">
+                    <option value="newest">新しい順</option>
+                    <option value="oldest">古い順</option>
+                    <option value="title">タイトル順</option>
+                  </select>
+                </div>
+
+                <div class="content-table" aria-label="お知らせ履歴">
+                  <div class="content-table-head">
+                    <div>日付</div>
+                    <div>状態</div>
+                    <div>タイトル</div>
+                    <div>操作</div>
+                  </div>
+                  <div id="newsList"></div>
+                </div>
+              </div>
+
+              <aside class="record-editor-pane" aria-label="お知らせ編集">
+                <div class="record-empty" id="newsEmptyState">
+                  <strong>一覧から選択</strong>
+                  <p>過去のお知らせは左の履歴から編集します。新しい告知を作る場合は「新規作成」を押してください。</p>
+                </div>
+
+                <div class="record-editor-form" id="newsEditorForm" hidden>
+                  <div class="record-editor-head">
+                    <div>
+                      <small id="newsEditorMode">新規作成</small>
+                      <h3 id="newsEditorTitle">お知らせを作成</h3>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" type="button" id="newsCloseEditorBtn">閉じる</button>
+                  </div>
+
+                  <div class="article-workspace">
+                    <div class="article-main">
+                      <div class="field article-title-field">
+                        <label for="newsEditTitle">記事タイトル</label>
+                        <input id="newsEditTitle" placeholder="例: 新ワールド公開のお知らせ">
+                      </div>
+
+                      <div class="field article-excerpt-field">
+                        <label for="newsEditExcerpt">抜粋 / 一覧に出す説明</label>
+                        <textarea id="newsEditExcerpt" placeholder="一覧カードやSNS告知で最初に読ませたい短い説明"></textarea>
+                        <p class="hint">公開ページのカードでは、本文全文ではなくこの説明を優先して表示します。</p>
+                      </div>
+
+                      <div class="field article-body-field">
+                        <div class="field-label-row">
+                          <label for="newsEditText">本文</label>
+                          <span>Markdown対応</span>
+                        </div>
+                        <div class="markdown-editor">
+                          <div class="editor-toolbar" aria-label="本文挿入">
+                            <button class="tool-btn" type="button" data-news-insert="heading">見出し</button>
+                            <button class="tool-btn" type="button" data-news-insert="bold">太字</button>
+                            <button class="tool-btn" type="button" data-news-insert="link">リンク</button>
+                            <button class="tool-btn" type="button" data-news-insert="list">箇条書き</button>
+                            <button class="tool-btn" type="button" data-news-insert="quote">引用</button>
+                            <button class="tool-btn" type="button" data-news-insert="image">本文画像</button>
+                          </div>
+                          <textarea id="newsEditText" class="article-textarea" placeholder="本文を書きます。見出し、リンク、画像、補足説明を入れて、単なる一行告知ではなくリリース記事として読める状態にします。"></textarea>
+                        </div>
+                        <p class="hint">例: 見出しは「## 見出し」、画像は「![説明](images/example.png)」として保存します。</p>
+                      </div>
+                    </div>
+
+                    <aside class="article-side" aria-label="記事設定">
+                      <div class="article-side-block important">
+                        <label for="newsEditStatus">公開状態</label>
+                        <select id="newsEditStatus">
+                          <option value="draft">下書きとして保存</option>
+                          <option value="published">公開ページに表示</option>
+                        </select>
+                        <p class="hint">下書きは公開ページには出ません。</p>
+                      </div>
+
+                      <div class="article-side-block">
+                        <label for="newsEditDate">公開日</label>
+                        <input id="newsEditDate" placeholder="2026.06.06">
+                      </div>
+
+                      <div class="article-side-block">
+                        <label for="newsEditImage">アイキャッチ画像</label>
+                        <input id="newsEditImage" placeholder="images/hero.png">
+                        <div class="media-preview" id="newsImagePreview"><span>画像パスを入力すると表示されます</span></div>
+                        <p class="hint">既存画像または公開できるURLを指定します。</p>
+                      </div>
+
+                      <div class="article-side-block">
+                        <label for="newsEditImageAlt">画像の説明</label>
+                        <input id="newsEditImageAlt" placeholder="画像の内容を短く説明">
+                      </div>
+                    </aside>
+                  </div>
+
+                  <div class="editor-action-bar">
+                    <button class="btn btn-primary" type="button" id="newsApplyBtn">履歴に追加</button>
+                    <button class="btn btn-secondary" type="button" id="newsDuplicateBtn">複製して下書きにする</button>
+                    <button class="btn btn-danger" type="button" id="newsDeleteBtn">このお知らせを削除</button>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="section world-manager" data-section="worlds">
+            <div class="section-toolbar">
+              <div>
+                <h2>ワールド管理</h2>
+                <p>制作・監修ワールドを一覧で確認し、新規作成または1件だけを選んで編集します。</p>
+              </div>
+              <button class="btn btn-primary" type="button" id="worldCreateBtn">新規作成</button>
+            </div>
+
+            <div class="content-admin-layout" id="worldAdminLayout">
+              <div class="content-list-pane">
+                <details class="compact-settings">
+                  <summary>ワールドセクション設定</summary>
+                  <div class="field" style="margin-top:12px">
+                    <label for="worldsTitle">セクション見出し</label>
+                    <input id="worldsTitle" data-path="worlds.title">
+                  </div>
+                  <div class="field">
+                    <label for="worldsDescription">説明</label>
+                    <textarea id="worldsDescription" data-path="worlds.description"></textarea>
+                  </div>
+                </details>
+
+                <div class="list-controls wide">
+                  <input id="worldSearch" type="search" placeholder="ワールド名・説明で検索">
+                  <select id="worldCategoryFilter">
+                    <option value="all">すべて</option>
+                    <option value="made">制作</option>
+                    <option value="supervised">監修</option>
+                  </select>
+                  <select id="worldStatusFilter">
+                    <option value="all">すべて</option>
+                    <option value="published">公開中</option>
+                    <option value="draft">下書き</option>
+                  </select>
+                  <select id="worldSort">
+                    <option value="name">名前順</option>
+                    <option value="category">掲載先順</option>
+                  </select>
+                </div>
+
+                <div class="content-table" aria-label="ワールド一覧">
+                  <div class="content-table-head">
+                    <div>掲載先</div>
+                    <div>状態</div>
+                    <div>ワールド名</div>
+                    <div>操作</div>
+                  </div>
+                  <div id="worldsList"></div>
+                </div>
+              </div>
+
+              <aside class="record-editor-pane" aria-label="ワールド編集">
+                <div class="record-empty" id="worldEmptyState">
+                  <strong>一覧から選択</strong>
+                  <p>既存ワールドは左の一覧から編集します。新しいワールドを掲載する場合は「新規作成」を押してください。</p>
+                </div>
+
+                <div class="record-editor-form" id="worldEditorForm" hidden>
+                  <div class="record-editor-head">
+                    <div>
+                      <small id="worldEditorMode">新規作成</small>
+                      <h3 id="worldEditorTitle">ワールドを作成</h3>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" type="button" id="worldCloseEditorBtn">閉じる</button>
+                  </div>
+
+                  <div class="row">
+                    <div class="field">
+                      <label for="worldEditCategory">掲載先</label>
+                      <select id="worldEditCategory">
+                        <option value="made">制作ワールド</option>
+                        <option value="supervised">制作監修ワールド</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="worldEditStatus">公開状態</label>
+                      <select id="worldEditStatus">
+                        <option value="draft">下書き</option>
+                        <option value="published">公開中</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="import-box">
+                    <div>
+                      <h4>VRChatから公開情報を取得</h4>
+                      <p>VRChatのワールドURL、`vrch.at` URL、または `wrld_...` のIDを入れると、画像・説明・人数・ビジット・お気に入り数をフォームへ反映します。検索機能はVRChat側の認証が必要なため、ここではID指定の取得に絞っています。</p>
+                    </div>
+                    <div class="import-row">
+                      <div class="field" style="margin-bottom:0">
+                        <label for="worldEditVrchatSource">VRChat URL / World ID</label>
+                        <input id="worldEditVrchatSource" placeholder="https://vrchat.com/home/world/wrld_...">
+                      </div>
+                      <button class="btn btn-secondary" type="button" id="worldFetchVrchatBtn">VRChatから取得</button>
+                    </div>
+                    <div class="import-status" id="worldFetchStatus">ローカル管理サーバー経由で取得します。本番GitHub Pages上では取得用バックエンドが必要です。</div>
+                  </div>
+
+                  <div class="field">
+                    <label for="worldEditName">ワールド名</label>
+                    <input id="worldEditName">
+                  </div>
+                  <div class="field">
+                    <label for="worldEditDescription">説明</label>
+                    <textarea id="worldEditDescription"></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="worldEditImage">画像パス</label>
+                    <input id="worldEditImage" placeholder="images/world-name.png">
+                  </div>
+                  <div class="row">
+                    <div class="field">
+                      <label for="worldEditWorldId">VRChat World ID</label>
+                      <input id="worldEditWorldId" placeholder="wrld_...">
+                    </div>
+                    <div class="field">
+                      <label for="worldEditIntroUrl">紹介ページURL</label>
+                      <input id="worldEditIntroUrl" placeholder="worlds/example/index.html">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="field">
+                      <label for="worldEditVrchatUrl">VRChat URL</label>
+                      <input id="worldEditVrchatUrl" placeholder="https://vrchat.com/home/world/...">
+                    </div>
+                    <div class="field">
+                      <label for="worldEditAuthorName">作者名</label>
+                      <input id="worldEditAuthorName">
+                    </div>
+                  </div>
+                  <div class="row stats-row">
+                    <div class="field">
+                      <label for="worldEditCapacity">最大人数</label>
+                      <input id="worldEditCapacity" inputmode="numeric">
+                    </div>
+                    <div class="field">
+                      <label for="worldEditRecommendedCapacity">推奨人数</label>
+                      <input id="worldEditRecommendedCapacity" inputmode="numeric">
+                    </div>
+                    <div class="field">
+                      <label for="worldEditVisits">ビジット</label>
+                      <input id="worldEditVisits" inputmode="numeric">
+                    </div>
+                    <div class="field">
+                      <label for="worldEditFavorites">お気に入り</label>
+                      <input id="worldEditFavorites" inputmode="numeric">
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button class="btn btn-primary" type="button" id="worldApplyBtn">一覧に追加</button>
+                    <button class="btn btn-secondary" type="button" id="worldDuplicateBtn">複製</button>
+                    <button class="btn btn-danger" type="button" id="worldDeleteBtn">削除</button>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="section" data-section="profile">
+            <h2>プロフィール</h2>
+            <p>人物説明やタグを変更する必要があるときに使います。</p>
+            <div class="field">
+              <label for="profileTags">タグ</label>
+              <input id="profileTags" data-path="profile.tagsText">
+              <p class="hint">カンマ区切り。例: VRChat Creator, World Builder</p>
+            </div>
+            <div class="field">
+              <label for="profileBio">プロフィール本文</label>
+              <textarea id="profileBio" data-path="profile.bio"></textarea>
+            </div>
+          </section>
+
+          <section class="section link-manager" data-section="links">
+            <div class="section-toolbar">
+              <div>
+                <h2>リンク管理</h2>
+                <p>SNS、販売、問い合わせ先を一覧で確認し、必要なリンクだけを編集します。</p>
+              </div>
+              <button class="btn btn-primary" type="button" id="linkCreateBtn">新規作成</button>
+            </div>
+
+            <div class="content-admin-layout" id="linkAdminLayout">
+              <div class="content-list-pane">
+                <details class="compact-settings">
+                  <summary>リンクセクション設定</summary>
+                  <div class="row">
+                    <div class="field">
+                      <label for="linksTitle">セクション見出し</label>
+                      <input id="linksTitle" data-path="links.title">
+                    </div>
+                    <div class="field">
+                      <label for="linksDescription">説明</label>
+                      <input id="linksDescription" data-path="links.description">
+                    </div>
+                  </div>
+                </details>
+
+                <div class="list-controls">
+                  <input id="linkSearch" type="search" placeholder="表示名・URLで検索">
+                  <select id="linkStatusFilter">
+                    <option value="all">すべて</option>
+                    <option value="published">公開中</option>
+                    <option value="draft">下書き</option>
+                  </select>
+                  <select id="linkSort">
+                    <option value="order">表示順</option>
+                    <option value="kind">種別順</option>
+                    <option value="label">表示名順</option>
+                  </select>
+                </div>
+
+                <div class="content-table" aria-label="リンク一覧">
+                  <div class="content-table-head">
+                    <div>種別</div>
+                    <div>状態</div>
+                    <div>表示名</div>
+                    <div>操作</div>
+                  </div>
+                  <div id="linksList"></div>
+                </div>
+              </div>
+
+              <aside class="record-editor-pane" aria-label="リンク編集">
+                <div class="record-empty" id="linkEmptyState">
+                  <strong>一覧から選択</strong>
+                  <p>既存リンクは左の一覧から編集します。新しい導線を追加する場合は「新規作成」を押してください。</p>
+                </div>
+
+                <div class="record-editor-form" id="linkEditorForm" hidden>
+                  <div class="record-editor-head">
+                    <div>
+                      <small id="linkEditorMode">新規作成</small>
+                      <h3 id="linkEditorTitle">リンクを作成</h3>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" type="button" id="linkCloseEditorBtn">閉じる</button>
+                  </div>
+
+                  <div class="row">
+                    <div class="field">
+                      <label for="linkEditKind">種別</label>
+                      <select id="linkEditKind">
+                        <option value="x">X</option>
+                        <option value="yt">YouTube</option>
+                        <option value="vrc">VRChat</option>
+                        <option value="booth">BOOTH</option>
+                        <option value="discord">Discord</option>
+                        <option value="fanbox">Fanbox</option>
+                        <option value="support">Support</option>
+                        <option value="contact">Contact</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="linkEditStatus">公開状態</label>
+                      <select id="linkEditStatus">
+                        <option value="draft">下書き</option>
+                        <option value="published">公開中</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="linkEditLabel">表示名</label>
+                    <input id="linkEditLabel">
+                  </div>
+                  <div class="field">
+                    <label for="linkEditHandle">補足</label>
+                    <input id="linkEditHandle">
+                  </div>
+                  <div class="field">
+                    <label for="linkEditUrl">URL</label>
+                    <input id="linkEditUrl">
+                  </div>
+
+                  <div class="actions">
+                    <button class="btn btn-primary" type="button" id="linkApplyBtn">一覧に追加</button>
+                    <button class="btn btn-secondary" type="button" id="linkDuplicateBtn">複製</button>
+                    <button class="btn btn-danger" type="button" id="linkDeleteBtn">削除</button>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="section" data-section="hero">
+            <h2>トップ文言・CTA</h2>
+            <p>ファーストビューの名前、肩書き、導線です。サイトの前提を変える時に使います。</p>
+            <div class="field">
+              <label for="heroRole">肩書き</label>
+              <input id="heroRole" data-path="hero.role">
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="heroName">名前</label>
+                <input id="heroName" data-path="hero.name">
+              </div>
+              <div class="field">
+                <label for="heroNameEn">英字名</label>
+                <input id="heroNameEn" data-path="hero.nameEn">
+              </div>
+            </div>
+            <div class="field">
+              <label for="heroDescription">説明文</label>
+              <textarea id="heroDescription" data-path="hero.description"></textarea>
+              <p class="hint">改行は本番でも反映されます。</p>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="primaryLabel">メインボタン文言</label>
+                <input id="primaryLabel" data-path="hero.primaryLabel">
+              </div>
+              <div class="field">
+                <label for="primaryUrl">メインボタンURL</label>
+                <input id="primaryUrl" data-path="hero.primaryUrl">
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="secondaryLabel">サブボタン文言</label>
+                <input id="secondaryLabel" data-path="hero.secondaryLabel">
+              </div>
+              <div class="field">
+                <label for="secondaryUrl">サブボタンURL</label>
+                <input id="secondaryUrl" data-path="hero.secondaryUrl">
+              </div>
+            </div>
+          </section>
+
+          <section class="section" data-section="preview">
+            <h2>確認と保存</h2>
+            <p>保存前にJSONと検証結果を確認します。</p>
+            <div class="field">
+              <label>検証結果</label>
+              <div class="preview" id="validation"></div>
+            </div>
+            <div class="field">
+              <label>JSONプレビュー</label>
+              <div class="preview" id="jsonPreview"></div>
+            </div>
+          </section>
+
+          <div class="save-strip">
+            <div class="actions">
+              <button class="btn btn-primary" type="button" id="saveBtn">GitHubへ送信して公開サイトに反映</button>
+              <button class="btn btn-secondary" type="button" id="refreshPreviewBtn">未保存の入力を確認画面に反映</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <aside class="panel inspector-panel">
+        <div class="panel-head">
+          <h2>保存前の確認</h2>
+          <p>未保存の入力を、公開ページと同じHTML/CSS/JSで確認します。</p>
+        </div>
+        <div class="panel-body">
+          <div class="inspector-block actual-preview-block">
+            <h3>公開ページの表示確認</h3>
+            <p class="actual-preview-note">ここに表示しているのは本番サイトではありません。入力中の内容を一時データとして渡し、公開ページ本体で表示した確認画面です。</p>
+            <div class="actual-preview-actions">
+              <a class="btn btn-secondary btn-sm" id="openActualPreview" href="../index.html?adminPreview=1#news" target="_blank" rel="noopener noreferrer">別タブで確認</a>
+              <button class="btn btn-ghost btn-sm" type="button" id="actualPreviewRefreshBtn">今の入力を反映</button>
+            </div>
+            <iframe class="actual-preview-frame" id="actualPagePreview" title="未保存データの公開ページ確認"></iframe>
+          </div>
+
+          <details class="inspector-drawer">
+            <summary>公開前チェック</summary>
+            <div class="metric-grid">
+              <div class="metric"><strong id="metricNews">0</strong><span>お知らせ</span></div>
+              <div class="metric"><strong id="metricWorlds">0</strong><span>ワールド</span></div>
+              <div class="metric"><strong id="metricLinks">0</strong><span>基本リンク</span></div>
+            </div>
+            <div class="preview" id="sideValidation" style="min-height:110px; margin-top:12px"></div>
+          </details>
+
+          <details class="inspector-drawer">
+            <summary>公開ページに出る情報</summary>
+            <div class="site-preview" id="siteOutline"></div>
+          </details>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <template id="newsTemplate">
+    <div class="item" data-kind="news">
+      <div class="item-head">
+        <div class="item-title">お知らせ項目</div>
+        <button class="btn btn-danger btn-sm" type="button" data-remove>削除</button>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>日付</label>
+          <input data-field="date" placeholder="2026.06.06">
+        </div>
+        <div class="field">
+          <label>タイトル</label>
+          <input data-field="title">
+        </div>
+      </div>
+      <div class="field">
+        <label>本文</label>
+        <textarea data-field="text"></textarea>
+      </div>
+    </div>
+  </template>
+
+  <template id="linkTemplate">
+    <div class="item" data-kind="link">
+      <div class="item-head">
+        <div class="item-title">リンク項目</div>
+        <button class="btn btn-danger btn-sm" type="button" data-remove>削除</button>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>種別</label>
+          <select data-field="kind">
+            <option value="x">X</option>
+            <option value="yt">YouTube</option>
+            <option value="vrc">VRChat</option>
+            <option value="booth">BOOTH</option>
+            <option value="discord">Discord</option>
+            <option value="fanbox">Fanbox</option>
+            <option value="support">Support</option>
+            <option value="contact">Contact</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>表示名</label>
+          <input data-field="label">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>補足</label>
+          <input data-field="handle">
+        </div>
+        <div class="field">
+          <label>URL</label>
+          <input data-field="url">
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="worldTemplate">
+    <div class="item" data-kind="world">
+      <div class="item-head">
+        <div class="item-title">ワールド項目</div>
+        <button class="btn btn-danger btn-sm" type="button" data-remove>削除</button>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>掲載先</label>
+          <select data-field="category">
+            <option value="made">制作ワールド</option>
+            <option value="supervised">制作監修ワールド</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>ワールド名</label>
+          <input data-field="name">
+        </div>
+      </div>
+      <div class="field">
+        <label>説明</label>
+        <textarea data-field="description"></textarea>
+      </div>
+      <div class="field">
+        <label>画像パス</label>
+        <input data-field="image" placeholder="images/world-name.png">
+        <p class="hint">空欄の場合はプレースホルダー表示になります。</p>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>紹介ページURL</label>
+          <input data-field="introUrl" placeholder="worlds/example/index.html">
+        </div>
+        <div class="field">
+          <label>VRChat URL</label>
+          <input data-field="vrchatUrl" placeholder="https://vrchat.com/home/world/...">
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const DEFAULT_DATA = {
+      version: 1,
+      updatedAt: new Date().toISOString(),
+      hero: {
+        role: 'VRChat Creator / World Builder / Community Organizer',
+        name: '鮫月ナツネ',
+        nameEn: 'SAMETSUKI NATSUNE',
+        description: 'ワールド制作も イベントも 動画も イラストも\n全部ひっくるめて "鮫月ナツネ" という活動。\nこのサイトは 技術の説明書ではなく\nナツネという人そのものに触れるための入口です。',
+        primaryLabel: '活動を見る',
+        primaryUrl: '#worlds',
+        secondaryLabel: 'X をフォロー',
+        secondaryUrl: 'https://x.com/natsune_vrc'
+      },
+      profile: {
+        tags: ['VRChat Creator', 'World Builder', 'Event Organizer', 'YouTuber', 'Illustrator'],
+        bio: 'VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。'
+      },
+      news: { title: 'お知らせ', description: '活動の最新情報をお届けします。', items: [] },
+      worlds: {
+        title: 'ワールド制作',
+        description: '体験と居心地を設計するワールドづくり。制作したワールドと、監修・協力したワールドを掲載しています。',
+        made: [],
+        supervised: []
+      },
+      links: { title: 'リンク', description: '各種SNSやプラットフォームへのリンクをまとめています。', items: [] }
+    };
+
+    let currentData = structuredClone(DEFAULT_DATA);
+    let currentSha = null;
+    let isBinding = false;
+    let activeTab = 'news';
+    const ACTUAL_PREVIEW_STORAGE_KEY = 'natsune_site_admin_preview_data';
+    let selectedNewsIndex = null;
+    let isCreatingNews = false;
+    let selectedWorldRef = null;
+    let isCreatingWorld = false;
+    let selectedLinkIndex = null;
+    let isCreatingLink = false;
+
+    const $ = selector => document.querySelector(selector);
+    const statusEl = $('#status');
+    const logEl = $('#log');
+
+    function log(message) {
+      logEl.textContent = `[${new Date().toLocaleTimeString()}] ${message}\n` + logEl.textContent;
+    }
+
+    function setStatus(message, type = 'warn') {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+    }
+
+    function encodeBase64Utf8(text) {
+      const bytes = new TextEncoder().encode(text);
+      let binary = '';
+      bytes.forEach(byte => binary += String.fromCharCode(byte));
+      return btoa(binary);
+    }
+
+    function decodeBase64Utf8(base64) {
+      const binary = atob(base64.replace(/\s/g, ''));
+      const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+
+    function encodeRepoPath(path) {
+      return path.split('/').map(encodeURIComponent).join('/');
+    }
+
+    function getToken() {
+      return $('#token').value.trim();
+    }
+
+    function getRepoConfig() {
+      return {
+        owner: $('#owner').value.trim(),
+        repo: $('#repo').value.trim(),
+        branch: $('#branch').value.trim(),
+        path: $('#path').value.trim()
+      };
+    }
+
+    async function githubRequest(method, body = null) {
+      const token = getToken();
+      if (!token) throw new Error('GitHub token を入力してください');
+      const { owner, repo, branch, path } = getRepoConfig();
+      if (!owner || !repo || !branch || !path) throw new Error('Owner / Repo / Branch / Path を確認してください');
+
+      const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${encodeRepoPath(path)}${method === 'GET' ? `?ref=${encodeURIComponent(branch)}` : ''}`;
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': `Bearer ${token}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+          'Content-Type': 'application/json'
+        },
+        body: body ? JSON.stringify(body) : null
+      });
+      const json = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(json.message || `GitHub API error: ${response.status}`);
+      }
+      return json;
+    }
+
+    function normalizeData(data) {
+      const merged = structuredClone(DEFAULT_DATA);
+      Object.assign(merged, data || {});
+      merged.hero = Object.assign({}, DEFAULT_DATA.hero, data?.hero || {});
+      merged.profile = Object.assign({}, DEFAULT_DATA.profile, data?.profile || {});
+      merged.news = Object.assign({}, DEFAULT_DATA.news, data?.news || {});
+      merged.worlds = Object.assign({}, DEFAULT_DATA.worlds, data?.worlds || {});
+      merged.links = Object.assign({}, DEFAULT_DATA.links, data?.links || {});
+      merged.profile.tags = Array.isArray(merged.profile.tags) ? merged.profile.tags : [];
+      merged.news.items = Array.isArray(merged.news.items) ? merged.news.items : [];
+      merged.news.items = merged.news.items.map(normalizeNewsItem);
+      merged.worlds.made = Array.isArray(merged.worlds.made) ? merged.worlds.made : [];
+      merged.worlds.supervised = Array.isArray(merged.worlds.supervised) ? merged.worlds.supervised : [];
+      merged.worlds.made = merged.worlds.made.map(normalizeWorldItem);
+      merged.worlds.supervised = merged.worlds.supervised.map(normalizeWorldItem);
+      merged.links.items = Array.isArray(merged.links.items) ? merged.links.items : [];
+      merged.links.items = merged.links.items.map(normalizeLinkItem);
+      return merged;
+    }
+
+    function getByPath(obj, path) {
+      return path.split('.').reduce((acc, key) => acc?.[key], obj);
+    }
+
+    function setByPath(obj, path, value) {
+      const keys = path.split('.');
+      const last = keys.pop();
+      const parent = keys.reduce((acc, key) => acc[key] ||= {}, obj);
+      parent[last] = value;
+    }
+
+    function normalizeNewsItem(item = {}) {
+      return {
+        date: item.date || '',
+        title: item.title || '',
+        excerpt: item.excerpt || '',
+        text: item.text || '',
+        image: item.image || '',
+        imageAlt: item.imageAlt || '',
+        status: item.status || 'published'
+      };
+    }
+
+    function normalizeWorldItem(item = {}) {
+      return {
+        worldId: item.worldId || '',
+        name: item.name || '',
+        authorName: item.authorName || '',
+        description: item.description || '',
+        image: item.image || '',
+        introUrl: item.introUrl || '',
+        vrchatUrl: item.vrchatUrl || '',
+        capacity: item.capacity ?? '',
+        recommendedCapacity: item.recommendedCapacity ?? '',
+        visits: item.visits ?? '',
+        favorites: item.favorites ?? '',
+        occupants: item.occupants ?? '',
+        vrchatUpdatedAt: item.vrchatUpdatedAt || '',
+        status: item.status || 'published'
+      };
+    }
+
+    function normalizeLinkItem(item = {}) {
+      return {
+        kind: item.kind || 'contact',
+        label: item.label || '',
+        handle: item.handle || '',
+        url: item.url || '',
+        status: item.status || 'published'
+      };
+    }
+
+    function statusLabel(status) {
+      return status === 'draft' ? '下書き' : '公開中';
+    }
+
+    function worldCategoryLabel(category) {
+      return category === 'supervised' ? '監修' : '制作';
+    }
+
+    function bindDataToForm(data) {
+      currentData = normalizeData(data);
+      currentData.profile.tagsText = currentData.profile.tags.join(', ');
+      selectedNewsIndex = null;
+      isCreatingNews = false;
+      selectedWorldRef = null;
+      isCreatingWorld = false;
+      selectedLinkIndex = null;
+      isCreatingLink = false;
+      document.querySelectorAll('[data-path]').forEach(input => {
+        input.value = getByPath(currentData, input.dataset.path) ?? '';
+      });
+      isBinding = true;
+      renderNewsList(currentData.news.items);
+      renderWorldsList(currentData.worlds);
+      renderLinksList(currentData.links.items);
+      isBinding = false;
+      updatePreview();
+    }
+
+    function collectFormData() {
+      if (selectedNewsIndex !== null && !isCreatingNews) syncNewsEditorToSelected();
+      const data = normalizeData(currentData);
+      document.querySelectorAll('[data-path]').forEach(input => {
+        setByPath(data, input.dataset.path, input.value);
+      });
+      data.profile.tags = ($('#profileTags').value || '').split(',').map(v => v.trim()).filter(Boolean);
+      delete data.profile.tagsText;
+      data.news.items = currentData.news.items.map(normalizeNewsItem);
+      if (selectedWorldRef && !isCreatingWorld) syncWorldEditorToSelected();
+      if (selectedLinkIndex !== null && !isCreatingLink) syncLinkEditorToSelected();
+      data.worlds.made = currentData.worlds.made.map(normalizeWorldItem);
+      data.worlds.supervised = currentData.worlds.supervised.map(normalizeWorldItem);
+      data.links.items = currentData.links.items.map(normalizeLinkItem);
+      data.updatedAt = new Date().toISOString();
+      currentData = data;
+      return data;
+    }
+
+    function stripCategory(item) {
+      const { category, ...payload } = item;
+      return payload;
+    }
+
+    function collectItems(listSelector) {
+      return [...document.querySelectorAll(`${listSelector} .item`)].map(item => {
+        const out = {};
+        item.querySelectorAll('[data-field]').forEach(input => {
+          out[input.dataset.field] = input.value.trim();
+        });
+        return out;
+      });
+    }
+
+    function renderNewsList(items) {
+      const list = $('#newsList');
+      list.innerHTML = '';
+      const query = ($('#newsSearch')?.value || '').trim().toLowerCase();
+      const statusFilter = $('#newsStatusFilter')?.value || 'all';
+      const sortMode = $('#newsSort')?.value || 'newest';
+      let rows = currentData.news.items.map((item, index) => ({ item: normalizeNewsItem(item), index }));
+
+      if (query) {
+        rows = rows.filter(({ item }) => [item.date, item.title, item.excerpt, item.text, item.imageAlt].join(' ').toLowerCase().includes(query));
+      }
+      if (statusFilter !== 'all') {
+        rows = rows.filter(({ item }) => item.status === statusFilter);
+      }
+      rows.sort((a, b) => {
+        if (sortMode === 'title') return (a.item.title || '').localeCompare(b.item.title || '', 'ja');
+        const av = a.item.date || '';
+        const bv = b.item.date || '';
+        return sortMode === 'oldest' ? av.localeCompare(bv) : bv.localeCompare(av);
+      });
+
+      if (!rows.length) {
+        list.innerHTML = '<div class="empty-list">該当するお知らせはありません。</div>';
+        return;
+      }
+
+      list.innerHTML = rows.map(({ item, index }) => `
+        <button class="news-row${index === selectedNewsIndex ? ' active' : ''}" type="button" data-news-index="${index}">
+          <div class="news-date">${escapeHTML(item.date || '-')}</div>
+          <div class="news-state"><span class="state-badge ${item.status === 'draft' ? 'draft' : ''}">${statusLabel(item.status)}</span></div>
+          <div class="news-title-cell">
+            <strong>${escapeHTML(item.title || '無題のお知らせ')}</strong>
+            <span>${escapeHTML(shortText(item.excerpt || item.text || '本文未入力', 72))}</span>
+          </div>
+          <div class="news-action-cell">編集</div>
+        </button>
+      `).join('');
+      list.querySelectorAll('[data-news-index]').forEach(row => {
+        row.addEventListener('click', () => openNewsEditor(Number(row.dataset.newsIndex)));
+      });
+    }
+
+    function setNewsEditorVisible(visible) {
+      $('#newsAdminLayout')?.classList.toggle('editing', visible);
+      $('#newsEmptyState').hidden = visible;
+      $('#newsEditorForm').hidden = !visible;
+    }
+
+    function setNewsEditorFields(item) {
+      const news = normalizeNewsItem(item);
+      $('#newsEditDate').value = news.date;
+      $('#newsEditStatus').value = news.status;
+      $('#newsEditTitle').value = news.title;
+      $('#newsEditExcerpt').value = news.excerpt;
+      $('#newsEditText').value = news.text;
+      $('#newsEditImage').value = news.image;
+      $('#newsEditImageAlt').value = news.imageAlt;
+      updateNewsImagePreview();
+    }
+
+    function readNewsEditorFields() {
+      return normalizeNewsItem({
+        date: $('#newsEditDate').value.trim(),
+        status: $('#newsEditStatus').value,
+        title: $('#newsEditTitle').value.trim(),
+        excerpt: $('#newsEditExcerpt').value.trim(),
+        text: $('#newsEditText').value.trim(),
+        image: $('#newsEditImage').value.trim(),
+        imageAlt: $('#newsEditImageAlt').value.trim()
+      });
+    }
+
+    function updateNewsImagePreview() {
+      const preview = $('#newsImagePreview');
+      if (!preview) return;
+      const imageUrl = previewAssetUrl($('#newsEditImage')?.value);
+      const alt = $('#newsEditImageAlt')?.value || 'アイキャッチ画像';
+      preview.innerHTML = imageUrl
+        ? `<img src="${escapeHTML(imageUrl)}" alt="${escapeHTML(alt)}">`
+        : '<span>画像パスを入力すると表示されます</span>';
+    }
+
+    function insertNewsMarkdown(kind) {
+      const textarea = $('#newsEditText');
+      if (!textarea) return;
+      const start = textarea.selectionStart ?? textarea.value.length;
+      const end = textarea.selectionEnd ?? textarea.value.length;
+      const selected = textarea.value.slice(start, end);
+      const snippets = {
+        heading: `\n## ${selected || '見出し'}\n\n`,
+        bold: `**${selected || '強調したい文字'}**`,
+        link: `[${selected || 'リンクテキスト'}](https://example.com)`,
+        list: `\n- ${selected || '項目'}\n- 項目\n`,
+        quote: `\n> ${selected || '引用または補足'}\n`,
+        image: `\n![画像の説明](images/example.png)\n`
+      };
+      const insert = snippets[kind] || '';
+      textarea.setRangeText(insert, start, end, 'end');
+      textarea.focus();
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function syncNewsEditorToSelected() {
+      if (selectedNewsIndex === null || isCreatingNews || $('#newsEditorForm').hidden) return;
+      currentData.news.items[selectedNewsIndex] = readNewsEditorFields();
+    }
+
+    function startCreateNews() {
+      selectedNewsIndex = null;
+      isCreatingNews = true;
+      setNewsEditorFields({
+        date: new Date().toISOString().slice(0, 10).replaceAll('-', '.'),
+        status: 'draft',
+        title: '',
+        excerpt: '',
+        text: '',
+        image: '',
+        imageAlt: ''
+      });
+      $('#newsEditorMode').textContent = '新規作成';
+      $('#newsEditorTitle').textContent = 'お知らせを作成';
+      $('#newsApplyBtn').textContent = '下書きとして履歴に追加';
+      $('#newsDeleteBtn').hidden = true;
+      $('#newsDuplicateBtn').hidden = true;
+      setNewsEditorVisible(true);
+      renderNewsList();
+      updatePreview();
+    }
+
+    function openNewsEditor(index) {
+      const item = currentData.news.items[index];
+      if (!item) return;
+      selectedNewsIndex = index;
+      isCreatingNews = false;
+      setNewsEditorFields(item);
+      $('#newsEditorMode').textContent = '個別編集';
+      $('#newsEditorTitle').textContent = item.title || '無題のお知らせ';
+      $('#newsApplyBtn').textContent = 'このお知らせの変更を反映';
+      $('#newsDeleteBtn').hidden = false;
+      $('#newsDuplicateBtn').hidden = false;
+      setNewsEditorVisible(true);
+      renderNewsList();
+      updatePreview();
+    }
+
+    function closeNewsEditor() {
+      selectedNewsIndex = null;
+      isCreatingNews = false;
+      setNewsEditorVisible(false);
+      renderNewsList();
+      updatePreview();
+    }
+
+    function applyNewsEditor() {
+      const item = readNewsEditorFields();
+      if (isCreatingNews) {
+        currentData.news.items.unshift(item);
+        selectedNewsIndex = 0;
+        isCreatingNews = false;
+      } else if (selectedNewsIndex !== null) {
+        currentData.news.items[selectedNewsIndex] = item;
+      }
+      openNewsEditor(selectedNewsIndex ?? 0);
+      log('news item applied to list');
+    }
+
+    function duplicateSelectedNews() {
+      const base = selectedNewsIndex !== null ? currentData.news.items[selectedNewsIndex] : readNewsEditorFields();
+      if (!base) return;
+      const copy = normalizeNewsItem({ ...base, title: `${base.title || '無題のお知らせ'} のコピー`, status: 'draft' });
+      currentData.news.items.splice((selectedNewsIndex ?? -1) + 1, 0, copy);
+      openNewsEditor((selectedNewsIndex ?? -1) + 1);
+      log('news item duplicated');
+    }
+
+    function deleteSelectedNews() {
+      if (selectedNewsIndex === null) {
+        closeNewsEditor();
+        return;
+      }
+      const item = currentData.news.items[selectedNewsIndex];
+      if (!confirm(`「${item?.title || '無題のお知らせ'}」を削除しますか？`)) return;
+      currentData.news.items.splice(selectedNewsIndex, 1);
+      closeNewsEditor();
+      log('news item deleted');
+    }
+
+    function getWorldArray(category) {
+      return category === 'supervised' ? currentData.worlds.supervised : currentData.worlds.made;
+    }
+
+    function worldRefEquals(a, b) {
+      return a && b && a.category === b.category && a.index === b.index;
+    }
+
+    function getWorldRows() {
+      return [
+        ...currentData.worlds.made.map((item, index) => ({ item: normalizeWorldItem(item), category: 'made', index })),
+        ...currentData.worlds.supervised.map((item, index) => ({ item: normalizeWorldItem(item), category: 'supervised', index }))
+      ];
+    }
+
+    function renderWorldsList() {
+      const list = $('#worldsList');
+      list.innerHTML = '';
+      const query = ($('#worldSearch')?.value || '').trim().toLowerCase();
+      const categoryFilter = $('#worldCategoryFilter')?.value || 'all';
+      const statusFilter = $('#worldStatusFilter')?.value || 'all';
+      const sortMode = $('#worldSort')?.value || 'name';
+      let rows = getWorldRows();
+
+      if (query) {
+        rows = rows.filter(({ item }) => [item.worldId, item.name, item.authorName, item.description, item.image, item.introUrl, item.vrchatUrl].join(' ').toLowerCase().includes(query));
+      }
+      if (categoryFilter !== 'all') rows = rows.filter(row => row.category === categoryFilter);
+      if (statusFilter !== 'all') rows = rows.filter(({ item }) => item.status === statusFilter);
+      rows.sort((a, b) => {
+        if (sortMode === 'category') return `${a.category}-${a.item.name}`.localeCompare(`${b.category}-${b.item.name}`, 'ja');
+        return (a.item.name || '').localeCompare(b.item.name || '', 'ja');
+      });
+
+      if (!rows.length) {
+        list.innerHTML = '<div class="empty-list">該当するワールドはありません。</div>';
+        return;
+      }
+
+      list.innerHTML = rows.map(({ item, category, index }) => {
+        const active = worldRefEquals(selectedWorldRef, { category, index });
+        return `
+          <button class="world-row${active ? ' active' : ''}" type="button" data-world-category="${category}" data-world-index="${index}">
+            <div class="news-date"><span class="kind-badge">${worldCategoryLabel(category)}</span></div>
+            <div class="news-state"><span class="state-badge ${item.status === 'draft' ? 'draft' : ''}">${statusLabel(item.status)}</span></div>
+            <div class="news-title-cell">
+              <strong>${escapeHTML(item.name || '無題のワールド')}</strong>
+              <span>${escapeHTML(shortText(item.description || '説明未入力', 72))}</span>
+            </div>
+            <div class="news-action-cell">編集</div>
+          </button>
+        `;
+      }).join('');
+      list.querySelectorAll('[data-world-category]').forEach(row => {
+        row.addEventListener('click', () => openWorldEditor(row.dataset.worldCategory, Number(row.dataset.worldIndex)));
+      });
+    }
+
+    function setWorldEditorVisible(visible) {
+      $('#worldAdminLayout')?.classList.toggle('editing', visible);
+      $('#worldEmptyState').hidden = visible;
+      $('#worldEditorForm').hidden = !visible;
+    }
+
+    function setWorldEditorFields(category, item) {
+      const world = normalizeWorldItem(item);
+      $('#worldEditCategory').value = category || 'made';
+      $('#worldEditStatus').value = world.status;
+      $('#worldEditWorldId').value = world.worldId;
+      $('#worldEditName').value = world.name;
+      $('#worldEditAuthorName').value = world.authorName;
+      $('#worldEditDescription').value = world.description;
+      $('#worldEditImage').value = world.image;
+      $('#worldEditIntroUrl').value = world.introUrl;
+      $('#worldEditVrchatUrl').value = world.vrchatUrl;
+      $('#worldEditVrchatSource').value = world.vrchatUrl || world.worldId;
+      $('#worldEditCapacity').value = world.capacity;
+      $('#worldEditRecommendedCapacity').value = world.recommendedCapacity;
+      $('#worldEditVisits').value = world.visits;
+      $('#worldEditFavorites').value = world.favorites;
+      $('#worldEditorForm').dataset.occupants = world.occupants;
+      $('#worldEditorForm').dataset.vrchatUpdatedAt = world.vrchatUpdatedAt;
+      setWorldFetchStatus(world.vrchatUpdatedAt ? `最終取得: ${world.vrchatUpdatedAt}` : 'ローカル管理サーバー経由で取得します。本番GitHub Pages上では取得用バックエンドが必要です。');
+    }
+
+    function readWorldEditorFields() {
+      return {
+        category: $('#worldEditCategory').value,
+        item: normalizeWorldItem({
+          status: $('#worldEditStatus').value,
+          worldId: $('#worldEditWorldId').value.trim(),
+          name: $('#worldEditName').value.trim(),
+          authorName: $('#worldEditAuthorName').value.trim(),
+          description: $('#worldEditDescription').value.trim(),
+          image: $('#worldEditImage').value.trim(),
+          introUrl: $('#worldEditIntroUrl').value.trim(),
+          vrchatUrl: $('#worldEditVrchatUrl').value.trim(),
+          capacity: $('#worldEditCapacity').value.trim(),
+          recommendedCapacity: $('#worldEditRecommendedCapacity').value.trim(),
+          visits: $('#worldEditVisits').value.trim(),
+          favorites: $('#worldEditFavorites').value.trim(),
+          occupants: $('#worldEditorForm').dataset.occupants || '',
+          vrchatUpdatedAt: $('#worldEditorForm').dataset.vrchatUpdatedAt || ''
+        })
+      };
+    }
+
+    function setWorldFetchStatus(message, type = '') {
+      const el = $('#worldFetchStatus');
+      if (!el) return;
+      el.textContent = message;
+      el.classList.toggle('ok', type === 'ok');
+      el.classList.toggle('error', type === 'error');
+    }
+
+    function extractWorldId(value) {
+      const match = String(value || '').match(/wrld_[0-9a-f-]+/i);
+      return match ? match[0] : '';
+    }
+
+    function toNumericText(value) {
+      return value === undefined || value === null || value === '' ? '' : String(value);
+    }
+
+    function mapVrchatWorld(world) {
+      const id = world.id || extractWorldId(world.url || '');
+      return normalizeWorldItem({
+        worldId: id,
+        name: world.name || '',
+        authorName: world.authorName || '',
+        description: world.description || '',
+        image: world.imageUrl || world.thumbnailImageUrl || '',
+        vrchatUrl: id ? `https://vrchat.com/home/world/${id}` : '',
+        capacity: toNumericText(world.capacity),
+        recommendedCapacity: toNumericText(world.recommendedCapacity),
+        visits: toNumericText(world.visits),
+        favorites: toNumericText(world.favorites),
+        occupants: toNumericText(world.occupants),
+        vrchatUpdatedAt: new Date().toISOString(),
+        status: $('#worldEditStatus')?.value || 'draft'
+      });
+    }
+
+    async function fetchVrchatWorld(worldId) {
+      const candidates = [];
+      if (['localhost', '127.0.0.1'].includes(location.hostname)) {
+        candidates.push(`/api/world/${encodeURIComponent(worldId)}`);
+      }
+      candidates.push(`https://api.vrchat.cloud/api/1/worlds/${encodeURIComponent(worldId)}`);
+      let lastError = null;
+      for (const url of candidates) {
+        try {
+          const response = await fetch(url, { cache: 'no-store' });
+          if (!response.ok) {
+            lastError = new Error(`HTTP ${response.status}`);
+            continue;
+          }
+          return response.json();
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError || new Error('VRChatから取得できませんでした');
+    }
+
+    function applyVrchatWorldToEditor(world) {
+      const mapped = mapVrchatWorld(world);
+      $('#worldEditWorldId').value = mapped.worldId;
+      $('#worldEditName').value = mapped.name;
+      $('#worldEditAuthorName').value = mapped.authorName;
+      $('#worldEditDescription').value = mapped.description;
+      $('#worldEditImage').value = mapped.image;
+      $('#worldEditVrchatUrl').value = mapped.vrchatUrl;
+      $('#worldEditVrchatSource').value = mapped.vrchatUrl || mapped.worldId;
+      $('#worldEditCapacity').value = mapped.capacity;
+      $('#worldEditRecommendedCapacity').value = mapped.recommendedCapacity;
+      $('#worldEditVisits').value = mapped.visits;
+      $('#worldEditFavorites').value = mapped.favorites;
+      $('#worldEditorForm').dataset.occupants = mapped.occupants;
+      $('#worldEditorForm').dataset.vrchatUpdatedAt = mapped.vrchatUpdatedAt;
+      if (selectedWorldRef && !isCreatingWorld) syncWorldEditorToSelected();
+      renderWorldsList();
+      updatePreview();
+    }
+
+    async function importVrchatWorldToEditor() {
+      const id = extractWorldId($('#worldEditVrchatSource').value || $('#worldEditVrchatUrl').value || $('#worldEditWorldId').value);
+      if (!id) {
+        setWorldFetchStatus('VRChatのワールドURL、vrch.at URL、または wrld_... のIDを入力してください。', 'error');
+        return;
+      }
+      $('#worldFetchVrchatBtn').disabled = true;
+      setWorldFetchStatus(`取得中: ${id}`);
+      try {
+        const world = await fetchVrchatWorld(id);
+        applyVrchatWorldToEditor(world);
+        setWorldFetchStatus(`取得しました: ${world.name || id}`, 'ok');
+        log(`vrchat world imported: ${id}`);
+      } catch (error) {
+        setWorldFetchStatus(`取得できませんでした。GitHub Pages上ではCORSで直接取得できないため、ローカル管理サーバーまたは取得用バックエンドが必要です。\n${error.message}`, 'error');
+        log(`vrchat world import failed: ${error.message}`);
+      } finally {
+        $('#worldFetchVrchatBtn').disabled = false;
+      }
+    }
+
+    function syncWorldEditorToSelected() {
+      if (!selectedWorldRef || isCreatingWorld || $('#worldEditorForm').hidden) return;
+      const next = readWorldEditorFields();
+      const oldArray = getWorldArray(selectedWorldRef.category);
+      if (!oldArray[selectedWorldRef.index]) return;
+      if (next.category === selectedWorldRef.category) {
+        oldArray[selectedWorldRef.index] = next.item;
+        return;
+      }
+      oldArray.splice(selectedWorldRef.index, 1);
+      const newArray = getWorldArray(next.category);
+      newArray.unshift(next.item);
+      selectedWorldRef = { category: next.category, index: 0 };
+    }
+
+    function startCreateWorld() {
+      selectedWorldRef = null;
+      isCreatingWorld = true;
+      setWorldEditorFields('made', { status: 'draft' });
+      $('#worldEditorMode').textContent = '新規作成';
+      $('#worldEditorTitle').textContent = 'ワールドを作成';
+      $('#worldApplyBtn').textContent = '一覧に追加';
+      $('#worldDeleteBtn').hidden = true;
+      $('#worldDuplicateBtn').hidden = true;
+      setWorldEditorVisible(true);
+      renderWorldsList();
+      updatePreview();
+    }
+
+    function openWorldEditor(category, index) {
+      const item = getWorldArray(category)[index];
+      if (!item) return;
+      selectedWorldRef = { category, index };
+      isCreatingWorld = false;
+      setWorldEditorFields(category, item);
+      $('#worldEditorMode').textContent = '個別編集';
+      $('#worldEditorTitle').textContent = item.name || '無題のワールド';
+      $('#worldApplyBtn').textContent = '変更を反映';
+      $('#worldDeleteBtn').hidden = false;
+      $('#worldDuplicateBtn').hidden = false;
+      setWorldEditorVisible(true);
+      renderWorldsList();
+      updatePreview();
+    }
+
+    function closeWorldEditor() {
+      selectedWorldRef = null;
+      isCreatingWorld = false;
+      setWorldEditorVisible(false);
+      renderWorldsList();
+      updatePreview();
+    }
+
+    function applyWorldEditor() {
+      const next = readWorldEditorFields();
+      if (isCreatingWorld) {
+        const target = getWorldArray(next.category);
+        target.unshift(next.item);
+        selectedWorldRef = { category: next.category, index: 0 };
+        isCreatingWorld = false;
+      } else if (selectedWorldRef) {
+        syncWorldEditorToSelected();
+      }
+      openWorldEditor(selectedWorldRef.category, selectedWorldRef.index);
+      log('world item applied to list');
+    }
+
+    function duplicateSelectedWorld() {
+      const source = selectedWorldRef ? getWorldArray(selectedWorldRef.category)[selectedWorldRef.index] : readWorldEditorFields().item;
+      const category = selectedWorldRef?.category || $('#worldEditCategory').value || 'made';
+      if (!source) return;
+      const copy = normalizeWorldItem({ ...source, name: `${source.name || '無題のワールド'} のコピー`, status: 'draft' });
+      const target = getWorldArray(category);
+      const insertAt = selectedWorldRef ? selectedWorldRef.index + 1 : 0;
+      target.splice(insertAt, 0, copy);
+      openWorldEditor(category, insertAt);
+      log('world item duplicated');
+    }
+
+    function deleteSelectedWorld() {
+      if (!selectedWorldRef) {
+        closeWorldEditor();
+        return;
+      }
+      const target = getWorldArray(selectedWorldRef.category);
+      const item = target[selectedWorldRef.index];
+      if (!confirm(`「${item?.name || '無題のワールド'}」を削除しますか？`)) return;
+      target.splice(selectedWorldRef.index, 1);
+      closeWorldEditor();
+      log('world item deleted');
+    }
+
+    function renderLinksList() {
+      const list = $('#linksList');
+      list.innerHTML = '';
+      const query = ($('#linkSearch')?.value || '').trim().toLowerCase();
+      const statusFilter = $('#linkStatusFilter')?.value || 'all';
+      const sortMode = $('#linkSort')?.value || 'order';
+      let rows = currentData.links.items.map((item, index) => ({ item: normalizeLinkItem(item), index }));
+
+      if (query) {
+        rows = rows.filter(({ item }) => [item.kind, item.label, item.handle, item.url].join(' ').toLowerCase().includes(query));
+      }
+      if (statusFilter !== 'all') rows = rows.filter(({ item }) => item.status === statusFilter);
+      rows.sort((a, b) => {
+        if (sortMode === 'kind') return `${a.item.kind}-${a.item.label}`.localeCompare(`${b.item.kind}-${b.item.label}`, 'ja');
+        if (sortMode === 'label') return (a.item.label || '').localeCompare(b.item.label || '', 'ja');
+        return a.index - b.index;
+      });
+
+      if (!rows.length) {
+        list.innerHTML = '<div class="empty-list">該当するリンクはありません。</div>';
+        return;
+      }
+
+      list.innerHTML = rows.map(({ item, index }) => `
+        <button class="link-row${index === selectedLinkIndex ? ' active' : ''}" type="button" data-link-index="${index}">
+          <div class="news-date"><span class="kind-badge">${escapeHTML(item.kind || 'link')}</span></div>
+          <div class="news-state"><span class="state-badge ${item.status === 'draft' ? 'draft' : ''}">${statusLabel(item.status)}</span></div>
+          <div class="news-title-cell">
+            <strong>${escapeHTML(item.label || '無題のリンク')}</strong>
+            <span>${escapeHTML(shortText(item.handle || item.url || 'URL未入力', 72))}</span>
+          </div>
+          <div class="news-action-cell">編集</div>
+        </button>
+      `).join('');
+      list.querySelectorAll('[data-link-index]').forEach(row => {
+        row.addEventListener('click', () => openLinkEditor(Number(row.dataset.linkIndex)));
+      });
+    }
+
+    function setLinkEditorVisible(visible) {
+      $('#linkAdminLayout')?.classList.toggle('editing', visible);
+      $('#linkEmptyState').hidden = visible;
+      $('#linkEditorForm').hidden = !visible;
+    }
+
+    function setLinkEditorFields(item) {
+      const link = normalizeLinkItem(item);
+      $('#linkEditKind').value = link.kind;
+      $('#linkEditStatus').value = link.status;
+      $('#linkEditLabel').value = link.label;
+      $('#linkEditHandle').value = link.handle;
+      $('#linkEditUrl').value = link.url;
+    }
+
+    function readLinkEditorFields() {
+      return normalizeLinkItem({
+        kind: $('#linkEditKind').value,
+        status: $('#linkEditStatus').value,
+        label: $('#linkEditLabel').value.trim(),
+        handle: $('#linkEditHandle').value.trim(),
+        url: $('#linkEditUrl').value.trim()
+      });
+    }
+
+    function syncLinkEditorToSelected() {
+      if (selectedLinkIndex === null || isCreatingLink || $('#linkEditorForm').hidden) return;
+      currentData.links.items[selectedLinkIndex] = readLinkEditorFields();
+    }
+
+    function startCreateLink() {
+      selectedLinkIndex = null;
+      isCreatingLink = true;
+      setLinkEditorFields({ kind: 'x', status: 'draft' });
+      $('#linkEditorMode').textContent = '新規作成';
+      $('#linkEditorTitle').textContent = 'リンクを作成';
+      $('#linkApplyBtn').textContent = '一覧に追加';
+      $('#linkDeleteBtn').hidden = true;
+      $('#linkDuplicateBtn').hidden = true;
+      setLinkEditorVisible(true);
+      renderLinksList();
+      updatePreview();
+    }
+
+    function openLinkEditor(index) {
+      const item = currentData.links.items[index];
+      if (!item) return;
+      selectedLinkIndex = index;
+      isCreatingLink = false;
+      setLinkEditorFields(item);
+      $('#linkEditorMode').textContent = '個別編集';
+      $('#linkEditorTitle').textContent = item.label || '無題のリンク';
+      $('#linkApplyBtn').textContent = '変更を反映';
+      $('#linkDeleteBtn').hidden = false;
+      $('#linkDuplicateBtn').hidden = false;
+      setLinkEditorVisible(true);
+      renderLinksList();
+      updatePreview();
+    }
+
+    function closeLinkEditor() {
+      selectedLinkIndex = null;
+      isCreatingLink = false;
+      setLinkEditorVisible(false);
+      renderLinksList();
+      updatePreview();
+    }
+
+    function applyLinkEditor() {
+      const item = readLinkEditorFields();
+      if (isCreatingLink) {
+        currentData.links.items.unshift(item);
+        selectedLinkIndex = 0;
+        isCreatingLink = false;
+      } else if (selectedLinkIndex !== null) {
+        currentData.links.items[selectedLinkIndex] = item;
+      }
+      openLinkEditor(selectedLinkIndex ?? 0);
+      log('link item applied to list');
+    }
+
+    function duplicateSelectedLink() {
+      const base = selectedLinkIndex !== null ? currentData.links.items[selectedLinkIndex] : readLinkEditorFields();
+      if (!base) return;
+      const copy = normalizeLinkItem({ ...base, label: `${base.label || '無題のリンク'} のコピー`, status: 'draft' });
+      currentData.links.items.splice((selectedLinkIndex ?? -1) + 1, 0, copy);
+      openLinkEditor((selectedLinkIndex ?? -1) + 1);
+      log('link item duplicated');
+    }
+
+    function deleteSelectedLink() {
+      if (selectedLinkIndex === null) {
+        closeLinkEditor();
+        return;
+      }
+      const item = currentData.links.items[selectedLinkIndex];
+      if (!confirm(`「${item?.label || '無題のリンク'}」を削除しますか？`)) return;
+      currentData.links.items.splice(selectedLinkIndex, 1);
+      closeLinkEditor();
+      log('link item deleted');
+    }
+
+    function fillTemplate(templateId, listId, values = {}) {
+      const node = document.importNode($(templateId).content, true);
+      const item = node.querySelector('.item');
+      item.querySelectorAll('[data-field]').forEach(input => {
+        input.value = values[input.dataset.field] || '';
+      });
+      item.querySelector('[data-remove]').addEventListener('click', () => {
+        item.remove();
+        updatePreview();
+      });
+      item.addEventListener('input', updatePreview);
+      item.addEventListener('change', updatePreview);
+      $(listId).appendChild(item);
+      if (!isBinding) updatePreview();
+    }
+
+    function addNewsItem(values = {}) {
+      fillTemplate('#newsTemplate', '#newsList', {
+        date: values.date || '',
+        title: values.title || '',
+        text: values.text || ''
+      });
+    }
+
+    function addWorldItem(values = {}) {
+      fillTemplate('#worldTemplate', '#worldsList', {
+        category: values.category || 'made',
+        name: values.name || '',
+        description: values.description || '',
+        image: values.image || '',
+        introUrl: values.introUrl || '',
+        vrchatUrl: values.vrchatUrl || ''
+      });
+    }
+
+    function addLinkItem(values = {}) {
+      fillTemplate('#linkTemplate', '#linksList', {
+        kind: values.kind || 'x',
+        label: values.label || '',
+        handle: values.handle || '',
+        url: values.url || ''
+      });
+    }
+
+    function validate(data) {
+      const issues = [];
+      if (!data.hero.name) issues.push('ヒーローの名前が空です');
+      if (!data.hero.description) issues.push('ヒーロー説明文が空です');
+      if (!data.profile.bio) issues.push('プロフィール本文が空です');
+      if (data.news.items.some(item => item.status !== 'draft' && (!item.title || !item.text))) issues.push('公開中のお知らせにタイトルまたは本文が空の項目があります');
+      data.news.items.forEach(item => {
+        if (item.image && !isSafeUrl(item.image)) issues.push(`許可されない画像URLです: ${item.title || item.image}`);
+        if (item.status !== 'draft' && item.image && !item.imageAlt) issues.push(`公開中のお知らせのアイキャッチ画像に説明がありません: ${item.title || item.image}`);
+      });
+      const worldItems = [...data.worlds.made, ...data.worlds.supervised];
+      if (worldItems.some(item => item.status !== 'draft' && (!item.name || !item.description))) issues.push('公開中のワールドに名前または説明が空の項目があります');
+      worldItems.forEach(item => {
+        ['image', 'introUrl', 'vrchatUrl'].forEach(field => {
+          if (item[field] && !isSafeUrl(item[field])) issues.push(`許可されないURLです: ${item.name || item[field]}`);
+        });
+      });
+      if (data.links.items.some(item => item.status !== 'draft' && (!item.label || !item.url))) issues.push('公開中のリンクに表示名またはURLが空の項目があります');
+      data.links.items.forEach(item => {
+        if (!isSafeUrl(item.url)) issues.push(`許可されないURLです: ${item.label || item.url}`);
+      });
+      return issues;
+    }
+
+    function isSafeUrl(url) {
+      if (!url) return false;
+      if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) return true;
+      try {
+        const parsed = new URL(url);
+        return ['https:', 'http:', 'mailto:'].includes(parsed.protocol);
+      } catch {
+        return false;
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+    }
+
+    function shortText(value, length = 90) {
+      const text = String(value || '').replace(/\s+/g, ' ').trim();
+      return text.length > length ? text.slice(0, length - 1) + '…' : text;
+    }
+
+    function textLines(value) {
+      return escapeHTML(value).replace(/\r?\n/g, '<br>');
+    }
+
+    function renderLiveNews(data) {
+      const editorOpen = activeTab === 'news' && $('#newsEditorForm') && !$('#newsEditorForm').hidden;
+      const items = editorOpen
+        ? [readNewsEditorFields()]
+        : data.news.items.filter(item => item.status !== 'draft').slice(0, 3);
+      return `
+        <div class="live-eyebrow">NEWS</div>
+        <h4>${escapeHTML(data.news.title || 'お知らせ')}</h4>
+        <p>${escapeHTML(editorOpen ? '編集中のお知らせを表示しています。' : (data.news.description || ''))}</p>
+        <div class="live-list">
+          ${items.length ? items.map(item => {
+            const news = normalizeNewsItem(item);
+            const imageUrl = previewAssetUrl(news.image);
+            return `
+              <div class="live-card live-news-article">
+                ${imageUrl ? `<div class="live-news-thumb"><img src="${escapeHTML(imageUrl)}" alt="${escapeHTML(news.imageAlt || news.title || '')}"></div>` : ''}
+                <div class="live-news-body">
+                  <small>${escapeHTML(news.date || '-')}${news.status === 'draft' ? ' / 下書き' : ''}</small>
+                  <h5>${escapeHTML(news.title || 'タイトル未入力')}</h5>
+                  <p>${textLines(shortText(news.excerpt || news.text || '本文未入力', 130))}</p>
+                </div>
+              </div>
+            `;
+          }).join('') : '<div class="live-card"><h5>お知らせがありません</h5><p>左の追加ボタンから項目を作成できます。</p></div>'}
+        </div>
+      `;
+    }
+
+    function previewAssetUrl(value) {
+      const url = String(value || '').trim();
+      if (!url || !isSafeUrl(url)) return '';
+      if (/^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('/') || url.startsWith('../')) return url;
+      return '../' + url.replace(/^\.?\//, '');
+    }
+
+    function renderLiveWorlds(data) {
+      const editorOpen = activeTab === 'worlds' && $('#worldEditorForm') && !$('#worldEditorForm').hidden;
+      const worlds = editorOpen
+        ? [readWorldEditorFields().item]
+        : [...(data.worlds?.made || []), ...(data.worlds?.supervised || [])].filter(item => item.status !== 'draft').slice(0, 3);
+      return `
+        <div class="live-eyebrow">WORLD</div>
+        <h4>${escapeHTML(data.worlds?.title || 'ワールド制作')}</h4>
+        <p>${escapeHTML(editorOpen ? '編集中のワールドを表示しています。' : (data.worlds?.description || ''))}</p>
+        <div class="live-world-grid">
+          ${worlds.length ? worlds.map(item => {
+            const imageUrl = previewAssetUrl(item.image);
+            return `
+              <div class="live-world">
+                <div class="live-world-thumb">${imageUrl ? `<img src="${escapeHTML(imageUrl)}" alt="${escapeHTML(item.name || '')}">` : ''}</div>
+                <div class="live-world-body">
+                  <h5>${escapeHTML(item.name || 'ワールド名未入力')}</h5>
+                  <p>${textLines(shortText(item.description || '説明未入力', 90))}</p>
+                  <p>${escapeHTML([
+                    item.capacity ? `人数 ${item.capacity}` : '',
+                    item.visits ? `Visit ${item.visits}` : '',
+                    item.favorites ? `Fav ${item.favorites}` : ''
+                  ].filter(Boolean).join(' / '))}</p>
+                </div>
+              </div>
+            `;
+          }).join('') : '<div class="live-card"><h5>ワールドがありません</h5><p>左の追加ボタンから項目を作成できます。</p></div>'}
+        </div>
+      `;
+    }
+
+    function renderLiveProfile(data) {
+      return `
+        <div class="live-eyebrow">PROFILE</div>
+        <h4>${escapeHTML(data.hero.name || '鮫月ナツネ')}</h4>
+        <div class="live-actions">${data.profile.tags.map(tag => `<span class="live-pill">${escapeHTML(tag)}</span>`).join('')}</div>
+        <p>${textLines(data.profile.bio || 'プロフィール本文未入力')}</p>
+      `;
+    }
+
+    function renderLiveLinks(data) {
+      const editorOpen = activeTab === 'links' && $('#linkEditorForm') && !$('#linkEditorForm').hidden;
+      const links = editorOpen ? [readLinkEditorFields()] : data.links.items.filter(item => item.status !== 'draft').slice(0, 5);
+      return `
+        <div class="live-eyebrow">LINK</div>
+        <h4>${escapeHTML(data.links.title || 'リンク')}</h4>
+        <p>${escapeHTML(editorOpen ? '編集中のリンクを表示しています。' : (data.links.description || ''))}</p>
+        <div class="live-list">
+          ${links.map(item => `
+            <div class="live-card">
+              <small>${escapeHTML(item.kind || 'link')}${item.status === 'draft' ? ' / 下書き' : ''}</small>
+              <h5>${escapeHTML(item.label || '表示名未入力')}</h5>
+              <p>${escapeHTML(item.handle || item.url || 'URL未入力')}</p>
+            </div>
+          `).join('') || '<div class="live-card"><h5>リンクがありません</h5><p>左の追加ボタンから項目を作成できます。</p></div>'}
+        </div>
+      `;
+    }
+
+    function renderLiveHero(data) {
+      return `
+        <div class="live-hero">
+          <div>
+            <div class="live-eyebrow">${escapeHTML(data.hero.role || 'ROLE')}</div>
+            <div class="live-name">${escapeHTML(data.hero.name || '名称未設定')}</div>
+            <p>${textLines(data.hero.description || '説明文未入力')}</p>
+          </div>
+          <div class="live-actions">
+            <span class="live-pill">${escapeHTML(data.hero.primaryLabel || 'メイン導線')}</span>
+            <span class="live-pill">${escapeHTML(data.hero.secondaryLabel || 'サブ導線')}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderLivePreview(data, tab = activeTab) {
+      const el = $('#livePreview');
+      if (!el) return;
+      const renderers = {
+        news: renderLiveNews,
+        worlds: renderLiveWorlds,
+        profile: renderLiveProfile,
+        links: renderLiveLinks,
+        hero: renderLiveHero,
+        preview: renderLiveNews
+      };
+      el.innerHTML = (renderers[tab] || renderLiveNews)(data);
+    }
+
+    function previewHashForTab(tab = activeTab) {
+      return {
+        news: 'news',
+        worlds: 'worlds',
+        profile: 'about',
+        links: 'links',
+        hero: 'top',
+        preview: 'news'
+      }[tab] || 'news';
+    }
+
+    function buildActualPreviewData(data) {
+      const previewData = structuredClone(data);
+      if (activeTab === 'news' && $('#newsEditorForm') && !$('#newsEditorForm').hidden) {
+        const item = { ...readNewsEditorFields(), status: 'published' };
+        if (selectedNewsIndex !== null && !isCreatingNews) {
+          previewData.news.items[selectedNewsIndex] = item;
+        } else {
+          previewData.news.items = [item, ...previewData.news.items];
+        }
+      }
+      if (activeTab === 'worlds' && $('#worldEditorForm') && !$('#worldEditorForm').hidden) {
+        const draft = readWorldEditorFields();
+        const item = { ...draft.item, status: 'published' };
+        const targetCategory = draft.category;
+        const target = targetCategory === 'supervised' ? previewData.worlds.supervised : previewData.worlds.made;
+        if (selectedWorldRef && !isCreatingWorld && selectedWorldRef.category === targetCategory) {
+          target[selectedWorldRef.index] = item;
+        } else {
+          target.unshift(item);
+        }
+      }
+      if (activeTab === 'links' && $('#linkEditorForm') && !$('#linkEditorForm').hidden) {
+        const item = { ...readLinkEditorFields(), status: 'published' };
+        if (selectedLinkIndex !== null && !isCreatingLink) {
+          previewData.links.items[selectedLinkIndex] = item;
+        } else {
+          previewData.links.items = [item, ...previewData.links.items];
+        }
+      }
+      return previewData;
+    }
+
+    function updateActualPagePreview(data) {
+      const previewData = buildActualPreviewData(data);
+      const hash = previewHashForTab();
+      const href = `../index.html?adminPreview=1#${hash}`;
+      const openLink = $('#openActualPreview');
+      if (openLink) openLink.href = href;
+      try {
+        sessionStorage.setItem(ACTUAL_PREVIEW_STORAGE_KEY, JSON.stringify(previewData));
+      } catch (error) {
+        log(`preview storage failed: ${error.message}`);
+      }
+      const frame = $('#actualPagePreview');
+      if (!frame) return;
+      const currentSrc = frame.getAttribute('src') || '';
+      if (!currentSrc) {
+        frame.setAttribute('src', href);
+        return;
+      }
+      try {
+        frame.contentWindow?.postMessage({
+          type: 'natsune-admin-preview-data',
+          payload: previewData,
+          hash
+        }, location.origin === 'null' ? '*' : location.origin);
+        frame.contentWindow.location.hash = hash;
+      } catch (error) {
+        frame.setAttribute('src', href);
+      }
+    }
+
+    function updateInspector(data, issues) {
+      $('#metricNews').textContent = data.news.items.length;
+      const madeWorlds = data.worlds?.made || [];
+      const supervisedWorlds = data.worlds?.supervised || [];
+      $('#metricWorlds').textContent = madeWorlds.length + supervisedWorlds.length;
+      $('#metricLinks').textContent = data.links.items.length;
+      $('#sideValidation').textContent = issues.length ? issues.map(v => `NG: ${v}`).join('\n') : 'OK: 保存可能です';
+
+      const latestNews = data.news.items[0];
+      const firstWorld = madeWorlds.find(item => item.status !== 'draft') || supervisedWorlds.find(item => item.status !== 'draft');
+      const primaryLink = data.links.items.find(item => item.status !== 'draft');
+      $('#siteOutline').innerHTML = [
+        `<div class="site-card"><small>最新のお知らせ</small><strong>${escapeHTML(latestNews?.title || 'お知らせなし')}</strong><p>${escapeHTML(shortText(latestNews?.excerpt || latestNews?.text || ''))}</p></div>`,
+        `<div class="site-card"><small>先頭のワールド</small><strong>${escapeHTML(firstWorld?.name || 'ワールドなし')}</strong><p>${escapeHTML(shortText(firstWorld?.description || ''))}</p></div>`,
+        `<div class="site-card"><small>基本導線</small><strong>${escapeHTML(primaryLink?.label || 'リンクなし')}</strong><p>${escapeHTML(primaryLink?.url || '')}</p></div>`
+      ].join('');
+      updateActualPagePreview(data);
+    }
+
+    function updatePreview() {
+      const data = collectFormData();
+      const issues = validate(data);
+      $('#validation').textContent = issues.length ? issues.map(v => `NG: ${v}`).join('\n') : 'OK: 保存可能です';
+      $('#jsonPreview').textContent = JSON.stringify(data, null, 2);
+      updateInspector(data, issues);
+      setStatus(issues.length ? '要確認' : '編集可能', issues.length ? 'warn' : 'ok');
+    }
+
+    async function loadFromGitHub() {
+      setStatus('読み込み中', 'warn');
+      const response = await githubRequest('GET');
+      const json = JSON.parse(decodeBase64Utf8(response.content));
+      currentSha = response.sha;
+      bindDataToForm(json);
+      setStatus('GitHub読み込み済み', 'ok');
+      log(`loaded ${response.path} @ ${response.sha.slice(0, 7)}`);
+      if ($('#rememberToken').checked) sessionStorage.setItem('natsune_admin_token', getToken());
+    }
+
+    async function loadFromPublicJson() {
+      setStatus('公開JSON読み込み中', 'warn');
+      const response = await fetch('../data/site.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`公開JSONを読めません: ${response.status}`);
+      const json = await response.json();
+      currentSha = null;
+      bindDataToForm(json);
+      setStatus('公開JSON読み込み済み', 'ok');
+      log('loaded public data/site.json');
+    }
+
+    async function saveToGitHub() {
+      updatePreview();
+      const data = collectFormData();
+      const issues = validate(data);
+      if (issues.length) {
+        setStatus('保存不可', 'error');
+        throw new Error(issues.join('\n'));
+      }
+      if (!currentSha) {
+        await loadFromGitHub();
+      }
+      const body = {
+        message: `Update site content ${new Date().toISOString().slice(0, 10)}`,
+        content: encodeBase64Utf8(JSON.stringify(data, null, 2) + '\n'),
+        sha: currentSha,
+        branch: getRepoConfig().branch
+      };
+      setStatus('保存中', 'warn');
+      const response = await githubRequest('PUT', body);
+      currentSha = response.content?.sha || currentSha;
+      setStatus('本番更新コミット済み', 'ok');
+      log(`saved commit ${response.commit?.sha?.slice(0, 7) || 'unknown'}`);
+    }
+
+    function downloadJson() {
+      updatePreview();
+      const blob = new Blob([JSON.stringify(collectFormData(), null, 2) + '\n'], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `natsune-site-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importJson(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          bindDataToForm(JSON.parse(reader.result));
+          currentSha = null;
+          log(`imported ${file.name}`);
+        } catch (error) {
+          setStatus('JSON読み込み失敗', 'error');
+          log(error.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function activateTab(tabName, updateHash = false) {
+      const tab = [...document.querySelectorAll('.tab')].find(item => item.dataset.tab === tabName) || $('.tab');
+      if (!tab) return;
+      const section = document.querySelector(`[data-section="${tab.dataset.tab}"]`);
+      if (!section) return;
+      document.querySelectorAll('.tab').forEach(item => item.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(item => item.classList.remove('active'));
+      activeTab = tab.dataset.tab;
+      tab.classList.add('active');
+      section.classList.add('active');
+      if (updateHash) history.replaceState(null, '', `#${activeTab}`);
+      updatePreview();
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => activateTab(tab.dataset.tab, true));
+    });
+
+    $('#loadBtn').addEventListener('click', () => loadFromGitHub().catch(error => { setStatus('読み込み失敗', 'error'); log(error.message); }));
+    $('#loadLocalBtn').addEventListener('click', () => loadFromPublicJson().catch(error => { setStatus('読み込み失敗', 'error'); log(error.message); }));
+    $('#saveBtn').addEventListener('click', () => saveToGitHub().catch(error => { setStatus('保存失敗', 'error'); log(error.message); }));
+    $('#refreshPreviewBtn').addEventListener('click', updatePreview);
+    $('#actualPreviewRefreshBtn').addEventListener('click', updatePreview);
+    $('#actualPagePreview').addEventListener('load', () => {
+      try {
+        $('#actualPagePreview').contentWindow?.postMessage({
+          type: 'natsune-admin-preview-data',
+          payload: buildActualPreviewData(currentData),
+          hash: previewHashForTab()
+        }, location.origin === 'null' ? '*' : location.origin);
+      } catch (error) {
+        log(`preview post failed: ${error.message}`);
+      }
+    });
+    $('#downloadBtn').addEventListener('click', downloadJson);
+    $('#newsCreateBtn').addEventListener('click', startCreateNews);
+    $('#newsApplyBtn').addEventListener('click', applyNewsEditor);
+    $('#newsCloseEditorBtn').addEventListener('click', closeNewsEditor);
+    $('#newsDuplicateBtn').addEventListener('click', duplicateSelectedNews);
+    $('#newsDeleteBtn').addEventListener('click', deleteSelectedNews);
+    ['newsSearch', 'newsStatusFilter', 'newsSort'].forEach(id => {
+      const el = $('#' + id);
+      el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', () => renderNewsList());
+    });
+    document.querySelectorAll('[data-news-insert]').forEach(button => {
+      button.addEventListener('click', () => insertNewsMarkdown(button.dataset.newsInsert));
+    });
+    ['newsEditDate', 'newsEditStatus', 'newsEditTitle', 'newsEditExcerpt', 'newsEditText', 'newsEditImage', 'newsEditImageAlt'].forEach(id => {
+      $('#' + id).addEventListener('input', () => {
+        if (id === 'newsEditImage' || id === 'newsEditImageAlt') updateNewsImagePreview();
+        if (selectedNewsIndex !== null && !isCreatingNews) {
+          syncNewsEditorToSelected();
+          $('#newsEditorTitle').textContent = currentData.news.items[selectedNewsIndex]?.title || '無題のお知らせ';
+          renderNewsList();
+        }
+        updatePreview();
+      });
+      $('#' + id).addEventListener('change', () => {
+        if (id === 'newsEditImage' || id === 'newsEditImageAlt') updateNewsImagePreview();
+        if (selectedNewsIndex !== null && !isCreatingNews) {
+          syncNewsEditorToSelected();
+          renderNewsList();
+        }
+        updatePreview();
+      });
+    });
+    $('#worldCreateBtn').addEventListener('click', startCreateWorld);
+    $('#worldApplyBtn').addEventListener('click', applyWorldEditor);
+    $('#worldCloseEditorBtn').addEventListener('click', closeWorldEditor);
+    $('#worldDuplicateBtn').addEventListener('click', duplicateSelectedWorld);
+    $('#worldDeleteBtn').addEventListener('click', deleteSelectedWorld);
+    $('#worldFetchVrchatBtn').addEventListener('click', () => importVrchatWorldToEditor());
+    ['worldSearch', 'worldCategoryFilter', 'worldStatusFilter', 'worldSort'].forEach(id => {
+      const el = $('#' + id);
+      el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', () => renderWorldsList());
+    });
+    ['worldEditCategory', 'worldEditStatus', 'worldEditWorldId', 'worldEditName', 'worldEditAuthorName', 'worldEditDescription', 'worldEditImage', 'worldEditIntroUrl', 'worldEditVrchatUrl', 'worldEditCapacity', 'worldEditRecommendedCapacity', 'worldEditVisits', 'worldEditFavorites'].forEach(id => {
+      const el = $('#' + id);
+      const handler = () => {
+        if (selectedWorldRef && !isCreatingWorld) {
+          syncWorldEditorToSelected();
+          const selected = selectedWorldRef ? getWorldArray(selectedWorldRef.category)[selectedWorldRef.index] : null;
+          $('#worldEditorTitle').textContent = selected?.name || '無題のワールド';
+          renderWorldsList();
+        }
+        updatePreview();
+      };
+      el.addEventListener('input', handler);
+      el.addEventListener('change', handler);
+    });
+
+    $('#linkCreateBtn').addEventListener('click', startCreateLink);
+    $('#linkApplyBtn').addEventListener('click', applyLinkEditor);
+    $('#linkCloseEditorBtn').addEventListener('click', closeLinkEditor);
+    $('#linkDuplicateBtn').addEventListener('click', duplicateSelectedLink);
+    $('#linkDeleteBtn').addEventListener('click', deleteSelectedLink);
+    ['linkSearch', 'linkStatusFilter', 'linkSort'].forEach(id => {
+      const el = $('#' + id);
+      el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', () => renderLinksList());
+    });
+    ['linkEditKind', 'linkEditStatus', 'linkEditLabel', 'linkEditHandle', 'linkEditUrl'].forEach(id => {
+      const el = $('#' + id);
+      const handler = () => {
+        if (selectedLinkIndex !== null && !isCreatingLink) {
+          syncLinkEditorToSelected();
+          $('#linkEditorTitle').textContent = currentData.links.items[selectedLinkIndex]?.label || '無題のリンク';
+          renderLinksList();
+        }
+        updatePreview();
+      };
+      el.addEventListener('input', handler);
+      el.addEventListener('change', handler);
+    });
+    $('#importFile').addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (file) importJson(file);
+      event.target.value = '';
+    });
+    document.addEventListener('input', event => {
+      if (event.target.matches('[data-path]')) updatePreview();
+    });
+    window.addEventListener('hashchange', () => activateTab(location.hash.replace('#', '') || 'news'));
+
+    const rememberedToken = sessionStorage.getItem('natsune_admin_token');
+    if (rememberedToken) {
+      $('#token').value = rememberedToken;
+      $('#rememberToken').checked = true;
+    }
+    bindDataToForm(DEFAULT_DATA);
+    activateTab(location.hash.replace('#', '') || 'news');
+    loadFromPublicJson().catch(error => log(error.message));
+  </script>
+</body>
+</html>

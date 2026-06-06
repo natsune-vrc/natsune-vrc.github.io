@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-06T00:00:00.000Z",
+  "hero": {
+    "role": "VRChat Creator / World Builder / Community Organizer",
+    "name": "鮫月ナツネ",
+    "nameEn": "SAMETSUKI NATSUNE",
+    "description": "ワールド制作も イベントも 動画も イラストも\n全部ひっくるめて \"鮫月ナツネ\" という活動。\nこのサイトは 技術の説明書ではなく\nナツネという人そのものに触れるための入口です。",
+    "primaryLabel": "活動を見る",
+    "primaryUrl": "#worlds",
+    "secondaryLabel": "X をフォロー",
+    "secondaryUrl": "https://x.com/natsune_vrc"
+  },
+  "profile": {
+    "tags": [
+      "VRChat Creator",
+      "World Builder",
+      "Event Organizer",
+      "YouTuber",
+      "Illustrator"
+    ],
+    "bio": "VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。"
+  },
+  "news": {
+    "title": "お知らせ",
+    "description": "活動の最新情報をお届けします。",
+    "items": [
+      {
+        "date": "2026.04.05",
+        "status": "published",
+        "title": "ポータルサイトをリニューアルしました",
+        "excerpt": "活動情報をまとめた新しいポータルサイトを公開しました。",
+        "image": "images/hero.png",
+        "imageAlt": "鮫月ナツネのポータルサイトビジュアル",
+        "text": "活動情報をまとめた新しいポータルサイトを公開しました。ワールド・イベント・動画など各セクションを順次更新していきます。"
+      },
+      {
+        "date": "2026.04.01",
+        "status": "published",
+        "title": "BOOTHショップ・Fanbox 運営中",
+        "excerpt": "BOOTHとFanboxでの発信・支援導線を公開しています。",
+        "image": "",
+        "imageAlt": "",
+        "text": "BOOTHにてアセット販売、Fanboxにてコンテンツ発信を行っています。ご支援いただけると嬉しいです。"
+      },
+      {
+        "date": "-",
+        "status": "published",
+        "title": "お知らせを順次追加予定",
+        "excerpt": "イベント情報・ワールドアップデート・動画公開情報などを掲載予定です。",
+        "image": "",
+        "imageAlt": "",
+        "text": "イベント情報・ワールドアップデート・動画公開情報などをこちらに掲載していきます。"
+      }
+    ]
+  },
+  "worlds": {
+    "title": "ワールド制作",
+    "description": "体験と居心地を設計するワールドづくり。制作したワールドと、監修・協力したワールドを掲載しています。",
+    "made": [
+      {
+        "worldId": "",
+        "name": "君と白に眠る",
+        "authorName": "",
+        "status": "published",
+        "description": "雪と静寂の中で、誰かと過ごすためのワールド。",
+        "image": "images/world-kimitoshiro.png",
+        "introUrl": "worlds/kimitoshiro/index.html",
+        "vrchatUrl": "https://vrchat.com/home/world/wrld_placeholder_kimitoshiro",
+        "capacity": "",
+        "recommendedCapacity": "",
+        "visits": "",
+        "favorites": "",
+        "occupants": "",
+        "vrchatUpdatedAt": ""
+      },
+      {
+        "worldId": "",
+        "name": "灯り巣 -TOMORIS-",
+        "authorName": "",
+        "status": "published",
+        "description": "温かな灯りが集まる、居場所のようなワールド。",
+        "image": "images/world-tomoris-official.png",
+        "introUrl": "worlds/tomoris/index.html",
+        "vrchatUrl": "https://vrchat.com/home/world/wrld_placeholder_tomoris",
+        "capacity": "",
+        "recommendedCapacity": "",
+        "visits": "",
+        "favorites": "",
+        "occupants": "",
+        "vrchatUpdatedAt": ""
+      }
+    ],
+    "supervised": []
+  },
+  "links": {
+    "title": "リンク",
+    "description": "各種SNSやプラットフォームへのリンクをまとめています。",
+    "items": [
+      {
+        "kind": "x",
+        "status": "published",
+        "label": "X / Twitter",
+        "handle": "@natsune_vrc",
+        "url": "https://x.com/natsune_vrc"
+      },
+      {
+        "kind": "yt",
+        "status": "published",
+        "label": "YouTube",
+        "handle": "@natsune_vrc",
+        "url": "https://www.youtube.com/@natsune_vrc"
+      },
+      {
+        "kind": "vrc",
+        "status": "published",
+        "label": "VRChat",
+        "handle": "鮫月ナツネ",
+        "url": "https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935"
+      },
+      {
+        "kind": "booth",
+        "status": "published",
+        "label": "BOOTH",
+        "handle": "natsunevrc.booth.pm",
+        "url": "https://natsunevrc.booth.pm/"
+      },
+      {
+        "kind": "discord",
+        "status": "published",
+        "label": "Discord",
+        "handle": "コミュニティサーバー",
+        "url": "contact.html"
+      },
+      {
+        "kind": "fanbox",
+        "status": "published",
+        "label": "Pixiv Fanbox",
+        "handle": "natsunevrc.fanbox.cc",
+        "url": "https://natsunevrc.fanbox.cc/"
+      },
+      {
+        "kind": "support",
+        "status": "published",
+        "label": "支援する",
+        "handle": "BOOTH / Fanbox",
+        "url": "shien.html"
+      },
+      {
+        "kind": "contact",
+        "status": "published",
+        "label": "お問い合わせ",
+        "handle": "DM / Discord",
+        "url": "contact.html"
+      }
+    ]
+  }
+}

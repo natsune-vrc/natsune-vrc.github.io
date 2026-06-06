@@ -104,7 +104,7 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
     .hero-role { font-family:var(--font-hand); font-size:14px; color:var(--purple); margin-bottom:10px; }
     .hero-name { font-size:clamp(48px,9vw,88px); font-weight:900; line-height:1.2; margin-bottom:28px; overflow:visible; font-family:'Zen Maru Gothic',sans-serif; letter-spacing:.05em; user-select:none; filter:drop-shadow(0 0 6px rgba(0,180,210,.18)) drop-shadow(0 0 2px rgba(0,120,180,.12)); }
-    .hero-name span { display:inline-block; position:relative; cursor:grab; }
+    .hero-name span { display:inline-block; position:relative; }
     .hero-name.wave-active span { animation:heroWave 4s ease-in-out infinite, heroGrad 16s linear infinite; background:linear-gradient(90deg,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
     .hero-name.wave-active span:nth-child(1){animation-delay:0s}
     .hero-name.wave-active span:nth-child(2){animation-delay:.18s}
@@ -113,6 +113,11 @@
     .hero-name.wave-active span:nth-child(5){animation-delay:.56s}
     @keyframes heroWave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
     @keyframes heroGrad { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
+    .hero-name-en { font-family:var(--font-ui); font-size:clamp(13px,2.2vw,18px); font-weight:700; letter-spacing:.25em; margin-bottom:24px; line-height:1.2; overflow:visible; user-select:none; filter:drop-shadow(0 0 4px rgba(0,180,210,.12)); }
+    .hero-name-en span { display:inline-block; position:relative; }
+    .hero-name-en.wave-active span { animation:heroWaveEn 4.5s ease-in-out infinite, heroGradEn 18s linear infinite; background:linear-gradient(90deg,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    @keyframes heroWaveEn { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+    @keyframes heroGradEn { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
     .hero-desc { font-size:15px; color:var(--text-soft); line-height:2; margin-bottom:36px; font-family:var(--font-hand); max-width:480px; }
     .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
     .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 26px; border-radius:12px; font-size:14px; font-weight:700; border:none; cursor:none; transition:all 0.3s; position:relative; overflow:hidden; }
@@ -147,15 +152,9 @@
 
     /* ── Profile ── */
     #profile .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
-    .profile-grid { display:grid; grid-template-columns:200px 1fr; gap:48px; align-items:start; }
-    .profile-avatar { width:200px; height:200px; border-radius:24px; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.08),rgba(124,77,255,0.08)); flex-shrink:0; }
-    .profile-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; }
-    .profile-name-ja { font-size:32px; font-weight:900; margin-bottom:4px; }
-    .profile-name-en { font-family:var(--font-ui); font-size:12px; letter-spacing:0.2em; color:var(--text-soft); margin-bottom:20px; }
     .profile-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
     .profile-tag { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; background:rgba(0,188,212,0.07); color:var(--cyan); border:1px solid rgba(0,188,212,0.15); }
-    .profile-bio { font-size:14px; color:var(--text-soft); line-height:2; font-family:var(--font-hand); }
-    @media(max-width:600px) { .profile-grid { grid-template-columns:1fr; } .profile-avatar { width:140px; height:140px; } }
+    .profile-bio { font-size:14px; color:var(--text-soft); line-height:2; font-family:var(--font-hand); max-width:640px; }
 
     /* ── WIP Projects ── */
     #wip .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
@@ -198,6 +197,10 @@
     .world-body { padding:20px; }
     .world-name { font-size:16px; font-weight:700; margin-bottom:6px; }
     .world-desc { font-size:13px; color:var(--text-soft); margin-bottom:16px; line-height:1.7; }
+    .world-meta { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0 0 16px; }
+    .world-meta-item { border:1px solid rgba(0,188,212,0.10); border-radius:10px; background:rgba(0,188,212,0.035); padding:8px 7px; }
+    .world-meta-item strong { display:block; font-family:var(--font-ui); font-size:13px; color:var(--text); line-height:1.1; }
+    .world-meta-item span { display:block; margin-top:3px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.08em; color:var(--text-soft); }
     .world-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .world-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; transition:all 0.2s; }
     .world-btn-intro { background:rgba(0,188,212,0.08); color:var(--cyan); border:1px solid rgba(0,188,212,0.2); }
@@ -275,14 +278,30 @@
     #blog .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
 
     .card-list { display:flex; flex-direction:column; gap:14px; }
-    .card-item { display:flex; align-items:flex-start; gap:20px; padding:22px; border-radius:16px; background:#fff; border:1px solid rgba(0,188,212,0.06); border-left:3px solid var(--cyan); transition:all 0.3s; }
+    .card-item { display:grid; grid-template-columns:112px minmax(0,1fr); align-items:flex-start; gap:20px; padding:22px; border-radius:16px; background:#fff; border:1px solid rgba(0,188,212,0.06); border-left:3px solid var(--cyan); transition:all 0.3s; }
     .card-item:hover { transform:translateX(6px); background:rgba(0,188,212,0.015); }
     #news .card-item { border-left-color:var(--cyan); }
     #articles .card-item { border-left-color:var(--purple); }
     #blog .card-item { border-left-color:var(--purple); }
     .card-date { font-family:var(--font-ui); font-size:10px; letter-spacing:0.1em; color:var(--text-soft); white-space:nowrap; padding-top:3px; }
+    .card-thumb { width:112px; aspect-ratio:16/10; border-radius:12px; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.08),rgba(255,255,255,0.92)); border:1px solid rgba(0,188,212,0.08); }
+    .card-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .card-body { min-width:0; }
     .card-body h4 { font-size:15px; font-weight:700; margin-bottom:5px; }
     .card-body p { font-size:13px; color:var(--text-soft); }
+    .card-excerpt { margin-bottom:8px; }
+    .news-read { margin-top:10px; }
+    .news-read summary { color:var(--cyan); font-family:var(--font-ui); font-size:11px; font-weight:800; cursor:pointer; }
+    .news-richtext { margin-top:12px; padding-top:12px; border-top:1px solid rgba(0,188,212,0.10); }
+    .news-richtext h5 { margin:14px 0 6px; font-size:14px; color:var(--text); }
+    .news-richtext p,
+    .news-richtext li,
+    .news-richtext blockquote { font-size:13px; line-height:1.85; color:var(--text-soft); }
+    .news-richtext ul { padding-left:1.2em; margin:8px 0; }
+    .news-richtext blockquote { margin:10px 0; padding:8px 12px; border-left:3px solid rgba(0,188,212,0.32); background:rgba(0,188,212,0.035); }
+    .news-richtext a { color:var(--cyan); font-weight:700; }
+    .news-richtext figure { margin:12px 0; }
+    .news-richtext figure img { width:100%; max-height:320px; object-fit:cover; border-radius:12px; border:1px solid rgba(0,188,212,0.10); }
 
     /* ── Placeholder card ── */
     .placeholder-card { padding:32px; border-radius:20px; background:rgba(0,188,212,0.02); border:1.5px dashed rgba(0,188,212,0.15); text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
@@ -300,6 +319,7 @@
     .link-card:hover { transform:translateY(-3px); box-shadow:0 8px 32px rgba(0,40,80,0.08); }
     .link-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .link-icon svg { width:20px; height:20px; }
+    .link-initial { font-family:var(--font-ui); font-size:12px; font-weight:900; letter-spacing:0; color:var(--cyan); }
     .link-info { flex:1; min-width:0; }
     .link-name { font-size:14px; font-weight:700; margin-bottom:2px; }
     .link-handle { font-size:11px; color:var(--text-soft); }
@@ -350,18 +370,22 @@
     }
     @media(max-width:820px) {
       .hero-grid { grid-template-columns:1fr; }
+      .hero-grid > .avatar-wrap { order:-1; justify-self:center; max-width:280px; margin-bottom:24px; }
       .hdr-nav { display:none; }
       body { cursor:auto; } a { cursor:auto; }
       .cursor { display:none; }
       .world-grid, .event-grid, .video-grid, .album-grid { grid-template-columns:1fr; }
       .illust-grid { grid-template-columns:repeat(2,1fr); }
       .placeholder-grid-2, .placeholder-grid-3 { grid-template-columns:1fr; }
+      .ug-grid { grid-template-columns:1fr; }
     }
     @media(max-width:560px) {
       .hero { padding:60px 0 40px; }
       .hero-btns { flex-direction:column; }
       .btn { width:100%; justify-content:center; }
       .hdr-actions { display:none; }
+      .card-item { grid-template-columns:1fr; }
+      .card-thumb { width:100%; }
     }
   </style>
 </head>
@@ -394,6 +418,7 @@
         <a href="#profile">プロフィール</a>
         <a href="#wip">進行中</a>
         <a href="#worlds">ワールド</a>
+        <a href="unity.html">Unity講座</a>
         <a href="#events">イベント</a>
         <a href="#videos">動画</a>
         <a href="#buichasuto">ぶいちゃすと</a>
@@ -411,16 +436,16 @@
 
     <!-- Marquee -->
     <div class="marquee"><div class="m-track">
-      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Illustrator</span><span>&mdash;</span><span class="hi">BOOTH</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
-      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Illustrator</span><span>&mdash;</span><span class="hi">BOOTH</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
+      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Illustrator</span><span>&mdash;</span><span class="hi">BOOTH</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span><span>Unity Guide</span><span>&mdash;</span>
+      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Illustrator</span><span>&mdash;</span><span class="hi">BOOTH</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span><span>Unity Guide</span><span>&mdash;</span>
     </div></div>
 
     <!-- Hero -->
     <section class="hero"><div class="container hero-grid">
       <div>
-        <div class="hero-status"><i></i> PORTAL ACTIVE</div>
         <p class="hero-role">VRChat Creator / World Builder / Community Organizer</p>
         <h1 class="hero-name" id="heroName">鮫月ナツネ</h1>
+        <div class="hero-name-en" id="heroNameEn">SAMETSUKI NATSUNE</div>
         <p class="hero-desc">ワールド制作も イベントも 動画も イラストも<br>全部ひっくるめて "鮫月ナツネ" という活動。<br>このサイトは 技術の説明書ではなく<br>ナツネという人そのものに触れるための入口です。</p>
         <div class="hero-btns">
           <a href="#worlds" class="btn btn-p magnetic">
@@ -442,24 +467,14 @@
     <!-- 0a. プロフィール -->
     <section class="sec" id="profile"><div class="container">
       <div class="sec-tag">// PROFILE</div>
-      <h2 class="sec-title">プロフィール</h2>
-      <div class="profile-grid">
-        <div class="profile-avatar">
-          <img src="images/icon.png" alt="鮫月ナツネ" />
-        </div>
-        <div>
-          <div class="profile-name-ja">鮫月ナツネ</div>
-          <div class="profile-name-en">SAMETSUKI NATSUNE</div>
-          <div class="profile-tags">
-            <span class="profile-tag">VRChat Creator</span>
-            <span class="profile-tag">World Builder</span>
-            <span class="profile-tag">Event Organizer</span>
-            <span class="profile-tag">YouTuber</span>
-            <span class="profile-tag">Illustrator</span>
-          </div>
-          <p class="profile-bio">VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。</p>
-        </div>
+      <div class="profile-tags">
+        <span class="profile-tag">VRChat Creator</span>
+        <span class="profile-tag">World Builder</span>
+        <span class="profile-tag">Event Organizer</span>
+        <span class="profile-tag">YouTuber</span>
+        <span class="profile-tag">Illustrator</span>
       </div>
+      <p class="profile-bio">VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。</p>
     </div></section>
 
     <!-- 0b. 現在進行中のプロジェクト -->
@@ -557,6 +572,585 @@
         </div>
       </div>
     </div></section>
+
+    <!-- Unity基礎講座 -->
+    <section class="sec" id="unity-guide"><div class="container">
+      <div class="sec-tag" style="color:var(--cyan);border-color:rgba(0,188,212,0.25)">// UNITY GUIDE</div>
+      <h2 class="sec-title">ワールド改変 Unity基礎講座</h2>
+      <p class="sec-desc">「Unityもさわったことない」から始めても大丈夫。8ステップで最初のアップロードまで、やりたいことから逆引きできるギミックガイドも収録。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:32px">
+        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(0,188,212,0.1);display:flex;align-items:flex-start;gap:12px">
+          <span style="font-size:20px;flex-shrink:0">📋</span>
+          <div><div style="font-size:13px;font-weight:700;margin-bottom:4px">8ステップで環境構築</div><div style="font-size:12px;color:var(--text-soft);font-family:var(--font-hand);line-height:1.7">VCC導入からアップロードまで順番に解説</div></div>
+        </div>
+        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(0,188,212,0.1);display:flex;align-items:flex-start;gap:12px">
+          <span style="font-size:20px;flex-shrink:0">🔍</span>
+          <div><div style="font-size:13px;font-weight:700;margin-bottom:4px">やりたいことから逆引き</div><div style="font-size:12px;color:var(--text-soft);font-family:var(--font-hand);line-height:1.7">持ち上げ・貫通・音・光など9ギミック収録</div></div>
+        </div>
+        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(0,188,212,0.1);display:flex;align-items:flex-start;gap:12px">
+          <span style="font-size:20px;flex-shrink:0">🛠️</span>
+          <div><div style="font-size:13px;font-weight:700;margin-bottom:4px">超初心者向けに丁寧</div><div style="font-size:12px;color:var(--text-soft);font-family:var(--font-hand);line-height:1.7">難易度ラベル・つまずきQ&A付き</div></div>
+        </div>
+      </div>
+      <a href="unity.html" class="btn btn-p" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;box-shadow:0 4px 20px rgba(0,188,212,0.25);transition:all 0.25s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        講座を見る →
+      </a>
+    </div></section>
+
+    <div style="display:none"><div>
+        <div class="ug-intro-item">
+          <div class="ug-intro-icon">🛠️</div>
+          <div class="ug-intro-body">
+            <h4>最初はつまずいて当たり前</h4>
+            <p>Unityは「動かない」「エラーが出る」が普通の入口。焦らず1つずつ解決すれば絶対に前に進める。</p>
+          </div>
+        </div>
+        <div class="ug-intro-item">
+          <div class="ug-intro-icon">⚠️</div>
+          <div class="ug-intro-body">
+            <h4>バージョンは必ず合わせる</h4>
+            <p>UnityとVRChat SDKのバージョンが合っていないと動かない。最初から正しいバージョンを使うのが一番の近道。</p>
+          </div>
+        </div>
+        <div class="ug-intro-item">
+          <div class="ug-intro-icon">🎯</div>
+          <div class="ug-intro-body">
+            <h4>最初の目標は「1つだけ変える」</h4>
+            <p>完璧なワールドを最初から作ろうとしない。「オブジェクトを1個追加してアップロードできた」がゴール。</p>
+          </div>
+        </div>
+        <div class="ug-intro-item">
+          <div class="ug-intro-icon">♻️</div>
+          <div class="ug-intro-body">
+            <h4>何回失敗してもやり直せる</h4>
+            <p>元データが消えることはない。壊しても元に戻せる。気楽に触っていい。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8ステップカード -->
+      <div class="ug-grid">
+
+        <!-- STEP 1 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">01</div>
+            <div class="ug-card-title">ワールド改変ってなに？</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">VRChatには「ワールド」と呼ばれる3D空間がある。誰かが作ったワールドのデータをもらって、自分好みに変えてアップロードすること——それが「ワールド改変」。</p>
+            <div class="ug-tips">
+              <div class="ug-tip">改変には元データ（unitypackage）の配布が必要。必ず利用規約を確認しよう</div>
+              <div class="ug-tip">改変したワールドはVRChatに自分のワールドとして公開できる</div>
+              <div class="ug-tip">ゼロから作るより簡単・速い。最初の練習に最適</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">02</div>
+            <div class="ug-card-title">必要なものを揃えよう</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">改変に必要なソフトは3つだけ。全部無料で使えるが、インストール前に必ずバージョンを確認すること。</p>
+            <div class="ug-tips">
+              <div class="ug-tip"><strong>Unity</strong>：VRChat公式が指定するバージョンを使う（Unity Hubで管理）</div>
+              <div class="ug-tip"><strong>VRChat Creator Companion（VCC）</strong>：公式ツール。SDKの管理はここで行う</div>
+              <div class="ug-tip"><strong>改変したいワールドのデータ</strong>：配布元からunitypackageをダウンロード</div>
+            </div>
+            <div class="ug-warn">
+              <div class="ug-warn-icon">⚠️</div>
+              <div class="ug-warn-text">VRChat公式サイトで「推奨Unityバージョン」を必ず確認。最新版が正解とは限らない。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">03</div>
+            <div class="ug-card-title">VCCでプロジェクトを作ろう</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">VRChat Creator Companion（VCC）を使って、Unityプロジェクトを作成する。直接Unityを開くより、VCCを通す方がSDKが自動で入って楽。</p>
+            <div class="ug-tips">
+              <div class="ug-tip">VCCを開いて「Create New Project」→「World」テンプレートを選ぶ</div>
+              <div class="ug-tip">プロジェクト名はわかりやすい名前に（日本語は避けるのが無難）</div>
+              <div class="ug-tip">作成後「Open Project」でUnityが自動で開く</div>
+            </div>
+            <div class="ug-warn">
+              <div class="ug-warn-icon">⚠️</div>
+              <div class="ug-warn-text">Unityの初回起動は数分かかることがある。フリーズではないので待とう。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">04</div>
+            <div class="ug-card-title">ワールドデータを読み込もう</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">ダウンロードしたワールドのunitypackageをプロジェクトに読み込む。ここからようやく改変の準備が整う。</p>
+            <div class="ug-tips">
+              <div class="ug-tip">Unityが開いた状態で、unitypackageファイルをダブルクリック</div>
+              <div class="ug-tip">インポートウィンドウが出たら「Import All」を押す</div>
+              <div class="ug-tip">完了後、Project画面にファイルが並んでいればOK</div>
+              <div class="ug-tip">Scenes フォルダを開き、.unityファイルをダブルクリックしてシーンを開く</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">05</div>
+            <div class="ug-card-title">Unity画面の見方（最低限これだけ）</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">Unityの画面は最初は複雑に見えるが、改変に使うエリアは実質4〜5か所だけ。全部覚えなくていい。</p>
+            <div class="ug-tips">
+              <div class="ug-tip"><strong>Scene</strong>：ワールドの3D空間を見る画面。直接オブジェクトを動かせる</div>
+              <div class="ug-tip"><strong>Hierarchy</strong>：ワールドにある全オブジェクトの一覧。ここから選択する</div>
+              <div class="ug-tip"><strong>Inspector</strong>：選んだオブジェクトの詳細設定画面。位置・サイズ・素材などを変更する</div>
+              <div class="ug-tip"><strong>Project</strong>：素材・テクスチャ・音楽などのファイル置き場</div>
+              <div class="ug-tip"><strong>Console</strong>：エラーや警告が表示される。赤いエラーが出たらここで確認</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 6 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">06</div>
+            <div class="ug-card-title">基本の改変をやってみよう</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">まずは「小さな変更を1つ加えてみる」ことが目標。完璧にしようとせず、動かしてみることが大事。</p>
+            <div class="ug-tips">
+              <div class="ug-tip"><strong>オブジェクトを追加</strong>：Hierarchyで右クリック → 3D Object → Cube などを選ぶ</div>
+              <div class="ug-tip"><strong>移動・回転・拡大</strong>：Scene画面上部のツール（W/E/R）で操作する</div>
+              <div class="ug-tip"><strong>オブジェクトを削除</strong>：Hierarchyで選択 → Delete キー</div>
+              <div class="ug-tip"><strong>保存</strong>：Ctrl+S で必ず保存。こまめに保存する癖をつけよう</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 7 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">07</div>
+            <div class="ug-card-title">VRChatにアップロードしよう</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">改変が終わったら、VRChatに自分のワールドとしてアップロードする。初回はVRChatアカウントへのログインが必要。</p>
+            <div class="ug-tips">
+              <div class="ug-tip">上メニュー「VRChat SDK」→「Show Control Panel」を開く</div>
+              <div class="ug-tip">VRChatアカウントでログインする</div>
+              <div class="ug-tip">「Builder」タブ → 「Build &amp; Publish for Windows」をクリック</div>
+              <div class="ug-tip">ワールド名・説明を入力して「Upload」。アップロード完了まで待つ</div>
+              <div class="ug-tip">VRChatを起動し、Worldsで自分のワールドを検索して入れたら成功！</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 8 -->
+        <div class="ug-card">
+          <div class="ug-card-top">
+            <div class="ug-step-num">08</div>
+            <div class="ug-card-title">うまくいかないときは？</div>
+          </div>
+          <div class="ug-card-body">
+            <p class="ug-card-desc">詰まったときのよくあるパターンと対処法。まずここを確認しよう。</p>
+            <div class="ug-faq">
+              <div class="ug-faq-item">
+                <div class="ug-faq-q">Unityが開かない・クラッシュする</div>
+                <div class="ug-faq-a">Unityのバージョンが合っているか確認。VCCから開き直すと安定することが多い。</div>
+              </div>
+              <div class="ug-faq-item">
+                <div class="ug-faq-q">オブジェクトがピンク色になる</div>
+                <div class="ug-faq-a">マテリアル（素材）が見つかっていない状態。Projectからマテリアルを探してInspectorにドラッグすると直ることが多い。</div>
+              </div>
+              <div class="ug-faq-item">
+                <div class="ug-faq-q">アップロードボタンが押せない</div>
+                <div class="ug-faq-a">Consoleに赤いエラーがないか確認。エラーがあるとアップロードできない。エラー文をコピーして検索すると解決策が見つかることが多い。</div>
+              </div>
+              <div class="ug-faq-item">
+                <div class="ug-faq-q">VRChatに反映されない</div>
+                <div class="ug-faq-a">アップロード完了後、VRChatを完全に再起動してみよう。反映まで数分かかることもある。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ug-grid -->
+
+      <!-- ギミック逆引き -->
+      <div class="gg-section">
+        <h3 class="gg-section-title">やりたいことから探す</h3>
+        <p class="gg-section-desc">環境構築が終わったら、次は「やりたいこと」から逆引きして挑戦しよう。<br>初心者はまず「かんたん」から試してみて。</p>
+
+        <!-- 入口3ボタン -->
+        <div class="gg-entry">
+          <button class="gg-entry-btn" data-target="cat-touch">
+            <span>🤲</span> 触れるものを作りたい
+          </button>
+          <button class="gg-entry-btn" data-target="cat-look">
+            <span>🎨</span> 見た目を変えたい
+          </button>
+          <button class="gg-entry-btn" data-target="cat-move">
+            <span>⚡</span> 特別な動きをさせたい
+          </button>
+        </div>
+
+        <!-- A: 置く・動かす・触る -->
+        <div class="gg-cat open" id="cat-touch">
+          <div class="gg-cat-header" onclick="toggleCat(this)">
+            <span class="gg-cat-icon">🤲</span>
+            <span class="gg-cat-name">置く・動かす・触る</span>
+            <span class="gg-cat-count">3項目</span>
+            <span class="gg-cat-arrow">▼</span>
+          </div>
+          <div class="gg-cat-body">
+
+            <!-- アイテムを持ち上げたい -->
+            <div class="gg-item open">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">アイテムを持ち上げたい</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>プレイヤーがオブジェクトを手で拾い上げ、持ち歩いたり投げたりできるようになる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p><strong>VRC Pickup</strong> コンポーネント<br>（VRChat SDK に入っている）</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>持ち上げたいオブジェクトをHierarchyで選択する</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>InspectorでAdd Component → 「VRC Pickup」を追加する</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>Rigidbodyが自動で追加される。そのままでOK</div>
+                    <div class="gg-step"><span class="gg-step-n">4</span>アップロードして確認。オブジェクトの上でトリガーを引くと持てる</div>
+                  </div>
+                </div>
+                <div class="gg-warn-small"><span>⚠️</span>Rigidbodyの「Is Kinematic」にチェックが入っていると持てないことがある。外してみよう。</div>
+              </div>
+            </div>
+
+            <!-- ドアを開けたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">ドアを開けたい</span>
+                <span class="gg-level gg-level-mid">ふつう</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>クリック（Interact）するとドアが開閉するアニメーションが動く。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p><strong>Animator</strong>（Unityの標準）<br><strong>VRC Trigger / Udon</strong>（SDK）</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>ドアのオブジェクトにAnimatorをAdd Componentする</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>Animation Clipを2つ作る（Open状態・Close状態）</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>AnimatorのTransitionに「open」「close」パラメータを設定する</div>
+                    <div class="gg-step"><span class="gg-step-n">4</span>UdonSharpでInteractイベントにパラメータを切り替えるスクリプトを書く</div>
+                  </div>
+                </div>
+                <div class="gg-warn-small"><span>⚠️</span>最初は「最も単純な1方向に開くドア」だけを目標にしよう。同期（全員が見えるドア）は別の話なので後回しでOK。</div>
+              </div>
+            </div>
+
+            <!-- 座れるようにしたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">椅子に座れるようにしたい</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>オブジェクトに近づいてトリガーを引くと、プレイヤーが着座ポーズになる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p><strong>VRC Station</strong> コンポーネント<br>（VRChat SDK に入っている）</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>椅子のオブジェクト（または空のGameObject）にAdd Component → 「VRC Station」を追加</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>「Seated」にチェックを入れる（座りポーズを使う場合）</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>Player MobilizerをNoneのままでもOK。アップロードして確認</div>
+                  </div>
+                </div>
+                <div class="gg-warn-small"><span>⚠️</span>座る位置がズレる場合は、Station オブジェクトの位置・回転を調整しよう。</div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /cat-touch -->
+
+        <!-- B: 当たり判定 -->
+        <div class="gg-cat" id="cat-collider">
+          <div class="gg-cat-header" onclick="toggleCat(this)">
+            <span class="gg-cat-icon">🔲</span>
+            <span class="gg-cat-name">当たり判定</span>
+            <span class="gg-cat-count">2項目</span>
+            <span class="gg-cat-arrow">▼</span>
+          </div>
+          <div class="gg-cat-body">
+
+            <!-- すり抜けさせたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">物をすり抜けさせたい（貫通）</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>オブジェクトの「壁として機能する当たり判定」をなくし、プレイヤーや物体がすり抜けられるようになる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p><strong>Collider</strong>（Box/Mesh Collider）<br>の <strong>Is Trigger</strong> チェックボックス</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>対象オブジェクトをHierarchyで選択する</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>InspectorでCollider（Box ColliderやMesh Collider）を探す</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>「Is Trigger」にチェックを入れる → これだけで当たり判定がなくなる</div>
+                  </div>
+                </div>
+                <div class="gg-warn-small"><span>⚠️</span>Is Triggerをつけると「物体が乗れなくなる」ので、床には絶対につけないこと。</div>
+              </div>
+            </div>
+
+            <!-- 見えない壁を作りたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">見えない壁・床を作りたい</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>目には見えないが、プレイヤーが通れない透明な壁・床・天井を作れる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p>Unityの <strong>Cube/Plane</strong> + <strong>Mesh Renderer</strong> を無効化</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>Hierarchy → 右クリック → 3D Object → Cube を作る</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>Sceneでサイズ・位置を壁の形に合わせる</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>InspectorのMesh Renderer左のチェックを外す → 見えなくなる</div>
+                    <div class="gg-step"><span class="gg-step-n">4</span>Box Colliderは残っているので当たり判定だけが残る</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /cat-collider -->
+
+        <!-- C: 見た目・音 -->
+        <div class="gg-cat" id="cat-look">
+          <div class="gg-cat-header" onclick="toggleCat(this)">
+            <span class="gg-cat-icon">🎨</span>
+            <span class="gg-cat-name">見た目・音・演出</span>
+            <span class="gg-cat-count">3項目</span>
+            <span class="gg-cat-arrow">▼</span>
+          </div>
+          <div class="gg-cat-body">
+
+            <!-- 音を鳴らしたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">近づいたら音を鳴らしたい</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>オブジェクトに近づくと音楽・SE・環境音が聴こえる。距離によって音量が変わる3D音響も設定できる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p>Unityの <strong>Audio Source</strong> コンポーネント + 音声ファイル（MP3/WAV）</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>音を出したい位置にGameObjectを置く（空でOK）</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>Add Component → 「Audio Source」を追加</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>「AudioClip」に音声ファイルをドラッグ、「Play On Awake」にチェック</div>
+                    <div class="gg-step"><span class="gg-step-n">4</span>Spatial Blend を 1 にすると3D音響（距離で音量変化）になる</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 霧・空気感を変えたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">霧・空気感・全体の雰囲気を変えたい</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>霧の濃さ・色・距離を変えたり、空（スカイボックス）を変えてワールドの雰囲気をガラッと変えられる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p>Unityメニューの <strong>Window → Rendering → Lighting</strong> → Environmentタブ</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>Unityの上メニュー「Window」→「Rendering」→「Lighting」を開く</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>Environmentタブで「Skybox Material」を変更して空を変える</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>「Other Settings」→「Fog」にチェックを入れて霧をONにする</div>
+                    <div class="gg-step"><span class="gg-step-n">4</span>Fog ColorとDensityで霧の色・濃さを調整する</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 光を当てたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">オブジェクトに光を当てたい</span>
+                <span class="gg-level gg-level-easy">かんたん</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>スポットライト・点灯・ライトなど、任意の場所に光源を置いてワールドを明るくしたり演出できる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p>Unityの <strong>Light</strong> コンポーネント（Point / Spot / Directional）</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>Hierarchy → 右クリック → Light → Point Light（または Spot Light）を選ぶ</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>Sceneで光らせたい位置に移動させる</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>InspectorでColorとIntensity（明るさ）、Range（届く距離）を調整</div>
+                  </div>
+                </div>
+                <div class="gg-warn-small"><span>⚠️</span>ライトを増やしすぎるとパフォーマンスが下がる。Point Lightは多くても10個以内を目安にしよう。</div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /cat-look -->
+
+        <!-- D: 移動・特別な動き -->
+        <div class="gg-cat" id="cat-move">
+          <div class="gg-cat-header" onclick="toggleCat(this)">
+            <span class="gg-cat-icon">⚡</span>
+            <span class="gg-cat-name">移動・テレポート</span>
+            <span class="gg-cat-count">1項目</span>
+            <span class="gg-cat-arrow">▼</span>
+          </div>
+          <div class="gg-cat-body">
+
+            <!-- ワープしたい -->
+            <div class="gg-item">
+              <div class="gg-item-header" onclick="toggleItem(this)">
+                <span class="gg-item-title">特定の場所にワープしたい</span>
+                <span class="gg-level gg-level-mid">ふつう</span>
+                <span class="gg-item-arrow">▼</span>
+              </div>
+              <div class="gg-item-body">
+                <div class="gg-5set">
+                  <div class="gg-5col">
+                    <h5>何ができるか</h5>
+                    <p>特定のオブジェクトやエリアに触れると、別の場所へ瞬間移動できる。</p>
+                  </div>
+                  <div class="gg-5col">
+                    <h5>使うもの</h5>
+                    <p><strong>VRC Station</strong>（着地型テレポート）または <strong>UdonSharp</strong> で Teleport スクリプト</p>
+                  </div>
+                </div>
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                  <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順（VRC Station方式）</h5>
+                  <div class="gg-steps">
+                    <div class="gg-step"><span class="gg-step-n">1</span>ワープ先にGameObjectを置き、VRC Stationを追加する</div>
+                    <div class="gg-step"><span class="gg-step-n">2</span>「Seated」のチェックを外す（立ったまま移動させる場合）</div>
+                    <div class="gg-step"><span class="gg-step-n">3</span>ワープ元のオブジェクトにTriggerコライダー（Is Trigger ON）を設置</div>
+                    <div class="gg-step"><span class="gg-step-n">4</span>触れた瞬間にStationに乗せる処理をUdonで記述する</div>
+                  </div>
+                </div>
+                <div class="gg-warn-small"><span>⚠️</span>テレポートはUdonの基礎知識が少し必要。まずは「物を持つ」「すり抜け」など簡単なものを終えてから挑戦しよう。</div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- /cat-move -->
+
+      </div><!-- /gg-section -->
+
+      <!-- CTA -->
+      <div class="ug-cta">
+        <h3>一緒に作ってみよう</h3>
+        <p>わからないことがあったら気軽にコミュニティで聞いてね。<br>ナツネのDiscordやXでも質問・報告を歓迎してるよ！</p>
+        <div class="ug-cta-btns">
+          <a href="#links" class="btn btn-p">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            リンク一覧を見る
+          </a>
+          <a href="contact.html" class="btn btn-s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            質問・相談する
+          </a>
+        </div>
+      </div>
+
+    </div></div>
 
     <!-- 2. イベント -->
     <section class="sec" id="events"><div class="container">
@@ -984,6 +1578,308 @@
   </footer>
 
   <script>
+    (async () => {
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+    }
+
+    function textLines(value) {
+      return escapeHTML(value).replace(/\r?\n/g, '<br>');
+    }
+
+    function safeUrl(value) {
+      const url = String(value || '').trim();
+      if (!url) return '#';
+      if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) return url;
+      try {
+        const parsed = new URL(url);
+        if (['https:', 'http:', 'mailto:'].includes(parsed.protocol)) return url;
+      } catch (_) {}
+      return '#';
+    }
+
+    function formatNumber(value) {
+      const raw = String(value ?? '').replace(/,/g, '').trim();
+      if (!raw) return '';
+      const num = Number(raw);
+      return Number.isFinite(num) ? num.toLocaleString('ja-JP') : '';
+    }
+
+    function inlineMarkdown(value) {
+      return escapeHTML(value)
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => {
+          const href = safeUrl(url);
+          if (href === '#') return escapeHTML(label);
+          const external = /^[a-z][a-z0-9+.-]*:/i.test(href);
+          return `<a href="${escapeHTML(href)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHTML(label)}</a>`;
+        });
+    }
+
+    function markdownToHTML(value) {
+      const lines = String(value || '').split(/\r?\n/);
+      const html = [];
+      let listOpen = false;
+      const closeList = () => {
+        if (listOpen) {
+          html.push('</ul>');
+          listOpen = false;
+        }
+      };
+      lines.forEach(line => {
+        const raw = line.trim();
+        if (!raw) {
+          closeList();
+          return;
+        }
+        const image = raw.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+        if (image) {
+          closeList();
+          const src = safeUrl(image[2]);
+          if (src !== '#') html.push(`<figure><img src="${escapeHTML(src)}" alt="${escapeHTML(image[1])}"></figure>`);
+          return;
+        }
+        const heading = raw.match(/^#{2,4}\s+(.+)$/);
+        if (heading) {
+          closeList();
+          html.push(`<h5>${inlineMarkdown(heading[1])}</h5>`);
+          return;
+        }
+        const item = raw.match(/^-\s+(.+)$/);
+        if (item) {
+          if (!listOpen) {
+            html.push('<ul>');
+            listOpen = true;
+          }
+          html.push(`<li>${inlineMarkdown(item[1])}</li>`);
+          return;
+        }
+        const quote = raw.match(/^>\s*(.+)$/);
+        if (quote) {
+          closeList();
+          html.push(`<blockquote>${inlineMarkdown(quote[1])}</blockquote>`);
+          return;
+        }
+        closeList();
+        html.push(`<p>${inlineMarkdown(raw)}</p>`);
+      });
+      closeList();
+      return html.join('');
+    }
+
+    function setText(selector, value) {
+      if (value === undefined || value === null) return;
+      const el = document.querySelector(selector);
+      if (el) el.textContent = value;
+    }
+
+    function setHTML(selector, value) {
+      if (value === undefined || value === null) return;
+      const el = document.querySelector(selector);
+      if (el) el.innerHTML = textLines(value);
+    }
+
+    function updateButton(selector, label, url) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      if (url) el.setAttribute('href', safeUrl(url));
+      if (label) {
+        const svg = el.querySelector('svg');
+        el.innerHTML = '';
+        if (svg) el.appendChild(svg);
+        el.appendChild(document.createTextNode(label));
+      }
+    }
+
+    function renderNews(news) {
+      if (!news) return;
+      setText('#news .sec-title', news.title);
+      setText('#news .sec-desc', news.description);
+      const list = document.querySelector('#news .card-list');
+      if (!list || !Array.isArray(news.items)) return;
+      list.innerHTML = news.items.filter(item => item.status !== 'draft').map(item => {
+        const image = item.image ? safeUrl(item.image) : '';
+        const body = item.text || '';
+        const excerpt = item.excerpt || body;
+        return `
+          <article class="card-item">
+            ${image ? `<div class="card-thumb"><img src="${escapeHTML(image)}" alt="${escapeHTML(item.imageAlt || item.title || '')}"></div>` : `<div class="card-date">${escapeHTML(item.date || '-')}</div>`}
+            <div class="card-body">
+              ${image ? `<div class="card-date">${escapeHTML(item.date || '-')}</div>` : ''}
+              <h4>${escapeHTML(item.title || '')}</h4>
+              <p class="card-excerpt">${textLines(excerpt || '')}</p>
+              ${body ? `<details class="news-read"><summary>本文を読む</summary><div class="news-richtext">${markdownToHTML(body)}</div></details>` : ''}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function renderLinks(links) {
+      if (!links) return;
+      setText('#links .sec-title', links.title);
+      setText('#links .sec-desc', links.description);
+      const grid = document.querySelector('#links .links-grid');
+      if (!grid || !Array.isArray(links.items)) return;
+      grid.innerHTML = links.items.filter(item => item.status !== 'draft').map(item => {
+        const url = safeUrl(item.url);
+        const external = /^https?:\/\//.test(url);
+        const kind = String(item.kind || 'contact').replace(/[^a-z0-9-]/gi, '').toLowerCase() || 'contact';
+        const initial = escapeHTML((item.label || '?').trim().slice(0, 2).toUpperCase());
+        return `
+          <a href="${escapeHTML(url)}" class="link-card link-${kind} reveal-item"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>
+            <div class="link-icon"><span class="link-initial">${initial}</span></div>
+            <div class="link-info">
+              <div class="link-name">${escapeHTML(item.label || '')}</div>
+              <div class="link-handle">${escapeHTML(item.handle || '')}</div>
+            </div>
+            <div class="link-arrow">→</div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    function renderWorldPlaceholder(text) {
+      return `
+        <div class="placeholder-grid-2">
+          <div class="placeholder-card">
+            <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+            <span class="placeholder-badge">COMING SOON</span>
+            <p>${escapeHTML(text)}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWorldCard(item) {
+      const name = escapeHTML(item.name || '');
+      const image = safeUrl(item.image);
+      const introUrl = safeUrl(item.introUrl);
+      const vrchatUrl = safeUrl(item.vrchatUrl);
+      const capacity = formatNumber(item.recommendedCapacity || item.capacity);
+      const visits = formatNumber(item.visits);
+      const favorites = formatNumber(item.favorites);
+      const meta = [
+        capacity ? `<div class="world-meta-item"><strong>${escapeHTML(capacity)}</strong><span>PLAYERS</span></div>` : '',
+        visits ? `<div class="world-meta-item"><strong>${escapeHTML(visits)}</strong><span>VISITS</span></div>` : '',
+        favorites ? `<div class="world-meta-item"><strong>${escapeHTML(favorites)}</strong><span>FAVORITES</span></div>` : ''
+      ].filter(Boolean).join('');
+      const thumb = item.image ? `
+        <div class="world-thumb">
+          <img src="${escapeHTML(image)}" alt="${name}" />
+        </div>
+      ` : `
+        <div class="world-thumb world-thumb-placeholder">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93Zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39Z"/></svg>
+        </div>
+      `;
+      const intro = item.introUrl ? `
+        <a href="${escapeHTML(introUrl)}" class="world-btn world-btn-intro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          紹介ページ
+        </a>
+      ` : '';
+      const vrc = item.vrchatUrl ? `
+        <a href="${escapeHTML(vrchatUrl)}" target="_blank" rel="noopener noreferrer" class="world-btn world-btn-open">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          VRChatで開く
+        </a>
+      ` : '';
+
+      return `
+        <div class="world-card tilt">
+          ${thumb}
+          <div class="world-body">
+            <h3 class="world-name">${name}</h3>
+            <p class="world-desc">${textLines(item.description || '')}</p>
+            ${meta ? `<div class="world-meta">${meta}</div>` : ''}
+            <div class="world-actions">${intro}${vrc}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWorldPanel(selector, items, emptyText) {
+      const panel = document.querySelector(selector);
+      if (!panel || !Array.isArray(items)) return;
+      panel.innerHTML = items.length
+        ? `<div class="world-grid">${items.map(renderWorldCard).join('')}</div>`
+        : renderWorldPlaceholder(emptyText);
+    }
+
+    function renderWorlds(worlds) {
+      if (!worlds) return;
+      setText('#worlds .sec-title', worlds.title);
+      setText('#worlds .sec-desc', worlds.description);
+      renderWorldPanel('#panel-made', (worlds.made || []).filter(item => item.status !== 'draft'), '制作ワールドを順次追加予定');
+      renderWorldPanel('#panel-supervised', (worlds.supervised || []).filter(item => item.status !== 'draft'), '監修ワールドを順次追加予定');
+    }
+
+    function applySiteData(data) {
+      if (!data) return;
+      if (data.hero) {
+        setText('.hero-role', data.hero.role);
+        setText('#heroName', data.hero.name);
+        setText('#heroNameEn', data.hero.nameEn);
+        setHTML('.hero-desc', data.hero.description);
+        updateButton('.hero-btns .btn-p', data.hero.primaryLabel, data.hero.primaryUrl);
+        updateButton('.hero-btns .btn-s', data.hero.secondaryLabel, data.hero.secondaryUrl);
+      }
+      if (data.profile) {
+        const tags = document.querySelector('.profile-tags');
+        if (tags && Array.isArray(data.profile.tags)) {
+          tags.innerHTML = data.profile.tags.map(tag => `<span class="profile-tag">${escapeHTML(tag)}</span>`).join('');
+        }
+        setText('.profile-bio', data.profile.bio);
+      }
+      renderNews(data.news);
+      renderWorlds(data.worlds);
+      renderLinks(data.links);
+    }
+
+    function readAdminPreviewData() {
+      if (new URLSearchParams(location.search).get('adminPreview') !== '1') return null;
+      try {
+        const raw = sessionStorage.getItem('natsune_site_admin_preview_data');
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        console.warn('admin preview data fallback:', error);
+        return null;
+      }
+    }
+
+    async function hydrateSiteData() {
+      const previewData = readAdminPreviewData();
+      if (previewData) {
+        applySiteData(previewData);
+      } else {
+        try {
+          const res = await fetch('data/site.json', { cache: 'no-store' });
+          if (!res.ok) return;
+          applySiteData(await res.json());
+        } catch (error) {
+          console.warn('site data fallback:', error);
+        }
+      }
+
+      if (new URLSearchParams(location.search).get('adminPreview') === '1') {
+        window.addEventListener('message', event => {
+          if (location.origin !== 'null' && event.origin !== location.origin) return;
+          if (event.data?.type !== 'natsune-admin-preview-data') return;
+          applySiteData(event.data.payload);
+          if (event.data.hash) location.hash = event.data.hash;
+        });
+      }
+
+      document.querySelectorAll('a[target="_blank"]').forEach(link => {
+        const rel = new Set((link.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+        rel.add('noopener'); rel.add('noreferrer');
+        link.setAttribute('rel', [...rel].join(' '));
+      });
+    }
+
+    await hydrateSiteData();
+
     // ── LOADER + REVEAL ──
     (() => {
       const loader = document.getElementById('loader');
@@ -1097,13 +1993,38 @@
     const heroName = document.getElementById('heroName');
     const heroChars = heroName.textContent.split('');
     heroName.innerHTML = heroChars.map(c => `<span>${c}</span>`).join('');
+
+    // ── Hero name EN split + animation ──
+    const heroNameEn = document.getElementById('heroNameEn');
+    const enChars = heroNameEn.textContent.split('');
+    heroNameEn.innerHTML = enChars.map(c => c === ' ' ? '<span>&nbsp;</span>' : `<span>${c}</span>`).join('');
+
+    // EN名は最初非表示
+    gsap.set('#heroNameEn span', { opacity: 0 });
+
     gsap.from('#heroName span', {
       y: 80, opacity: 0, rotateZ: -15, scale: 0.5, duration: 0.7, stagger: 0.08, ease: 'back.out(1.7)', delay: 0.3,
       onComplete: () => {
-        // GSAPイントロ完了後にF32 wave + グラデアニメを開始
         heroName.classList.add('wave-active');
-        // 物理インタラクト初期化
-        initHeroPhysics(heroName);
+        // EN名イントロ（日本語名完了後に続けて出現）
+        gsap.fromTo('#heroNameEn span',
+          { y: 12, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, stagger: 0.02, ease: 'power2.out',
+            onComplete: () => {
+              heroNameEn.classList.add('wave-active');
+              heroNameEn.querySelectorAll('span').forEach((sp, i) => {
+                sp.style.animationDelay = `${i * 0.04}s, 0s`;
+              });
+            }
+          }
+        );
+        // スマホではphysicsインタラクト無効（軽量化）
+        const isDesktop = window.matchMedia('(pointer:fine)').matches && window.innerWidth > 768;
+        if (isDesktop) {
+          initHeroPhysics(heroName);
+        } else {
+          heroName.querySelectorAll('span').forEach(s => s.style.cursor = '');
+        }
       }
     });
 
@@ -1139,16 +2060,16 @@
         }
       });
 
-      el.addEventListener('mouseleave', () => { if(grabbed){grabbed.style.cursor='grab';grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
+      el.addEventListener('mouseleave', () => { if(grabbed){grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
 
       spans.forEach(sp => {
         sp.addEventListener('mousedown', e => {
-          e.preventDefault(); grabbed = sp; sp.style.cursor = 'grabbing';
+          e.preventDefault(); grabbed = sp;
           const r = sp.getBoundingClientRect();
           gox = e.clientX-(r.left+r.width/2); goy = e.clientY-(r.top+r.height/2);
         });
       });
-      document.addEventListener('mouseup', () => { if(grabbed){grabbed.style.cursor='grab';grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
+      document.addEventListener('mouseup', () => { if(grabbed){grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
 
       (function tick(){
         spans.forEach(sp => {
@@ -1216,22 +2137,21 @@
     // ── Parallax avatar ──
     gsap.to('.avatar-blob', { y: -40, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-    // ── Avatar 3D tilt interaction ──
-    const avatarWrap = document.querySelector('.avatar-wrap');
-    if (avatarWrap) {
-      const avatarBlob = avatarWrap.querySelector('.avatar-blob');
-      const avatarGlow = avatarWrap.querySelector('.avatar-glow');
-      avatarWrap.addEventListener('mousemove', e => {
-        const r = avatarWrap.getBoundingClientRect();
-        const cx = (e.clientX - r.left) / r.width - 0.5;  // -0.5 ~ 0.5
-        const cy = (e.clientY - r.top) / r.height - 0.5;
-        gsap.to(avatarBlob, { rotateY: cx * 12, rotateX: -cy * 12, scale: 1.03, duration: 0.4, ease: 'power2.out' });
-        if (avatarGlow) gsap.to(avatarGlow, { x: cx * 15, y: cy * 15, duration: 0.4 });
-      });
-      avatarWrap.addEventListener('mouseleave', () => {
-        gsap.to(avatarBlob, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.8, ease: 'elastic.out(1,0.4)' });
-        if (avatarGlow) gsap.to(avatarGlow, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1,0.4)' });
-      });
+    // ── Avatar Eye Tracking interaction (desktop only) ──
+    if (window.matchMedia('(pointer:fine)').matches && window.innerWidth > 768) {
+      const avatarWrap = document.querySelector('.avatar-wrap');
+      if (avatarWrap) {
+        const avatarImg = avatarWrap.querySelector('.av-blob img, .avatar-blob img');
+        avatarWrap.addEventListener('mousemove', e => {
+          const r = avatarWrap.getBoundingClientRect();
+          const cx = (e.clientX - r.left) / r.width - 0.5;
+          const cy = (e.clientY - r.top) / r.height - 0.5;
+          gsap.to(avatarImg, { x: cx * 16, y: cy * 10, duration: 0.4, ease: 'power2.out' });
+        });
+        avatarWrap.addEventListener('mouseleave', () => {
+          gsap.to(avatarImg, { x: 0, y: 0, duration: 0.6, ease: 'power2.out' });
+        });
+      }
     }
 
     // ── World tabs ──
@@ -1243,6 +2163,7 @@
         document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
       });
     });
+    })();
   </script>
 </body>
 </html>

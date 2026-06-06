@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
@@ -19,10 +20,62 @@ const MIME = {
   '.ico': 'image/x-icon',
 };
 
-http.createServer((req, res) => {
-  let url = req.url.split('?')[0];
-  if (url === '/') url = '/index.html';
+// Local helper for admin-side VRChat world imports. GitHub Pages does not run this server.
+const cache = new Map();
+const TTL_MS = 60 * 1000;
 
+function fetchVRChat(worldId, callback) {
+  const cached = cache.get(worldId);
+  if (cached && Date.now() - cached.t < TTL_MS) {
+    return callback(null, cached.data);
+  }
+  const opts = {
+    hostname: 'api.vrchat.cloud',
+    path: `/api/1/worlds/${worldId}`,
+    method: 'GET',
+    headers: {
+      'User-Agent': 'natsune-site-admin/0.1 (https://natsune-vrc.com/)',
+      'Accept': 'application/json',
+    },
+  };
+  const req = https.request(opts, r => {
+    let body = '';
+    r.on('data', chunk => body += chunk);
+    r.on('end', () => {
+      cache.set(worldId, { t: Date.now(), data: body });
+      callback(null, body);
+    });
+  });
+  req.on('error', err => callback(err));
+  req.end();
+}
+
+http.createServer((req, res) => {
+  const urlNoQs = req.url.split('?')[0];
+
+  // ── VRChat world API proxy ──
+  const m = urlNoQs.match(/^\/api\/world\/(wrld_[a-f0-9-]+)$/i);
+  if (m) {
+    fetchVRChat(m[1], (err, data) => {
+      if (err) {
+        res.writeHead(502, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ error: err.message }));
+        return;
+      }
+      res.writeHead(200, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=60',
+      });
+      res.end(data);
+    });
+    return;
+  }
+
+  // ── Static files ──
+  let url = urlNoQs;
+  if (url === '/') url = '/index.html';
+  if (url.endsWith('/')) url += 'index.html';
   const filePath = path.join(ROOT, url);
   const ext = path.extname(filePath);
 
@@ -37,4 +90,5 @@ http.createServer((req, res) => {
   });
 }).listen(PORT, () => {
   console.log(`Natsune site server running at http://localhost:${PORT}`);
+  console.log(`VRChat API proxy: /api/world/:worldId`);
 });
