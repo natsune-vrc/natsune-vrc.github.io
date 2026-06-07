@@ -219,9 +219,10 @@
 
     .tab[data-tab="news"]::before { content: "1"; }
     .tab[data-tab="worlds"]::before { content: "2"; }
-    .tab[data-tab="profile"]::before { content: "3"; }
-    .tab[data-tab="links"]::before { content: "4"; }
-    .tab[data-tab="hero"]::before { content: "5"; }
+    .tab[data-tab="sections"]::before { content: "3"; }
+    .tab[data-tab="profile"]::before { content: "4"; }
+    .tab[data-tab="links"]::before { content: "5"; }
+    .tab[data-tab="hero"]::before { content: "6"; }
     .tab[data-tab="preview"]::before { content: "✓"; }
 
     .tab small {
@@ -526,6 +527,51 @@
       border-top: 1px solid var(--line-strong);
       border-bottom: 1px solid var(--line);
       background: rgba(255, 255, 255, .52);
+    }
+
+    .section-settings-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .section-config-card {
+      display: grid;
+      grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+      gap: 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fff, var(--section-surface));
+    }
+
+    .section-config-head {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .section-config-head strong {
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .section-config-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .section-config-fields {
+      display: grid;
+      gap: 12px;
+    }
+
+    .section-config-fields .row {
+      margin: 0;
     }
 
     .content-table-head,
@@ -1290,6 +1336,7 @@
       .list-controls,
       .list-controls.wide { grid-template-columns: 1fr; }
       .content-table-head { display: none; }
+      .section-config-card { grid-template-columns: 1fr; }
       .news-row,
       .world-row,
       .link-row { grid-template-columns: 1fr; gap: 0; padding: 12px; }
@@ -1321,6 +1368,7 @@
             <div class="nav-section-label">追加・更新する公開情報</div>
             <button class="tab active" data-tab="news" type="button"><span>お知らせ管理<small>履歴・新規作成・個別編集</small></span></button>
             <button class="tab" data-tab="worlds" type="button"><span>ワールド情報<small>制作ワールドの追加・更新</small></span></button>
+            <button class="tab" data-tab="sections" type="button"><span>準備中機能<small>公開前セクションの編集</small></span></button>
             <div class="nav-section-label">サイトの基本設定</div>
             <button class="tab" data-tab="profile" type="button"><span>プロフィール<small>人物説明とタグ</small></span></button>
             <button class="tab" data-tab="links" type="button"><span>リンク・導線<small>SNS・販売・問い合わせ</small></span></button>
@@ -1692,6 +1740,21 @@
             </div>
           </section>
 
+          <section class="section" data-section="sections">
+            <div class="section-toolbar">
+              <div>
+                <h2>準備中機能</h2>
+                <p>記事・ブログ・イラストなど、まだ中身が揃っていない機能を管理します。下書きの間は公開ページには表示されません。</p>
+              </div>
+            </div>
+
+            <div class="notice">
+              ここで編集した内容はJSONには保存されますが、公開状態が「下書き」の機能はトップページ、ナビ、公開プレビューには出ません。中身が揃った段階で公開に切り替えます。
+            </div>
+
+            <div class="section-settings-grid" id="sectionSettingsList" aria-label="準備中機能一覧"></div>
+          </section>
+
           <section class="section" data-section="profile">
             <h2>プロフィール</h2>
             <p>人物説明やタグを変更する必要があるときに使います。</p>
@@ -2038,6 +2101,17 @@
         tags: ['VRChat Creator', 'World Builder', 'Event Organizer', 'YouTuber', 'Illustrator'],
         bio: 'VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。'
       },
+      sections: {
+        articles: { status: 'draft', label: '記事', title: '記事', description: 'VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。' },
+        blog: { status: 'draft', label: 'ブログ', title: 'ブログ', description: '活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。' },
+        booth: { status: 'draft', label: 'ブース', title: 'ブース', description: 'ナツネの世界観に触れられるショップ。VRChatアバター・アセット・グッズを販売中。' },
+        album: { status: 'draft', label: 'アルバム', title: 'アルバム', description: 'VRChatでの思い出の写真、スクリーンショットギャラリー。' },
+        illust: { status: 'draft', label: 'イラスト', title: 'イラスト', description: '描いたイラストや、活動で使用したビジュアルを掲載します。' },
+        shortVideos: { status: 'draft', label: 'ショート動画', title: 'ショート動画', description: 'ショート動画を掲載予定。' },
+        liveStreams: { status: 'draft', label: 'ライブ配信', title: 'ライブ配信', description: 'ライブ配信情報とアーカイブを掲載予定。' },
+        eventOrganizer: { status: 'draft', label: '運営イベント', title: '運営イベント', description: '運営しているイベント情報を掲載予定。' },
+        unityGuide: { status: 'draft', label: 'ワールド改変 Unity基礎講座', title: 'ワールド改変 Unity基礎講座', description: 'Unity初心者向けのワールド改変講座。' }
+      },
       news: { title: 'お知らせ', description: '活動の最新情報をお届けします。', items: [] },
       worlds: {
         title: 'ワールド制作',
@@ -2059,6 +2133,18 @@
     let isCreatingWorld = false;
     let selectedLinkIndex = null;
     let isCreatingLink = false;
+
+    const SECTION_ORDER = [
+      { key: 'articles', group: '読み物', note: '記事一覧や解説コンテンツが揃うまで非公開' },
+      { key: 'blog', group: '読み物', note: 'ブログ記事を作り始めるまで非公開' },
+      { key: 'booth', group: '販売・配布', note: '商品ページや紹介文が揃うまで非公開' },
+      { key: 'album', group: 'ギャラリー', note: '掲載写真を選定するまで非公開' },
+      { key: 'illust', group: 'ギャラリー', note: '掲載イラストを選定するまで非公開' },
+      { key: 'shortVideos', group: '動画', note: 'ショート動画の掲載方針が決まるまで非公開' },
+      { key: 'liveStreams', group: '動画', note: '配信予定やアーカイブが揃うまで非公開' },
+      { key: 'eventOrganizer', group: 'イベント', note: '運営イベント情報が揃うまで非公開' },
+      { key: 'unityGuide', group: '講座', note: '講座ページを再公開できる状態まで非公開' }
+    ];
 
     const $ = selector => document.querySelector(selector);
     const statusEl = $('#status');
@@ -2127,11 +2213,26 @@
       return json;
     }
 
+    function normalizeSectionConfig(key, item = {}) {
+      const base = DEFAULT_DATA.sections[key] || { status: 'draft', label: key, title: key, description: '' };
+      return {
+        status: item.status === 'published' ? 'published' : 'draft',
+        label: item.label || base.label || key,
+        title: item.title || base.title || item.label || base.label || key,
+        description: item.description ?? base.description ?? ''
+      };
+    }
+
+    function normalizeSections(sections = {}) {
+      return Object.fromEntries(SECTION_ORDER.map(({ key }) => [key, normalizeSectionConfig(key, sections?.[key])]));
+    }
+
     function normalizeData(data) {
       const merged = structuredClone(DEFAULT_DATA);
       Object.assign(merged, data || {});
       merged.hero = Object.assign({}, DEFAULT_DATA.hero, data?.hero || {});
       merged.profile = Object.assign({}, DEFAULT_DATA.profile, data?.profile || {});
+      merged.sections = normalizeSections(data?.sections);
       merged.news = Object.assign({}, DEFAULT_DATA.news, data?.news || {});
       merged.worlds = Object.assign({}, DEFAULT_DATA.worlds, data?.worlds || {});
       merged.links = Object.assign({}, DEFAULT_DATA.links, data?.links || {});
@@ -2203,6 +2304,75 @@
       return status === 'draft' ? '下書き' : '公開中';
     }
 
+    function renderSectionSettings(sections = currentData.sections) {
+      const list = $('#sectionSettingsList');
+      if (!list) return;
+      currentData.sections = normalizeSections(sections);
+      list.innerHTML = SECTION_ORDER.map(meta => {
+        const item = normalizeSectionConfig(meta.key, currentData.sections[meta.key]);
+        const isDraft = item.status !== 'published';
+        return `
+          <article class="section-config-card" data-section-config-card="${escapeHTML(meta.key)}">
+            <div class="section-config-head">
+              <span class="state-badge ${isDraft ? 'draft' : ''}">${statusLabel(item.status)}</span>
+              <strong>${escapeHTML(item.label)}</strong>
+              <p>${escapeHTML(meta.group)} / ${escapeHTML(meta.note)}</p>
+            </div>
+            <div class="section-config-fields">
+              <div class="row">
+                <div class="field">
+                  <label>公開状態</label>
+                  <select data-section-config="${escapeHTML(meta.key)}" data-section-field="status">
+                    <option value="draft"${isDraft ? ' selected' : ''}>下書きとして非公開</option>
+                    <option value="published"${!isDraft ? ' selected' : ''}>公開ページに表示</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>管理名</label>
+                  <input data-section-config="${escapeHTML(meta.key)}" data-section-field="label" value="${escapeHTML(item.label)}">
+                </div>
+              </div>
+              <div class="field">
+                <label>公開見出し</label>
+                <input data-section-config="${escapeHTML(meta.key)}" data-section-field="title" value="${escapeHTML(item.title)}">
+              </div>
+              <div class="field">
+                <label>説明</label>
+                <textarea data-section-config="${escapeHTML(meta.key)}" data-section-field="description">${escapeHTML(item.description)}</textarea>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+      list.querySelectorAll('[data-section-config]').forEach(input => {
+        input.addEventListener('input', handleSectionConfigInput);
+        input.addEventListener('change', handleSectionConfigInput);
+      });
+    }
+
+    function syncSectionSettings() {
+      if (!currentData.sections) currentData.sections = normalizeSections();
+      document.querySelectorAll('[data-section-config]').forEach(input => {
+        const key = input.dataset.sectionConfig;
+        const field = input.dataset.sectionField;
+        if (!key || !field) return;
+        currentData.sections[key] = normalizeSectionConfig(key, currentData.sections[key]);
+        currentData.sections[key][field] = input.value;
+      });
+      currentData.sections = normalizeSections(currentData.sections);
+    }
+
+    function handleSectionConfigInput(event) {
+      const key = event.target.dataset.sectionConfig;
+      const field = event.target.dataset.sectionField;
+      if (!key || !field) return;
+      currentData.sections[key] = normalizeSectionConfig(key, currentData.sections[key]);
+      currentData.sections[key][field] = event.target.value;
+      currentData.sections = normalizeSections(currentData.sections);
+      if (field === 'status') renderSectionSettings(currentData.sections);
+      updatePreview();
+    }
+
     function worldCategoryLabel(category) {
       return category === 'supervised' ? '監修' : '制作';
     }
@@ -2223,18 +2393,21 @@
       renderNewsList(currentData.news.items);
       renderWorldsList(currentData.worlds);
       renderLinksList(currentData.links.items);
+      renderSectionSettings(currentData.sections);
       isBinding = false;
       updatePreview();
     }
 
     function collectFormData() {
       if (selectedNewsIndex !== null && !isCreatingNews) syncNewsEditorToSelected();
+      syncSectionSettings();
       const data = normalizeData(currentData);
       document.querySelectorAll('[data-path]').forEach(input => {
         setByPath(data, input.dataset.path, input.value);
       });
       data.profile.tags = ($('#profileTags').value || '').split(',').map(v => v.trim()).filter(Boolean);
       delete data.profile.tagsText;
+      data.sections = normalizeSections(currentData.sections);
       data.news.items = currentData.news.items.map(normalizeNewsItem);
       if (selectedWorldRef && !isCreatingWorld) syncWorldEditorToSelected();
       if (selectedLinkIndex !== null && !isCreatingLink) syncLinkEditorToSelected();
@@ -2952,6 +3125,11 @@
       data.links.items.forEach(item => {
         if (!isSafeUrl(item.url)) issues.push(`許可されないURLです: ${item.label || item.url}`);
       });
+      Object.values(data.sections || {}).forEach(section => {
+        if (section.status !== 'draft' && (!section.title || !section.description)) {
+          issues.push(`公開中の準備中機能に見出しまたは説明が空の項目があります: ${section.label || section.title || '名称未設定'}`);
+        }
+      });
       return issues;
     }
 
@@ -3073,6 +3251,27 @@
       `;
     }
 
+    function renderLiveSections(data) {
+      const sections = normalizeSections(data.sections);
+      return `
+        <div class="live-eyebrow">DRAFT FEATURES</div>
+        <h4>準備中機能</h4>
+        <p>下書きの機能は公開ページには表示されません。中身が揃ったものだけ公開に切り替えます。</p>
+        <div class="live-list">
+          ${SECTION_ORDER.map(meta => {
+            const item = sections[meta.key];
+            return `
+              <div class="live-card">
+                <small>${escapeHTML(meta.group)} / ${statusLabel(item.status)}</small>
+                <h5>${escapeHTML(item.label || item.title || meta.key)}</h5>
+                <p>${escapeHTML(shortText(item.description || meta.note, 110))}</p>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
     function renderLiveHero(data) {
       return `
         <div class="live-hero">
@@ -3095,6 +3294,7 @@
       const renderers = {
         news: renderLiveNews,
         worlds: renderLiveWorlds,
+        sections: renderLiveSections,
         profile: renderLiveProfile,
         links: renderLiveLinks,
         hero: renderLiveHero,
@@ -3107,6 +3307,7 @@
       return {
         news: 'news',
         worlds: 'worlds',
+        sections: 'top',
         profile: 'about',
         links: 'links',
         hero: 'top',

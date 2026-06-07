@@ -21,6 +21,62 @@
     ],
     "bio": "VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。"
   },
+  "sections": {
+    "articles": {
+      "status": "draft",
+      "label": "記事",
+      "title": "記事",
+      "description": "VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。"
+    },
+    "blog": {
+      "status": "draft",
+      "label": "ブログ",
+      "title": "ブログ",
+      "description": "活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。"
+    },
+    "booth": {
+      "status": "draft",
+      "label": "ブース",
+      "title": "ブース",
+      "description": "ナツネの世界観に触れられるショップ。VRChatアバター・アセット・グッズを販売中。"
+    },
+    "album": {
+      "status": "draft",
+      "label": "アルバム",
+      "title": "アルバム",
+      "description": "VRChatでの思い出の写真、スクリーンショットギャラリー。"
+    },
+    "illust": {
+      "status": "draft",
+      "label": "イラスト",
+      "title": "イラスト",
+      "description": "描いたイラストや、活動で使用したビジュアルを掲載します。"
+    },
+    "shortVideos": {
+      "status": "draft",
+      "label": "ショート動画",
+      "title": "ショート動画",
+      "description": "ショート動画を掲載予定。"
+    },
+    "liveStreams": {
+      "status": "draft",
+      "label": "ライブ配信",
+      "title": "ライブ配信",
+      "description": "ライブ配信情報とアーカイブを掲載予定。"
+    },
+    "eventOrganizer": {
+      "status": "draft",
+      "label": "運営イベント",
+      "title": "運営イベント",
+      "description": "運営しているイベント情報を掲載予定。"
+    },
+    "unityGuide": {
+      "status": "draft",
+      "label": "ワールド改変 Unity基礎講座",
+      "title": "ワールド改変 Unity基礎講座",
+      "description": "Unity初心者向けのワールド改変講座。"
+    }
+  },
   "news": {
     "title": "お知らせ",
     "description": "活動の最新情報をお届けします。",
