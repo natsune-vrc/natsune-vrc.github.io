@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-06T00:00:00.000Z",
+  "updatedAt": "2026-06-08T00:00:00.000Z",
   "hero": {
     "role": "VRChat Creator / World Builder / Community Organizer",
     "name": "鮫月ナツネ",
@@ -24,57 +24,93 @@
   "sections": {
     "articles": {
       "status": "draft",
+      "readiness": "empty",
       "label": "記事",
       "title": "記事",
-      "description": "VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。"
+      "description": "VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。",
+      "required": "記事タイトル、本文、アイキャッチまたは補足画像、公開日、カテゴリ方針",
+      "nextAction": "最初の記事テーマを1本決めて、下書きを作成する。",
+      "memo": ""
     },
     "blog": {
       "status": "draft",
+      "readiness": "empty",
       "label": "ブログ",
       "title": "ブログ",
-      "description": "活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。"
+      "description": "活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。",
+      "required": "投稿タイトル、本文、公開日、本文画像の有無、更新頻度の目安",
+      "nextAction": "最初の投稿として、近況または制作記録を1本書く。",
+      "memo": ""
     },
     "booth": {
       "status": "draft",
+      "readiness": "empty",
       "label": "ブース",
       "title": "ブース",
-      "description": "ナツネの世界観に触れられるショップ。VRChatアバター・アセット・グッズを販売中。"
+      "description": "ナツネの世界観に触れられるショップ。VRChatアバター・アセット・グッズを販売中。",
+      "required": "掲載商品、商品画像、商品説明、価格または配布条件、BOOTHリンク",
+      "nextAction": "公開する商品を選び、商品画像と説明文を揃える。",
+      "memo": ""
     },
     "album": {
       "status": "draft",
+      "readiness": "empty",
       "label": "アルバム",
       "title": "アルバム",
-      "description": "VRChatでの思い出の写真、スクリーンショットギャラリー。"
+      "description": "VRChatでの思い出の写真、スクリーンショットギャラリー。",
+      "required": "掲載写真、撮影場所または説明、並び順、サムネイル画像",
+      "nextAction": "公開してよいスクリーンショットを10枚ほど選ぶ。",
+      "memo": ""
     },
     "illust": {
       "status": "draft",
+      "readiness": "empty",
       "label": "イラスト",
       "title": "イラスト",
-      "description": "描いたイラストや、活動で使用したビジュアルを掲載します。"
+      "description": "描いたイラストや、活動で使用したビジュアルを掲載します。",
+      "required": "掲載イラスト、タイトル、説明、使用許可の確認、サムネイル画像",
+      "nextAction": "公開するイラストを選び、表示順を決める。",
+      "memo": ""
     },
     "shortVideos": {
       "status": "draft",
+      "readiness": "empty",
       "label": "ショート動画",
       "title": "ショート動画",
-      "description": "ショート動画を掲載予定。"
+      "description": "ショート動画を掲載予定。",
+      "required": "動画URL、タイトル、サムネイル、説明、掲載順",
+      "nextAction": "掲載するショート動画を3本選ぶ。",
+      "memo": ""
     },
     "liveStreams": {
       "status": "draft",
+      "readiness": "empty",
       "label": "ライブ配信",
       "title": "ライブ配信",
-      "description": "ライブ配信情報とアーカイブを掲載予定。"
+      "description": "ライブ配信情報とアーカイブを掲載予定。",
+      "required": "配信予定またはアーカイブURL、タイトル、日時、説明",
+      "nextAction": "今後の配信予定か、公開済みアーカイブを1件決める。",
+      "memo": ""
     },
     "eventOrganizer": {
       "status": "draft",
+      "readiness": "empty",
       "label": "運営イベント",
       "title": "運営イベント",
-      "description": "運営しているイベント情報を掲載予定。"
+      "description": "運営しているイベント情報を掲載予定。",
+      "required": "イベント名、開催日、説明、画像、参加導線または告知URL",
+      "nextAction": "公開できる運営イベントを1件選び、必要情報を揃える。",
+      "memo": ""
     },
     "unityGuide": {
       "status": "draft",
+      "readiness": "empty",
       "label": "ワールド改変 Unity基礎講座",
       "title": "ワールド改変 Unity基礎講座",
-      "description": "Unity初心者向けのワールド改変講座。"
+      "description": "Unity初心者向けのワールド改変講座。",
+      "required": "講座本文、章立て、画像またはスクリーンショット、公開URL、最終確認",
+      "nextAction": "公開ページとして再開する範囲を決め、講座本文を整理する。",
+      "memo": ""
     }
   },
   "news": {
