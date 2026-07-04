@@ -4,554 +4,660 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>鮫月ナツネ | Links</title>
-  <meta name="description" content="鮫月ナツネの各種リンク集。YouTube、X、Discord、BOOTH、note、VRChatなど。" />
+  <meta name="description" content="鮫月ナツネのリンクまとめ。VRChat・YouTube・X・Discord・支援・お問い合わせはこちらから。" />
+  <meta property="og:title" content="鮫月ナツネ | Links" />
+  <meta property="og:description" content="鮫月ナツネのリンクまとめ。VRChat・YouTube・X・Discord・支援・お問い合わせはこちらから。" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:image" content="https://natsune-vrc.com/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" href="icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f7fdff;
-      --bg-soft: #eefbfe;
-      --surface: #ffffff;
-      --line: #d9f1f6;
-      --text: #16323a;
-      --text-soft: #55717a;
-      --accent: #00bcd4;
-      --accent-strong: #00a8be;
-      --accent-soft: #dbf8fc;
-      --shadow: 0 10px 30px rgba(0,121,140,0.08);
-      --shadow-hover: 0 16px 40px rgba(0,121,140,0.14);
-      --r: 16px;
-      --r-sm: 10px;
+      --ink:        #16344d;
+      --ink-soft:   #52738b;
+      --aqua:       #42a5f5;
+      --aqua-deep:  #1e88e5;
+      --aqua-mist:  #e0f2fc;
+      --lamp:       #ffc94d;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { -webkit-text-size-adjust:100%; }
     body {
-      font-family: "Hiragino Sans","Yu Gothic","Meiryo",system-ui,sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
+      font-family:'Zen Maru Gothic',sans-serif; color:var(--ink);
+      /* canvas 停止時（reduced-motion / no-JS）のフォールバック */
+      background:linear-gradient(180deg,#f4fcff 0%,#cfeafc 30%,#7db8dd 60%,#2a5a80 82%,#0a1e30 100%);
+      min-height:100svh; line-height:1.7; overflow-x:hidden;
+    }
+    a { color:inherit; text-decoration:none; -webkit-tap-highlight-color:transparent; }
+    img { max-width:100%; display:block; }
+    ::selection { background:var(--aqua-mist); color:var(--ink); }
+
+    /* ── 海のシーン（1枚のキャンバスが全てを描く） ── */
+    #ocean { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    .page { position:relative; z-index:1; width:min(100% - 36px, 480px); margin:0 auto; padding:64px 0 0; }
+
+    /* ── プロフィール ── */
+    .prof { position:relative; text-align:center; margin-bottom:54px; }
+    .ghost-name {
+      position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+      font-weight:900; font-size:clamp(68px,21vw,124px); letter-spacing:0.06em; line-height:1;
+      color:transparent; -webkit-text-stroke:1px rgba(66,165,245,0.16);
+      white-space:nowrap; pointer-events:none; user-select:none; z-index:0;
+    }
+    .prof-avatar-wrap { position:relative; width:136px; margin:0 auto 22px; z-index:1; }
+    .prof-avatar { width:136px; height:152px; overflow:hidden; animation:seaBlob 12s ease-in-out infinite; }
+    .prof-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+    .prof-glow { position:absolute; inset:-16px; border-radius:inherit; animation:seaBlob 12s ease-in-out infinite; background:conic-gradient(from 40deg, #42a5f5, #a8e1fb, #ffd57a, #7fd0f5, #42a5f5); filter:blur(22px); opacity:0.3; z-index:-1; }
+    @keyframes seaBlob {
+      0%,100% { border-radius:30% 70% 70% 30% / 30% 30% 70% 70%; }
+      25% { border-radius:58% 42% 55% 45% / 52% 28% 72% 48%; }
+      50% { border-radius:42% 58% 35% 65% / 38% 62% 38% 62%; }
+      75% { border-radius:65% 35% 48% 52% / 48% 52% 48% 52%; }
+    }
+    .prof-name {
+      position:relative; z-index:1;
+      font-size:32px; font-weight:900; letter-spacing:0.06em; line-height:1.3;
+      background:linear-gradient(90deg,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5);
+      background-size:300%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      animation:nameGrad 14s linear infinite;
+      filter:drop-shadow(0 1px 6px rgba(0,140,200,.18));
+    }
+    @keyframes nameGrad { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+    .prof-en { font-size:11px; font-weight:700; letter-spacing:0.34em; color:var(--aqua-deep); opacity:0.8; margin:7px 0 15px; position:relative; z-index:1; }
+    .prof-bio { font-family:'Klee One',cursive; font-size:13px; color:var(--ink-soft); line-height:1.95; position:relative; z-index:1; }
+
+    /* ── 海中: 潜水ラインとシーグラスのカード ── */
+    .sea { position:relative; padding:6px 0 78px; }
+    .sea::before {
+      content:''; position:absolute; left:50%; top:-44px; bottom:-6px; width:1px;
+      background:linear-gradient(180deg, rgba(66,165,245,0) 0%, rgba(66,165,245,0.4) 10%, rgba(160,215,250,0.5) 60%, rgba(234,246,255,0.5) 100%);
+    }
+    .links { position:relative; display:flex; flex-direction:column; gap:24px; counter-reset:deep; }
+
+    .bubble-link {
+      --brand: var(--aqua-deep);
+      --mx:50%; --my:50%;
+      position:relative; counter-increment:deep;
+      display:flex; align-items:center; gap:15px; padding:17px 20px;
+      width:min(100%, 360px);
+      overflow:hidden;
+      background:linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.74));
+      -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.95),
+        0 2px 6px rgba(23,64,99,0.05),
+        0 20px 44px -14px rgba(23,64,99,0.22);
+      border-radius:21px 26px 22px 27px;
+      transition:border-radius 0.7s ease, box-shadow 0.35s ease, transform 0.25s ease;
+      transform-style:preserve-3d;
+      opacity:0;
+    }
+    .links.in .bubble-link { animation:surfaceIn 0.9s cubic-bezier(.16,1,.3,1) forwards; }
+    .links.in .bubble-link:nth-child(1) { animation-delay:0.10s; }
+    .links.in .bubble-link:nth-child(2) { animation-delay:0.19s; }
+    .links.in .bubble-link:nth-child(3) { animation-delay:0.28s; }
+    .links.in .bubble-link:nth-child(4) { animation-delay:0.37s; }
+    .links.in .bubble-link:nth-child(5) { animation-delay:0.46s; }
+    .links.in .bubble-link:nth-child(6) { animation-delay:0.55s; }
+    .links.in .bubble-link:nth-child(7) { animation-delay:0.64s; }
+    .links.in .bubble-link:nth-child(8) { animation-delay:0.73s; }
+    .links.in .bubble-link:nth-child(9) { animation-delay:0.82s; }
+    @keyframes surfaceIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ガラスの光: 上辺キャッチライト + ポインターに追従するシーン */
+    .bubble-link::before {
+      content:''; position:absolute; top:0; left:12%; right:38%; height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,1), transparent);
+      z-index:2;
+    }
+    .bubble-link::after {
+      content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+      background:radial-gradient(220px circle at var(--mx) var(--my), rgba(255,255,255,0.5), rgba(255,255,255,0) 55%);
+      opacity:0; transition:opacity 0.35s ease;
+    }
+    .bubble-link:hover::after { opacity:0.55; }
+
+    .bubble-link:nth-child(odd)  { align-self:flex-start; }
+    .bubble-link:nth-child(even) { align-self:flex-end; border-radius:26px 21px 27px 22px; }
+    .mooring { position:absolute; top:50%; width:26px; height:1px; background:rgba(160,215,250,0.55); z-index:0; }
+    .bubble-link { z-index:1; }
+
+    .bubble-link:hover, .bubble-link:active {
+      border-radius:27px 20px 25px 21px;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--brand) 45%, rgba(255,255,255,0.9)),
+        0 2px 6px rgba(23,64,99,0.05),
+        0 24px 48px -14px color-mix(in srgb, var(--brand) 32%, rgba(23,64,99,0.2));
     }
 
-    /* ── Back nav ── */
-    .back-bar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(247,253,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .bl-icon {
+      width:47px; height:47px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+      border-radius:50%; position:relative; z-index:2;
+      background:rgba(255,255,255,0.55);
+      box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 38%, transparent);
+      color:var(--brand);
+      transition:box-shadow 0.35s ease, transform 0.35s ease;
     }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      color: var(--accent-strong);
-      font-size: 14px;
-      font-weight: 600;
-      transition: gap 0.2s;
+    .bl-icon svg { width:22px; height:22px; }
+    .bubble-link:hover .bl-icon { transform:scale(1.05); box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 70%, transparent), 0 0 14px color-mix(in srgb, var(--brand) 25%, transparent); }
+    .bl-body { flex:1; min-width:0; position:relative; z-index:2; }
+    .bl-num { display:block; font-size:9px; font-weight:700; letter-spacing:0.26em; color:var(--aqua-deep); opacity:0.6; line-height:1.4; }
+    .bl-num::before { content:"0" counter(deep); }
+    .bl-label { display:block; font-size:16.5px; font-weight:900; letter-spacing:0.03em; line-height:1.45; }
+    .bl-handle { display:block; font-size:11px; color:var(--ink-soft); letter-spacing:0.04em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .bl-mark { position:absolute; right:-16px; top:50%; width:96px; height:96px; transform:translateY(-50%) rotate(-10deg); color:var(--brand); opacity:0.07; z-index:0; pointer-events:none; transition:opacity 0.45s ease, transform 0.45s ease; }
+    .bl-mark svg { width:100%; height:100%; }
+    .bubble-link:hover .bl-mark { opacity:0.13; transform:translateY(-50%) translateX(-5px) rotate(-6deg); }
+    .bl-arrow { flex-shrink:0; color:var(--brand); opacity:0; transform:translateX(-5px); transition:transform 0.3s ease, opacity 0.3s; font-size:15px; position:relative; z-index:2; }
+    .bubble-link:hover .bl-arrow { transform:translateX(0); opacity:0.9; }
+
+    .kind-x       { --brand:#0f1419; }
+    .kind-yt      { --brand:#e02424; }
+    .kind-vrc     { --brand:#1e88e5; }
+    .kind-discord { --brand:#5865F2; }
+    .kind-fanbox  { --brand:#ff5421; }
+    .kind-booth   { --brand:#fc5076; }
+    .kind-support { --brand:#e8a200; }
+    .kind-contact { --brand:#1e88e5; }
+
+    .bubble-link.primary {
+      --brand:#ffffff;
+      align-self:center; width:min(100%, 392px);
+      background:linear-gradient(135deg, rgba(30,136,229,0.97), rgba(38,150,243,0.88));
+      color:#fff;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.35),
+        0 2px 6px rgba(23,64,99,0.08),
+        0 22px 48px -12px rgba(30,136,229,0.5);
     }
-    .back-link:hover { gap: 10px; }
-    .back-link svg { width: 16px; height: 16px; }
-    .back-bar-title {
-      font-size: 13px;
-      color: var(--text-soft);
-      font-weight: 600;
+    .bubble-link.primary::before { left:8%; right:30%; }
+    .bubble-link.primary .bl-num { color:rgba(255,255,255,0.8); }
+    .bubble-link.primary .bl-num::after { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--lamp); box-shadow:0 0 9px 2px rgba(255,201,77,0.65); margin-left:8px; vertical-align:0.5px; }
+    .bubble-link.primary .bl-handle { color:rgba(255,255,255,0.75); }
+    .bubble-link.primary .bl-icon { background:rgba(255,255,255,0.12); box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.4); }
+    .bubble-link.primary .bl-mark { opacity:0.1; }
+    .bubble-link.primary:hover {
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.55),
+        0 2px 6px rgba(23,64,99,0.08),
+        0 26px 54px -12px rgba(30,136,229,0.6);
     }
 
-    /* ── Main container ── */
-    .page {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 32px 20px 80px;
+    /* 深海ゾーン: 暗いガラス・発光するリム */
+    .links .bubble-link:nth-last-child(-n+3) {
+      background:linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+      color:#eaf6ff;
+      box-shadow:
+        inset 0 0 0 1px rgba(160,215,250,0.35),
+        0 0 26px rgba(102,196,250,0.18),
+        0 16px 38px -12px rgba(4,20,36,0.55);
+    }
+    .links .bubble-link:nth-last-child(-n+3)::before { background:linear-gradient(90deg, transparent, rgba(200,235,255,0.7), transparent); }
+    .links .bubble-link:nth-last-child(-n+3)::after { background:radial-gradient(220px circle at var(--mx) var(--my), rgba(170,225,255,0.35), rgba(170,225,255,0) 55%); }
+    .links .bubble-link:nth-last-child(-n+3) .bl-handle { color:rgba(214,236,250,0.62); }
+    .links .bubble-link:nth-last-child(-n+3) .bl-num { color:#9fd8fb; opacity:0.8; }
+    .links .bubble-link:nth-last-child(-n+3) .bl-icon { background:rgba(160,215,250,0.1); box-shadow:inset 0 0 0 1.5px rgba(160,215,250,0.45); color:#bfe4fd; }
+    .links .bubble-link:nth-last-child(-n+3) .bl-mark { color:#cfeafd; opacity:0.08; }
+    .links .bubble-link:nth-last-child(-n+3) .bl-arrow { color:#bfe4fd; }
+    .links .bubble-link:nth-last-child(-n+3):hover {
+      box-shadow:
+        inset 0 0 0 1px rgba(190,228,253,0.6),
+        0 0 40px rgba(122,206,252,0.3),
+        0 18px 42px -12px rgba(4,20,36,0.6);
     }
 
-    /* ── Profile header ── */
-    .profile {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .profile-avatar {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-      border: 3px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.4rem;
-      margin: 0 auto 12px;
-    }
-    .profile-name {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-    .profile-handle {
-      font-size: 0.82rem;
-      color: var(--accent-strong);
-      margin: 4px 0 8px;
-    }
-    .profile-bio {
-      font-size: 0.85rem;
-      color: var(--text-soft);
-      max-width: 400px;
-      margin: 0 auto;
-    }
+    /* ── 深度ゲージ（ダイブコンピュータ） ── */
+    .gauge { position:fixed; right:14px; top:50%; transform:translateY(-50%); height:36vh; z-index:2; pointer-events:none; }
+    .g-track { position:absolute; right:6px; top:0; bottom:0; width:1px; background:linear-gradient(180deg, rgba(66,165,245,0.15), rgba(66,165,245,0.5), rgba(190,228,253,0.5)); display:block; }
+    .g-track::before, .g-track::after { content:''; position:absolute; right:-2px; width:5px; height:1px; background:rgba(66,165,245,0.4); }
+    .g-track::before { top:0; } .g-track::after { bottom:0; }
+    .g-thumb { position:absolute; right:4px; top:0; width:5px; height:5px; border-radius:50%; background:var(--lamp); box-shadow:0 0 8px 2px rgba(255,201,77,0.55); display:block; }
+    .g-read { position:absolute; right:14px; top:0; font-size:9px; font-weight:700; letter-spacing:0.12em; color:var(--aqua-deep); opacity:0.75; transform:translateY(-40%); white-space:nowrap; }
+    @media(max-width:600px) { .gauge { right:8px; height:30vh; } .g-read { display:none; } }
 
-    /* ── Section ── */
-    .section { margin-bottom: 36px; }
-    .section-label {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent-strong);
-      margin-bottom: 14px;
-      padding-left: 2px;
-    }
+    /* ── 海底 ── */
+    .foot { text-align:center; padding:12px 0 48px; }
+    .foot-lamp { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--lamp); box-shadow:0 0 16px 5px rgba(255,201,77,0.55); animation:lampPulse 3.4s ease-in-out infinite; margin-bottom:14px; }
+    @keyframes lampPulse { 0%,100%{box-shadow:0 0 12px 4px rgba(255,201,77,0.42)} 50%{box-shadow:0 0 24px 8px rgba(255,201,77,0.68)} }
+    .foot-copy { font-size:10px; color:rgba(214,236,250,0.55); letter-spacing:0.08em; }
 
-    /* ── Card Grid (PC) ── */
-    .link-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 14px;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+      #ocean { display:none; }
+      .bubble-link, .links .bubble-link { opacity:1 !important; animation:none !important; }
     }
-
-    /* ── Link Card ── */
-    .link-card {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 18px 20px;
-      background: var(--surface);
-      border: 1.5px solid var(--line);
-      border-radius: var(--r);
-      text-decoration: none;
-      color: var(--text);
-      transition: all 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-      overflow: hidden;
+    @media (min-width:600px) {
+      .page { padding-top:80px; }
+      .prof-name { font-size:36px; }
     }
-    .link-card:hover {
-      border-color: var(--accent);
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-4px);
-    }
-
-    .link-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.05rem;
-      flex-shrink: 0;
-      color: #fff;
-      font-weight: 700;
-      transition: transform 0.28s;
-    }
-    .link-card:hover .link-icon { transform: scale(1.08); }
-
-    .link-body { flex: 1; min-width: 0; }
-    .link-title {
-      font-size: 0.92rem;
-      font-weight: 700;
-      display: block;
-      margin-bottom: 2px;
-    }
-    .link-desc {
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      display: block;
-      line-height: 1.5;
-    }
-
-    /* ── Expandable detail on hover (PC) ── */
-    .link-detail {
-      display: block;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.25s, margin-top 0.25s;
-      font-size: 0.75rem;
-      color: var(--text-soft);
-      line-height: 1.6;
-      margin-top: 0;
-    }
-    .link-card:hover .link-detail {
-      max-height: 80px;
-      opacity: 1;
-      margin-top: 8px;
-    }
-
-    .link-arrow {
-      color: var(--text-soft);
-      font-size: 1rem;
-      flex-shrink: 0;
-      transition: all 0.25s;
-      align-self: center;
-      opacity: 0.4;
-    }
-    .link-card:hover .link-arrow {
-      color: var(--accent);
-      transform: translateX(4px);
-      opacity: 1;
-    }
-
-    /* ── Platform colors ── */
-    .ic-yt { background: #ff0000; }
-    .ic-x { background: #000000; }
-    .ic-dc { background: #5865f2; }
-    .ic-booth { background: #fc4d50; }
-    .ic-note { background: #41c9b4; }
-    .ic-vrchat { background: #00bcd4; }
-    .ic-github { background: #24292e; }
-    .ic-wish { background: #ff9800; }
-
-    /* ── Footer ── */
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
-    }
-    .footer-home {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 28px;
-      border-radius: 999px;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .footer-home:hover {
-      background: var(--accent-strong);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,188,212,0.25);
-    }
-    .footer-copy {
-      font-size: 0.72rem;
-      color: var(--text-soft);
-      margin-top: 16px;
-    }
-
-    /* ── Responsive: スマホ縦リスト ── */
-    @media (max-width: 640px) {
-      .page { padding: 20px 14px 60px; }
-      .profile { margin-bottom: 28px; }
-
-      .link-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .link-card {
-        padding: 14px 16px;
-      }
-
-      /* スマホではタップで展開（ホバーなし） */
-      .link-detail {
-        max-height: 80px;
-        opacity: 1;
-        margin-top: 6px;
-      }
-
-      .link-arrow { opacity: 0.6; }
-    }
-
-    /* ── Sponsor grid (smaller cards) ── */
-    .sponsor-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 10px;
-    }
-    .sponsor-card {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      background: var(--surface);
-      border: 1.5px solid var(--line);
-      border-radius: var(--r-sm);
-      text-decoration: none;
-      color: var(--text);
-      transition: all 0.25s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-    .sponsor-card:hover {
-      border-color: var(--accent);
-      box-shadow: var(--shadow);
-      transform: translateY(-2px);
-    }
-    .sponsor-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-      color: #fff;
-    }
-    .sponsor-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    .sponsor-arrow {
-      margin-left: auto;
-      color: var(--text-soft);
-      font-size: 0.85rem;
-      opacity: 0.3;
-      transition: all 0.2s;
-    }
-    .sponsor-card:hover .sponsor-arrow {
-      color: var(--accent);
-      opacity: 1;
-      transform: translateX(2px);
-    }
-
-    @media (max-width: 640px) {
-      .sponsor-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-    }
-    @media (max-width: 400px) {
-      .sponsor-grid { grid-template-columns: 1fr; }
+    @media (max-width:420px) {
+      .bubble-link { width:calc(100% - 20px); }
+      .mooring { width:18px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ====== Back nav ====== -->
-  <div class="back-bar">
-    <a href="index.html" class="back-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      ポータルに戻る
-    </a>
-    <span class="back-bar-title">鮫月ナツネ Links</span>
-  </div>
+  <canvas id="ocean" aria-hidden="true"></canvas>
+  <div class="gauge" aria-hidden="true"><i class="g-track"></i><i class="g-thumb" id="gThumb"></i><span class="g-read" id="gRead">0m</span></div>
 
-  <div class="page">
-
-    <!-- ====== Profile ====== -->
-    <div class="profile">
-      <div class="profile-avatar"><img src="images/avatar.png" alt="鮫月ナツネ" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;" /></div>
-      <div class="profile-name">鮫月ナツネ</div>
-      <div class="profile-handle">@natsune_vrc</div>
-      <p class="profile-bio">VRChatワールド制作 / ギミック開発 / YouTube / BOOTH / イベント / コミュニティ運営</p>
-    </div>
-
-    <!-- ====== Main Links ====== -->
-    <div class="section">
-      <div class="section-label">Main Links</div>
-      <div class="link-grid">
-
-        <a href="https://www.youtube.com/@natsune_vrc" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-yt">▶</div>
-          <div class="link-body">
-            <span class="link-title">YouTube</span>
-            <span class="link-desc">チュートリアル・制作ログ・ライブ</span>
-            <span class="link-detail">VRChatのワールド制作やギミック開発の過程を動画で公開。初心者向けの解説からライブ配信まで。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="https://x.com/natsune_vrc" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-x">𝕏</div>
-          <div class="link-body">
-            <span class="link-title">X / Twitter</span>
-            <span class="link-desc">更新告知・制作中のひとこと</span>
-            <span class="link-detail">新作の告知、制作途中のスクショ、VRChat関連の気づきなど。いちばんリアルタイムな発信場所。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-dc">DC</div>
-          <div class="link-body">
-            <span class="link-title">Discord — ナツネの作業部屋</span>
-            <span class="link-desc">質問・雑談・制作物の共有（230人）</span>
-            <span class="link-detail">ワールド制作の質問やVRChat雑談ができるコミュニティ。初心者歓迎。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-booth">BT</div>
-          <div class="link-body">
-            <span class="link-title">BOOTH ショップ</span>
-            <span class="link-desc">ギミック・アセット販売</span>
-            <span class="link-detail">ナツネが制作したVRChat向けギミックやアセットを販売。無料アイテムもあり。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-note">NT</div>
-          <div class="link-body">
-            <span class="link-title">note — 週刊ナツネ通信</span>
-            <span class="link-desc">制作の裏側・VRChat最新情報</span>
-            <span class="link-detail">動画や投稿では語りきれない制作の裏話、考え方、VRChat界隈の情報などを長文で。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-vrchat">VR</div>
-          <div class="link-body">
-            <span class="link-title">VRChat プロフィール</span>
-            <span class="link-desc">フレンド申請はお気軽に</span>
-            <span class="link-detail">ナツネのVRChatプロフィール。制作したワールドに直接飛べます。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="https://vrchat.com/home/launch?worldId=wrld_334e8b18-60e1-4205-9710-7596821dfa0e" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-vrchat">W</div>
-          <div class="link-body">
-            <span class="link-title">君と白に眠る</span>
-            <span class="link-desc">制作ワールド</span>
-            <span class="link-detail">ナツネが制作したVRChatワールド。ぜひ遊びに来てください。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="https://vrchat.com/home/launch?worldId=wrld_f8be7be3-909e-4016-814d-074eabd7e4ca" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-vrchat">W</div>
-          <div class="link-body">
-            <span class="link-title">灯り巣-TOMORIS</span>
-            <span class="link-desc">制作ワールド</span>
-            <span class="link-detail">ナツネが制作したVRChatワールド。ぜひ遊びに来てください。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-github">GH</div>
-          <div class="link-body">
-            <span class="link-title">GitHub</span>
-            <span class="link-desc">オープンソースのギミック・ツール</span>
-            <span class="link-detail">公開中のUdonSharpギミックやツールのソースコード。自由に使えます。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
+  <main class="page">
+    <header class="prof">
+      <div class="ghost-name" aria-hidden="true">NATSUNE</div>
+      <div class="prof-avatar-wrap">
+        <div class="prof-glow" aria-hidden="true"></div>
+        <div class="prof-avatar"><img src="avatar.png" alt="鮫月ナツネ" /></div>
       </div>
+      <h1 class="prof-name">鮫月ナツネ</h1>
+      <p class="prof-en">SAMETSUKI NATSUNE</p>
+      <p class="prof-bio">VRChatを中心に活動するクリエイター。<br>ワールド制作・イベント運営・動画投稿。</p>
+    </header>
+
+    <div class="sea">
+      <nav class="links" id="linkList" aria-label="リンク一覧">
+        <a href="index.html" class="bubble-link primary" data-kind="home">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">公式サイト</span>
+            <span class="bl-handle">natsune-vrc.com</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="https://x.com/natsune_vrc" target="_blank" rel="noopener noreferrer" class="bubble-link kind-x" data-json-slot data-kind="x">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">X / Twitter</span>
+            <span class="bl-handle">@natsune_vrc</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="https://www.youtube.com/@natsune_vrc" target="_blank" rel="noopener noreferrer" class="bubble-link kind-yt" data-json-slot data-kind="yt">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">YouTube</span>
+            <span class="bl-handle">@natsune_vrc</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="https://vrchat.com/home/user/usr_86874bcb-2f67-4234-9937-eedfb70b8935" target="_blank" rel="noopener noreferrer" class="bubble-link kind-vrc" data-json-slot data-kind="vrc">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6.5h16A2.5 2.5 0 0 1 22.5 9v6a2.5 2.5 0 0 1-2.5 2.5h-4.2L13 14.7h-2l-2.8 2.8H4A2.5 2.5 0 0 1 1.5 15V9A2.5 2.5 0 0 1 4 6.5zm3.2 3.2a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6zm9.6 0a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6z"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">VRChat</span>
+            <span class="bl-handle">鮫月ナツネ</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6.5h16A2.5 2.5 0 0 1 22.5 9v6a2.5 2.5 0 0 1-2.5 2.5h-4.2L13 14.7h-2l-2.8 2.8H4A2.5 2.5 0 0 1 1.5 15V9A2.5 2.5 0 0 1 4 6.5zm3.2 3.2a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6zm9.6 0a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6z"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="contact.html" class="bubble-link kind-discord" data-json-slot data-kind="discord">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.07.07 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.06.06 0 0 0-.03.02C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.23-2a.08.08 0 0 0-.04-.1 13.1 13.1 0 0 1-1.87-.9.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08 0c.12.11.24.2.37.3a.08.08 0 0 1 0 .12 12.3 12.3 0 0 1-1.88.9.08.08 0 0 0-.04.1c.36.7.78 1.37 1.23 2a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.67a.06.06 0 0 0-.03-.02zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">Discord</span>
+            <span class="bl-handle">コミュニティサーバー</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.07.07 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.06.06 0 0 0-.03.02C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.23-2a.08.08 0 0 0-.04-.1 13.1 13.1 0 0 1-1.87-.9.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08 0c.12.11.24.2.37.3a.08.08 0 0 1 0 .12 12.3 12.3 0 0 1-1.88.9.08.08 0 0 0-.04.1c.36.7.78 1.37 1.23 2a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.67a.06.06 0 0 0-.03-.02zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="https://natsunevrc.fanbox.cc/" target="_blank" rel="noopener noreferrer" class="bubble-link kind-fanbox" data-json-slot data-kind="fanbox">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9.5"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">Pixiv Fanbox</span>
+            <span class="bl-handle">natsunevrc.fanbox.cc</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9.5"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="shien.html" class="bubble-link kind-support" data-json-slot data-kind="support">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">支援する</span>
+            <span class="bl-handle">BOOTH / Fanbox</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="contact.html" class="bubble-link kind-contact" data-json-slot data-kind="contact">
+          <span class="bl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="19" height="15" rx="3"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg></span>
+          <span class="bl-body">
+            <span class="bl-num" aria-hidden="true"></span>
+            <span class="bl-label">お問い合わせ</span>
+            <span class="bl-handle">DM / Discord</span>
+          </span>
+          <span class="bl-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="19" height="15" rx="3"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg></span>
+          <span class="bl-arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
     </div>
 
-    <!-- ====== Free Assets ====== -->
-    <div class="section">
-      <div class="section-label">Free Assets (BOOTH)</div>
-      <div class="link-grid">
+    <footer class="foot">
+      <span class="foot-lamp" aria-hidden="true"></span>
+      <p class="foot-copy">&copy; 2026 鮫月ナツネ</p>
+    </footer>
+  </main>
 
-        <a href="https://booth.pm/wish_list_names/8kaTGWrX" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-wish">⚙</div>
-          <div class="link-body">
-            <span class="link-title">無料ギミック集</span>
-            <span class="link-desc">スイッチ・ドア・BGM系など 24アイテム</span>
-            <span class="link-detail">ナツネが実際に使って良かったVRChat向け無料ギミックをまとめたリスト。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
+  <script>
+    (() => {
+      const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        <a href="https://booth.pm/wish_list_names/KR6T4BRG" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-wish">🌍</div>
-          <div class="link-body">
-            <span class="link-title">無料ワールド素材</span>
-            <span class="link-desc">部屋・自然・スカイボックスなど 18アイテム</span>
-            <span class="link-detail">ワールド制作に使える背景やスカイボックス、部屋素材の無料セレクション。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
+      /* ═══ site.json 連動（単一ソース。失敗時は静的リストのまま） ═══ */
+      const TEMPLATES = {};
+      document.querySelectorAll('[data-json-slot]').forEach(a => {
+        const kind = a.getAttribute('data-kind');
+        if (kind) TEMPLATES[kind] = { icon: a.querySelector('.bl-icon').innerHTML, mark: a.querySelector('.bl-mark').innerHTML };
+      });
 
-        <a href="https://booth.pm/wish_list_names/p6kT6YgJ" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-wish">🪑</div>
-          <div class="link-body">
-            <span class="link-title">無料家具・小物</span>
-            <span class="link-desc">椅子・テーブル・照明など 32アイテム</span>
-            <span class="link-detail">ワールドの雰囲気を作る家具や小物。置くだけでクオリティが上がるアイテム集。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
+      function esc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+      function safeUrl(v) {
+        const u = String(v || '').trim();
+        if (!u) return '#';
+        if (!/^[a-z][a-z0-9+.-]*:/i.test(u)) return u;
+        try { const p = new URL(u); if (['https:','http:','mailto:'].includes(p.protocol)) return u; } catch (_) {}
+        return '#';
+      }
+      function isPublic(item) {
+        if (!item || item.status === 'draft') return false;
+        if (item.status === 'scheduled') {
+          const raw = String(item.scheduledAt || '').trim();
+          if (!raw) return false;
+          const time = new Date(raw.includes('T') ? raw : raw.replace(/\./g, '-').replace(' ', 'T')).getTime();
+          return Number.isFinite(time) && time <= Date.now();
+        }
+        return true;
+      }
 
-        <a href="#" target="_blank" rel="noopener" class="link-card">
-          <div class="link-icon ic-wish">🖊</div>
-          <div class="link-body">
-            <span class="link-title">QVペン関連</span>
-            <span class="link-desc">差し替えモデル・カスタム 8アイテム</span>
-            <span class="link-detail">QVペンの見た目を変えるモデルやカスタムパーツのコレクション。</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
+      const ready = fetch('data/site.json').then(r => r.json()).then(data => {
+        const items = data?.links?.items?.filter(isPublic);
+        if (!items || !items.length) return;
+        const list = document.getElementById('linkList');
+        list.querySelectorAll('[data-json-slot]').forEach(el => el.remove());
+        items.forEach(item => {
+          const kind = String(item.kind || 'contact').replace(/[^a-z0-9-]/gi, '').toLowerCase() || 'contact';
+          const url = safeUrl(item.url);
+          const external = /^https?:\/\//.test(url);
+          const tpl = TEMPLATES[kind] || TEMPLATES['contact'];
+          const initial = esc((item.label || '?').trim().slice(0, 2).toUpperCase());
+          const a = document.createElement('a');
+          a.href = url;
+          a.className = `bubble-link kind-${kind}`;
+          if (external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+          a.innerHTML = `
+            <span class="bl-icon" aria-hidden="true">${tpl ? tpl.icon : initial}</span>
+            <span class="bl-body">
+              <span class="bl-num" aria-hidden="true"></span>
+              <span class="bl-label">${esc(item.label || '')}</span>
+              <span class="bl-handle">${esc(item.handle || '')}</span>
+            </span>
+            ${tpl ? `<span class="bl-mark" aria-hidden="true">${tpl.mark}</span>` : ''}
+            <span class="bl-arrow" aria-hidden="true">→</span>`;
+          list.appendChild(a);
+        });
+      }).catch(() => {});
 
-      </div>
-    </div>
+      /* ═══ 係留点 ═══ */
+      function layMoorings() {
+        document.querySelectorAll('.sea .mooring').forEach(m => m.remove());
+        const sea = document.querySelector('.sea');
+        document.querySelectorAll('.links .bubble-link:not(.primary)').forEach(card => {
+          const m = document.createElement('span');
+          m.className = 'mooring';
+          m.setAttribute('aria-hidden', 'true');
+          const isOdd = [...card.parentNode.children].indexOf(card) % 2 === 0;
+          m.style.top = (card.offsetTop + card.offsetHeight / 2) + 'px';
+          if (isOdd) { m.style.left = (card.offsetLeft + card.offsetWidth) + 'px'; }
+          else { m.style.left = (card.offsetLeft - 26) + 'px'; }
+          sea.appendChild(m);
+        });
+      }
 
-    <!-- ====== Sponsor Shops ====== -->
-    <div class="section">
-      <div class="section-label">Sponsor Shops</div>
-      <div class="sponsor-grid">
-        <a href="https://levan-ira.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#6c63ff;">XA</div>
-          <span class="sponsor-name">XOR Architecture</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-        <a href="https://harusamenozakka.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#4caf50;">🌿</div>
-          <span class="sponsor-name">はるさめ雑貨店</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-        <a href="https://harunami-0819.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#e91e63;">🌸</div>
-          <span class="sponsor-name">美州春波屋</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-        <a href="https://han-noko.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#ff9800;">🔨</div>
-          <span class="sponsor-name">HANの工房</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-        <a href="https://mallta00.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#9c27b0;">👻</div>
-          <span class="sponsor-name">おばけの雑貨屋さん</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-        <a href="https://dragonmaide.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#f44336;">🐉</div>
-          <span class="sponsor-name">ドラゴンメイド工房</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-        <a href="https://tanakaumai.booth.pm/" target="_blank" rel="noopener" class="sponsor-card">
-          <div class="sponsor-icon" style="background:#607d8b;">🏪</div>
-          <span class="sponsor-name">無人STORE</span>
-          <span class="sponsor-arrow">→</span>
-        </a>
-      </div>
-    </div>
+      /* ═══ ガラス面のシーン + 微小チルト（hover環境のみ） ═══ */
+      function bindGlass() {
+        if (!matchMedia('(hover:hover)').matches) return;
+        document.querySelectorAll('.bubble-link').forEach(card => {
+          card.addEventListener('pointermove', e => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+            card.style.setProperty('--mx', (x * 100) + '%');
+            card.style.setProperty('--my', (y * 100) + '%');
+            card.style.transform = `perspective(700px) rotateX(${(0.5 - y) * 4}deg) rotateY(${(x - 0.5) * 4}deg)`;
+          });
+          card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+        });
+      }
 
-    <!-- ====== Footer ====== -->
-    <div class="footer">
-      <a href="index.html" class="footer-home">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        ポータルサイトへ戻る
-      </a>
-      <p class="footer-copy">&copy; 2026 鮫月ナツネ</p>
-    </div>
+      ready.finally(() => {
+        requestAnimationFrame(() => {
+          document.getElementById('linkList').classList.add('in');
+          layMoorings();
+          bindGlass();
+        });
+        addEventListener('resize', layMoorings);
+      });
 
-  </div>
+      /* ═══ 深度ゲージ ═══ */
+      const gThumb = document.getElementById('gThumb');
+      const gRead = document.getElementById('gRead');
+      const gauge = document.querySelector('.gauge');
+      function updGauge() {
+        const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        const d = Math.min(1, scrollY / max);
+        const h = gauge.offsetHeight - 5;
+        gThumb.style.top = (d * h) + 'px';
+        gRead.style.top = (d * h) + 'px';
+        gRead.textContent = d < 0.015 ? '0m' : '-' + (Math.round(d * 300) / 10) + 'm';
+      }
+      addEventListener('scroll', updGauge, { passive: true });
+      addEventListener('resize', updGauge);
+      updGauge();
 
+      if (REDUCE) return;
+
+      /* ═══════════════════════════════════════════════
+         海のシーン — 1枚のキャンバス
+         スクロール = カメラの潜行。色・光・粒子が深度に連動
+         ═══════════════════════════════════════════════ */
+      const cv = document.getElementById('ocean');
+      const ctx = cv.getContext('2d');
+      let W, H, DPR;
+      function sizeCanvas() {
+        DPR = Math.min(devicePixelRatio || 1, 2);
+        W = innerWidth; H = innerHeight;
+        cv.width = W * DPR; cv.height = H * DPR;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        buildRay(); buildVignette();
+      }
+
+      /* 深度カラーランプ */
+      const RAMP = [
+        [0.00, [244, 252, 255]],
+        [0.28, [207, 234, 252]],
+        [0.55, [125, 184, 221]],
+        [0.80, [ 42,  90, 128]],
+        [1.00, [ 10,  30,  48]]
+      ];
+      function colAt(t) {
+        t = Math.max(0, Math.min(1, t));
+        for (let i = 1; i < RAMP.length; i++) {
+          if (t <= RAMP[i][0]) {
+            const [t0, c0] = RAMP[i - 1], [t1, c1] = RAMP[i];
+            const k = (t - t0) / (t1 - t0);
+            return c0.map((v, j) => Math.round(v + (c1[j] - v) * k));
+          }
+        }
+        return RAMP[RAMP.length - 1][1];
+      }
+
+      /* ゴッドレイのスプライト（オフスクリーンに1回だけ描く） */
+      let raySprite;
+      function buildRay() {
+        raySprite = document.createElement('canvas');
+        raySprite.width = 320; raySprite.height = Math.ceil(H * 1.5);
+        const rc = raySprite.getContext('2d');
+        const g = rc.createLinearGradient(0, 0, 0, raySprite.height);
+        g.addColorStop(0, 'rgba(235,250,255,0.55)');
+        g.addColorStop(0.5, 'rgba(190,230,252,0.12)');
+        g.addColorStop(1, 'rgba(190,230,252,0)');
+        rc.fillStyle = g;
+        rc.beginPath();
+        rc.moveTo(120, 0); rc.lineTo(200, 0);
+        rc.lineTo(320, raySprite.height); rc.lineTo(0, raySprite.height);
+        rc.closePath(); rc.fill();
+      }
+
+      /* ビネット（縁の減光） */
+      let vigSprite;
+      function buildVignette() {
+        vigSprite = document.createElement('canvas');
+        vigSprite.width = W; vigSprite.height = H;
+        const vc = vigSprite.getContext('2d');
+        const g = vc.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.75);
+        g.addColorStop(0, 'rgba(4,18,32,0)');
+        g.addColorStop(1, 'rgba(4,18,32,1)');
+        vc.fillStyle = g; vc.fillRect(0, 0, W, H);
+      }
+
+      /* 浮遊粒子: 3層の視差 */
+      const LAYERS = [
+        { n: 26, par: 0.18, rMin: 0.6, rMax: 1.4, aMax: 0.22, v: 0.05 },
+        { n: 22, par: 0.45, rMin: 1.0, rMax: 2.2, aMax: 0.3,  v: 0.1  },
+        { n: 14, par: 0.9,  rMin: 1.8, rMax: 3.4, aMax: 0.38, v: 0.16 }
+      ];
+      let motes = [];
+      function seedMotes() {
+        motes = [];
+        LAYERS.forEach((L, li) => {
+          for (let i = 0; i < L.n; i++) {
+            motes.push({
+              li, x: Math.random() * 1.2 - 0.1, y: Math.random(),
+              r: L.rMin + Math.random() * (L.rMax - L.rMin),
+              a: (0.35 + Math.random() * 0.65) * L.aMax,
+              ph: Math.random() * Math.PI * 2,
+              sun: li === 2 && Math.random() < 0.16
+            });
+          }
+        });
+      }
+
+      /* ポインター = ダイバーのランプ */
+      let px = -999, py = -999, tx = -999, ty = -999;
+      addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+      addEventListener('touchmove', e => { const t = e.touches[0]; if (t) { tx = t.clientX; ty = t.clientY; } }, { passive: true });
+
+      sizeCanvas(); seedMotes();
+      addEventListener('resize', () => { sizeCanvas(); });
+
+      let t0 = 0, docMax = 1, dNorm = 0;
+      function frame() {
+        t0 += 0.008;
+        docMax = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        dNorm = Math.min(1, scrollY / docMax);
+
+        /* 1. 深度に連動した水の色 */
+        const top = colAt(dNorm * 0.82);
+        const bot = colAt(Math.min(1, dNorm * 0.82 + 0.34));
+        const bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, `rgb(${top[0]},${top[1]},${top[2]})`);
+        bg.addColorStop(1, `rgb(${bot[0]},${bot[1]},${bot[2]})`);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        const surface = Math.pow(1 - dNorm, 1.6); /* 水面への近さ */
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+
+        /* 2. コースティクス（干渉する光の筋・水面近くだけ） */
+        if (surface > 0.04) {
+          const band = H * (0.42 + 0.2 * surface);
+          for (let i = 0; i < 18; i++) {
+            const yBase = (i / 18) * band - (scrollY * 0.25) % 40;
+            const alpha = 0.028 * surface * (1 - i / 22);
+            if (alpha <= 0.003 || yBase < -20 || yBase > band) continue;
+            ctx.beginPath();
+            for (let x = 0; x <= W; x += 14) {
+              const y = yBase
+                + Math.sin(x * 0.011 + t0 * 1.6 + i * 1.7) * 9
+                + Math.sin(x * 0.023 - t0 * 2.1 + i) * 5;
+              x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+            ctx.lineWidth = 1.6;
+            ctx.stroke();
+          }
+        }
+
+        /* 3. ゴッドレイ（差し込む光の柱） */
+        if (surface > 0.03) {
+          const rays = [
+            { x: W * 0.16, sway: Math.sin(t0 * 0.7) * 0.05 - 0.16, a: 0.5 },
+            { x: W * 0.46, sway: Math.sin(t0 * 0.55 + 2) * 0.06 - 0.1, a: 0.34 },
+            { x: W * 0.78, sway: Math.sin(t0 * 0.62 + 4) * 0.05 - 0.2, a: 0.42 }
+          ];
+          rays.forEach(r => {
+            ctx.save();
+            ctx.translate(r.x, -H * 0.08);
+            ctx.rotate(r.sway);
+            ctx.globalAlpha = r.a * surface * 0.55;
+            ctx.drawImage(raySprite, -160, 0);
+            ctx.restore();
+          });
+          ctx.globalAlpha = 1;
+        }
+
+        /* 4. 浮遊粒子（3層視差・ゆっくり上昇） */
+        motes.forEach(m => {
+          const L = LAYERS[m.li];
+          m.y -= L.v * 0.0012;
+          if (m.y < -0.03) { m.y = 1.03; m.x = Math.random() * 1.2 - 0.1; }
+          const sx = m.x * W + Math.sin(t0 * 0.9 + m.ph) * (5 + m.li * 4);
+          const sy = ((m.y * (H * 1.35) - scrollY * L.par) % (H * 1.35) + (H * 1.35)) % (H * 1.35) - H * 0.15;
+          if (sy < -10 || sy > H + 10) return;
+          const tw = 0.75 + 0.25 * Math.sin(t0 * 2 + m.ph * 3);
+          ctx.beginPath();
+          ctx.arc(sx, sy, m.r, 0, Math.PI * 2);
+          if (m.sun && surface > 0.15) {
+            ctx.fillStyle = `rgba(255,205,90,${m.a * tw * surface})`;
+          } else {
+            ctx.fillStyle = `rgba(210,240,255,${m.a * tw * (0.55 + 0.45 * (1 - m.li / 3))})`;
+          }
+          ctx.fill();
+        });
+
+        /* 5. ダイバーのランプ（ポインター追従・深いほど暖色に） */
+        px += (tx - px) * 0.07; py += (ty - py) * 0.07;
+        if (px > -500) {
+          const warm = Math.pow(dNorm, 1.4);
+          const cr = Math.round(180 + warm * 75);
+          const cg = Math.round(228 - warm * 30);
+          const cb = Math.round(255 - warm * 130);
+          const R = 210 + 60 * warm;
+          const lg = ctx.createRadialGradient(px, py, 0, px, py, R);
+          lg.addColorStop(0, `rgba(${cr},${cg},${cb},${0.09 + 0.07 * warm})`);
+          lg.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+          ctx.fillStyle = lg;
+          ctx.fillRect(px - R, py - R, R * 2, R * 2);
+        }
+        ctx.restore();
+
+        /* 6. ビネット（深いほど縁が沈む） */
+        ctx.globalAlpha = 0.12 + 0.4 * dNorm;
+        ctx.drawImage(vigSprite, 0, 0, W, H);
+        ctx.globalAlpha = 1;
+
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
+  </script>
 </body>
 </html>
