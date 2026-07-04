@@ -2,10 +2,10 @@
   "version": 1,
   "updatedAt": "2026-06-08T00:00:00.000Z",
   "hero": {
-    "role": "VRChat Creator / World Builder / Community Organizer",
+    "role": "VRChatを盛り上げたい！VRChat発のVRTuber",
     "name": "鮫月ナツネ",
     "nameEn": "SAMETSUKI NATSUNE",
-    "description": "鮫月ナツネの活動をまとめた公式ポータルです。\nVRChatで制作したワールド、参加しているイベント、YouTubeで公開した動画など、\n今見られる情報をここに整理して掲載しています。",
+    "description": "はじめまして、鮫月ナツネです！VRChatに住んでるVRTuber。\nワールドをつくって、イベントに立って、動画も出してます。\n画面越しじゃなくて同じ空間で会えるので——気になったら遊びに来て！",
     "primaryLabel": "活動を見る",
     "primaryUrl": "#worlds",
     "secondaryLabel": "X をフォロー",
@@ -13,13 +13,14 @@
   },
   "profile": {
     "tags": [
+      "VRTuber",
       "VRChat Creator",
       "World Builder",
       "Event Organizer",
       "YouTuber",
       "Illustrator"
     ],
-    "bio": "VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。"
+    "bio": "鮫月ナツネです！VRChatを盛り上げたくて活動してるVRTuber。ワールド制作もイベントも動画もイラストも、ぜんぶ\u300c楽しいから\u300dやってるマルチクリエイター。彼方BARのキャストと、ぶいちゃすと！のリーダーもやってます。フルトラで動く系です！"
   },
   "sections": {
     "articles": {
@@ -115,7 +116,7 @@
   },
   "news": {
     "title": "お知らせ",
-    "description": "活動の最新情報をお届けします。",
+    "description": "最近なにしてるかは、ここでチェック！",
     "items": [
       {
         "date": "2026.04.01",
@@ -139,7 +140,7 @@
   },
   "worlds": {
     "title": "ワールド制作",
-    "description": "体験と居心地を設計するワールドづくり。制作したワールドと、監修・協力したワールドを掲載しています。",
+    "description": "\u300cまた来たくなる場所\u300dを目指してつくってます。まずは遊びに行ってみて！",
     "made": [
       {
         "worldId": "",
@@ -176,9 +177,48 @@
     ],
     "supervised": []
   },
+  "projects": {
+    "title": "現在進行中のプロジェクト",
+    "description": "いま動かしてるあれこれ。お楽しみに！",
+    "items": [
+      {
+        "category": "WORLD",
+        "title": "制作中ワールド",
+        "description": "新しいワールドを構想・制作中。詳細は近日公開予定。",
+        "phase": "IN PROGRESS",
+        "updatedAt": "",
+        "image": "",
+        "imageAlt": "",
+        "url": "",
+        "status": "published"
+      },
+      {
+        "category": "EVENT",
+        "title": "企画中イベント",
+        "description": "VRChat内での新しいイベントを企画中。続報をお待ちください。",
+        "phase": "PLANNING",
+        "updatedAt": "",
+        "image": "",
+        "imageAlt": "",
+        "url": "",
+        "status": "published"
+      },
+      {
+        "category": "COMMUNITY",
+        "title": "ぶいちゃすと！",
+        "description": "VRChat住民による動画投稿グループを運営中。メンバー拡充を検討中。",
+        "phase": "RUNNING",
+        "updatedAt": "",
+        "image": "",
+        "imageAlt": "",
+        "url": "#buichasuto",
+        "status": "published"
+      }
+    ]
+  },
   "links": {
     "title": "リンク",
-    "description": "各種SNSやプラットフォームへのリンクをまとめています。",
+    "description": "SNSはこちら！フォローしてもらえたらうれしいです！",
     "items": [
       {
         "kind": "x",
@@ -203,9 +243,9 @@
       },
       {
         "kind": "booth",
-        "status": "draft",
+        "status": "published",
         "label": "BOOTH",
-        "handle": "natsunevrc.booth.pm",
+        "handle": "商品を見る",
         "url": "https://natsunevrc.booth.pm/"
       },
       {
@@ -216,16 +256,16 @@
         "url": "contact.html"
       },
       {
-        "kind": "fanbox",
+        "kind": "support",
         "status": "published",
-        "label": "Pixiv Fanbox",
-        "handle": "natsunevrc.fanbox.cc",
+        "label": "支援する",
+        "handle": "pixiv FANBOX",
         "url": "https://natsunevrc.fanbox.cc/"
       },
       {
         "kind": "support",
-        "status": "published",
-        "label": "支援する",
+        "status": "draft",
+        "label": "支援する（旧・まとめページ）",
         "handle": "BOOTH / Fanbox",
         "url": "shien.html"
       },

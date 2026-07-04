@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>鮫月ナツネ | Official Portal</title>
   <meta name="description" content="鮫月ナツネの個人ポータルサイト。VRChatワールド制作・イベント運営・YouTube・BOOTH・イラスト・コミュニティ。" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
@@ -13,96 +14,68 @@
     @property --angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 
     :root {
-      --bg: #f4f9ff; --text: #1a2a3a; --text-soft: #5a7088; --dim: #e8f0f8;
-      --cyan: #00bcd4; --pink: #ff4081; --purple: #7c4dff;
-      --font-ui: 'Orbitron', sans-serif;
+      /* v11 palette — 海: 水面の白 × 海の水色 × 陽光・灯りの黄色 */
+      --snow:       #ffffff;   /* 水面 */
+      --snow-deep:  #eaf6fc;   /* 浅瀬の面 */
+      --ink:        #1d3b52;
+      --ink-soft:   #5e7d93;
+      --aqua:       #42a5f5;
+      --aqua-deep:  #1e88e5;
+      --aqua-mist:  #e0f2fc;
+      --lamp:       #ffc94d;
+      --lamp-soft:  #fff3d6;
+      --abyss:      #0f2a40;   /* 海底 */
+      --abyss-deep: #0a1f31;
+
+      /* legacy aliases kept only so untouched component CSS below resolves to
+         the new palette without a thousand manual edits. No component may
+         introduce NEW usages of these names — see spec §1. */
+      --bg: var(--snow); --text: var(--ink); --text-soft: var(--ink-soft); --dim: var(--snow-deep);
+      --cyan: var(--aqua-deep); --pink: var(--aqua-deep); --purple: var(--aqua);
+      --font-ui: 'Zen Maru Gothic', sans-serif;
       --font-hand: 'Klee One', cursive;
       --font-body: 'Zen Maru Gothic', sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: auto; }
-    body { font-family: var(--font-body); color: var(--text); background: var(--bg); line-height: 1.7; overflow-x: hidden; cursor: none; }
-    a { color: inherit; text-decoration: none; cursor: none; }
+    html { scroll-behavior: auto; overflow-x: clip; }
+    body { font-family: var(--font-body); color: var(--text); background: linear-gradient(180deg, #ffffff 0%, #eef8fd 45%, #cfe8f8 68%, #7db8dd 84%, #2a5a80 93%, #0d2234 100%); line-height: 1.7; overflow-x: clip; }
+    a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
-    ::selection { background: var(--cyan); color: var(--bg); }
+    ::selection { background: var(--aqua-mist); color: var(--ink); }
 
-    /* ── LOADER ── */
-    .loader { position:fixed; inset:0; z-index:99999; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
-    .loader.done { pointer-events:none; }
-    .loader-name { font-family:var(--font-ui); font-size:clamp(28px,6vw,48px); font-weight:900; letter-spacing:0.2em; color:var(--text); position:relative; }
-    .loader-name::before, .loader-name::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; }
-    .loader-name::before { color:var(--cyan); animation:loaderGlitch1 0.3s infinite; }
-    .loader-name::after { color:var(--pink); animation:loaderGlitch2 0.3s infinite; }
-    @keyframes loaderGlitch1 {
-      0%{clip-path:inset(40% 0 20% 0);transform:translate(-2px,1px)} 20%{clip-path:inset(10% 0 60% 0);transform:translate(2px,-1px)}
-      40%{clip-path:inset(70% 0 5% 0);transform:translate(-1px,2px)} 60%{clip-path:inset(20% 0 50% 0);transform:translate(1px,-2px)}
-      80%{clip-path:inset(50% 0 10% 0);transform:translate(-2px,0)} 100%{clip-path:inset(30% 0 30% 0);transform:translate(2px,1px)}
-    }
-    @keyframes loaderGlitch2 {
-      0%{clip-path:inset(60% 0 10% 0);transform:translate(2px,-1px)} 20%{clip-path:inset(5% 0 70% 0);transform:translate(-2px,2px)}
-      40%{clip-path:inset(30% 0 40% 0);transform:translate(1px,-1px)} 60%{clip-path:inset(50% 0 20% 0);transform:translate(-1px,1px)}
-      80%{clip-path:inset(10% 0 50% 0);transform:translate(2px,-2px)} 100%{clip-path:inset(40% 0 30% 0);transform:translate(-2px,1px)}
-    }
-    .loader-bar-wrap { width:min(320px,80vw); height:4px; background:rgba(0,188,212,0.06); border-radius:2px; overflow:hidden; }
-    .loader-bar { height:100%; width:0; background:linear-gradient(90deg,var(--cyan),var(--pink)); border-radius:2px; box-shadow:0 0 12px var(--cyan); }
-    .loader-pct { font-family:var(--font-ui); font-size:12px; letter-spacing:0.2em; color:var(--text-soft); }
-    .loader-sub { font-family:var(--font-hand); font-size:13px; color:var(--text-soft); opacity:0.5; }
-    .curtain-top, .curtain-bot { position:fixed; left:0; width:100%; height:50vh; z-index:99998; background:#fff; }
-    .curtain-top { top:0; } .curtain-bot { bottom:0; }
-
-    /* ── Cursor (SVG Arrow) ── */
-    .cursor {
-      position:fixed; top:0; left:0; overflow:visible;
-      pointer-events:none; z-index:10000;
-      filter:drop-shadow(0 0 4px rgba(0,188,212,0.6));
-      transition:filter 0.15s;
-    }
-    .cursor .cur-shape {
-      fill:white; stroke:#00bcd4; stroke-width:1.3; stroke-linejoin:round;
-      transition:stroke 0.15s;
-    }
-    .cursor.hover { filter:drop-shadow(0 0 5px rgba(255,64,129,0.7)); }
-    .cursor.hover .cur-shape { stroke:#ff4081; }
-
-    /* ── Noise ── */
-    body::after { content:''; position:fixed; inset:0; z-index:9998; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:0.018; mix-blend-mode:multiply; }
+    /* ── Noise (kept, extremely subtle paper texture) ── */
+    body::after { content:''; position:fixed; inset:0; z-index:9998; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:0.012; mix-blend-mode:multiply; }
 
     #bgCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
-    .scroll-bar { position:fixed; top:0; left:0; height:2px; z-index:200; background:linear-gradient(90deg,var(--cyan),var(--pink),var(--purple)); transform-origin:left; transform:scaleX(0); }
+    .scroll-bar { position:fixed; top:0; left:0; height:2px; z-index:200; background:var(--aqua); transform-origin:left; transform:scaleX(0); opacity:0.5; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    }
 
     .wrap { position:relative; z-index:1; }
     .container { width:min(calc(100% - 40px), 1080px); margin:0 auto; }
 
     /* ── Header ── */
-    .hdr { position:sticky; top:0; z-index:100; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; background:rgba(244,249,255,0.88); backdrop-filter:blur(20px); border-bottom:1px solid rgba(0,188,212,0.1); gap:12px; }
+    .hdr { position:sticky; top:0; z-index:100; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; background:rgba(244,249,255,0.88); backdrop-filter:blur(20px); border-bottom:1px solid rgba(30,136,229,0.1); gap:12px; }
     .hdr-logo { display:flex; align-items:center; gap:10px; flex-shrink:0; }
     .hdr-logo img { width:28px; height:28px; border-radius:50%; object-fit:cover; }
-    .hdr-logo span { font-family:var(--font-ui); font-size:12px; font-weight:700; letter-spacing:0.12em; }
+    .hdr-logo span { font-family:var(--font-ui); font-size:12px; font-weight:700; letter-spacing:0.12em; color:var(--aqua-deep); }
     .hdr-nav { display:flex; gap:2px; flex-wrap:wrap; }
     .hdr-nav a { padding:5px 10px; border-radius:6px; font-size:10px; font-weight:600; color:var(--text-soft); letter-spacing:0.04em; transition:all 0.2s; white-space:nowrap; }
-    .hdr-nav a:hover { color:var(--cyan); background:rgba(0,229,255,0.06); }
+    .hdr-nav a:hover { color:var(--cyan); background:rgba(30,136,229,0.06); }
     .hdr-actions { display:flex; gap:6px; flex-shrink:0; }
     .hdr-actions a { padding:6px 14px; border-radius:8px; font-size:10px; font-weight:700; letter-spacing:0.06em; white-space:nowrap; transition:all 0.2s; }
-    .hdr-btn-support { background:rgba(124,77,255,0.08); color:var(--purple); border:1px solid rgba(124,77,255,0.2); }
-    .hdr-btn-support:hover { background:rgba(124,77,255,0.15); }
-    .hdr-btn-contact { background:rgba(0,188,212,0.08); color:var(--cyan); border:1px solid rgba(0,188,212,0.2); }
-    .hdr-btn-contact:hover { background:rgba(0,188,212,0.14); }
-
-    /* ── Marquee ── */
-    .marquee { overflow:hidden; white-space:nowrap; padding:14px 0; border-top:1px solid rgba(0,188,212,0.04); border-bottom:1px solid rgba(0,188,212,0.04); }
-    .m-track { display:inline-flex; gap:3rem; animation:m 30s linear infinite; }
-    .m-track span { font-family:var(--font-ui); font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-soft); opacity:0.35; }
-    .m-track .hi { color:var(--cyan); opacity:0.7; }
-    .marquee:hover .m-track { animation-play-state:paused; }
-    @keyframes m { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .hdr-btn-support { background:rgba(66,165,245,0.08); color:var(--purple); border:1px solid rgba(66,165,245,0.2); }
+    .hdr-btn-support:hover { background:rgba(66,165,245,0.15); }
+    .hdr-btn-contact { background:rgba(30,136,229,0.08); color:var(--cyan); border:1px solid rgba(30,136,229,0.2); }
+    .hdr-btn-contact:hover { background:rgba(30,136,229,0.14); }
 
     /* ── Hero ── */
-    .hero { padding:80px 0 70px; }
-    .hero-grid { display:grid; grid-template-columns:1fr 380px; gap:60px; align-items:center; }
-    .hero-status { display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:6px; border:1px solid rgba(0,188,212,0.3); color:var(--cyan); font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:24px; }
-    .hero-status i { width:6px; height:6px; border-radius:50%; background:var(--cyan); animation:blink 1.5s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.15} }
-    .hero-role { font-family:var(--font-hand); font-size:14px; color:var(--purple); margin-bottom:10px; }
+    .hero { padding:100px 0 80px; position:relative; overflow:hidden; }
+    .hero-grid { display:grid; grid-template-columns:1fr 380px; gap:60px; align-items:center; position:relative; z-index:1; }
+    .hero-role { font-family:var(--font-hand); font-size:14px; color:var(--aqua-deep); margin-bottom:10px; letter-spacing:0.04em; }
     .hero-name { font-size:clamp(48px,9vw,88px); font-weight:900; line-height:1.2; margin-bottom:28px; overflow:visible; font-family:'Zen Maru Gothic',sans-serif; letter-spacing:.05em; user-select:none; filter:drop-shadow(0 0 6px rgba(0,180,210,.18)) drop-shadow(0 0 2px rgba(0,120,180,.12)); }
     .hero-name span { display:inline-block; position:relative; }
     .hero-name.wave-active span { animation:heroWave 4s ease-in-out infinite, heroGrad 16s linear infinite; background:linear-gradient(90deg,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5,#42a5f5,#64b5f6,#42a5f5,#1e88e5); background-size:400%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
@@ -120,76 +93,88 @@
     @keyframes heroGradEn { 0%{background-position:0% 50%} 100%{background-position:400% 50%} }
     .hero-desc { font-size:15px; color:var(--text-soft); line-height:2; margin-bottom:36px; font-family:var(--font-hand); max-width:480px; }
     .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
-    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 26px; border-radius:12px; font-size:14px; font-weight:700; border:none; cursor:none; transition:all 0.3s; position:relative; overflow:hidden; }
-    .btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent); opacity:0; transition:opacity 0.3s; }
-    .btn:hover::before { opacity:1; }
-    .btn-p { background:linear-gradient(135deg,var(--cyan),var(--purple)); color:#fff; box-shadow:0 0 30px rgba(0,229,255,0.25); }
-    .btn-p:hover { box-shadow:0 0 50px rgba(0,229,255,0.45); transform:translateY(-2px); }
-    .btn-s { background:transparent; color:var(--pink); border:1.5px solid var(--pink); }
-    .btn-s:hover { background:rgba(255,64,129,0.08); box-shadow:0 0 25px rgba(255,64,129,0.2); }
+    .btn { display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:14px; font-size:14px; font-weight:700; border:none; transition:all 0.3s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden; }
+    .btn-p { background:#fff; color:var(--ink); box-shadow:0 8px 32px rgba(37,55,70,0.08); }
+    .btn-p .btn-dot { width:8px; height:8px; border-radius:50%; background:var(--lamp); flex-shrink:0; transition:transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s; }
+    .btn-p:hover { background:var(--lamp-soft); transform:translateY(-2px); box-shadow:0 12px 36px rgba(37,55,70,0.1); }
+    .btn-p:hover .btn-dot { transform:scale(2.4); box-shadow:0 0 16px rgba(255,201,77,0.5); }
+    .btn-s { background:transparent; color:var(--aqua-deep); border:1px solid var(--aqua); }
+    .btn-s:hover { background:var(--aqua-mist); transform:translateY(-2px); }
     .btn svg { width:16px; height:16px; }
 
-    /* ── Avatar blob ── */
+    /* ── Avatar blob (本番承認済みの形状変形を復活・光彩は海+陽光色) ── */
     .avatar-wrap { position:relative; perspective:800px; }
-    .avatar-blob { width:100%; aspect-ratio:0.85/1; overflow:hidden; animation:blobMorph 12s ease-in-out infinite; position:relative; }
+    .avatar-blob { width:100%; aspect-ratio:0.85/1; overflow:hidden; animation:seaBlob 12s ease-in-out infinite; position:relative; }
     .avatar-blob img { width:100%; height:100%; object-fit:cover; object-position:center top; }
-    .avatar-blob::after { content:''; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 60px rgba(0,229,255,0.12), inset 0 0 120px rgba(255,64,129,0.06); }
-    @keyframes blobMorph {
+    /* キャラクターの呼吸（生きてそこにいる、のVTuber文法。視差・視線追従とは独立レイヤー） */
+    .av-breathe { width:100%; height:100%; animation:breathe 5.6s ease-in-out infinite; will-change:transform; }
+    @keyframes breathe { 0%,100% { transform:scale(1) translateY(0); } 50% { transform:scale(1.012) translateY(-3px); } }
+    .avatar-blob::after { content:''; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 0 60px rgba(66,165,245,0.14), inset 0 0 120px rgba(255,201,77,0.05); }
+    @keyframes seaBlob {
       0%,100% { border-radius:30% 70% 70% 30% / 30% 30% 70% 70%; }
       25% { border-radius:58% 42% 55% 45% / 52% 28% 72% 48%; }
       50% { border-radius:42% 58% 35% 65% / 38% 62% 38% 62%; }
       75% { border-radius:65% 35% 48% 52% / 48% 52% 48% 52%; }
     }
-    .avatar-glow { position:absolute; inset:-20px; border-radius:inherit; animation:blobMorph 12s ease-in-out infinite, rotateBorder 6s linear infinite; background:conic-gradient(from var(--angle), var(--cyan), var(--purple), var(--pink), var(--cyan)); filter:blur(30px); opacity:0.2; z-index:-1; }
-    @keyframes rotateBorder { to{--angle:360deg} }
+    .avatar-glow { position:absolute; inset:-20px; border-radius:50%; animation:glowTurn 14s linear infinite; background:conic-gradient(#42a5f5, #a8e1fb, #ffd57a, #7fd0f5, #42a5f5); filter:blur(30px); opacity:0.22; z-index:-1; will-change:transform; }
+    @keyframes glowTurn { to { transform:rotate(360deg); } }
 
     /* ── Section common ── */
     .sec { padding:90px 0; }
-    .sec + .sec { border-top:1px solid rgba(0,188,212,0.05); }
-    .sec-tag { display:inline-block; padding:4px 12px; border-radius:4px; font-family:var(--font-ui); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:14px; border:1px solid; }
+    .sec + .sec { border-top:1px solid rgba(30,136,229,0.05); }
+    .sec-tag { display:block; font-family:'Zen Maru Gothic',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.3em; text-transform:uppercase; margin-bottom:10px; color:var(--ink-soft); opacity:0.55; }
     .sec-title { font-size:clamp(22px,3.5vw,34px); font-weight:900; line-height:1.3; margin-bottom:10px; }
     .sec-desc { color:var(--text-soft); font-size:14px; max-width:540px; margin-bottom:36px; line-height:1.9; }
 
     /* ── Profile ── */
-    #profile .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
     .profile-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
-    .profile-tag { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; background:rgba(0,188,212,0.07); color:var(--cyan); border:1px solid rgba(0,188,212,0.15); }
+    .profile-tag { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; background:rgba(30,136,229,0.07); color:var(--cyan); border:1px solid rgba(30,136,229,0.15); }
     .profile-bio { font-size:14px; color:var(--text-soft); line-height:2; font-family:var(--font-hand); max-width:640px; }
 
     /* ── WIP Projects ── */
-    #wip .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
     .wip-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
-    .wip-card { padding:24px; border-radius:20px; background:#fff; border:1px solid rgba(124,77,255,0.1); box-shadow:0 2px 16px rgba(0,40,80,0.04); transition:all 0.3s; position:relative; overflow:hidden; }
-    .wip-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--cyan),var(--purple)); }
-    .wip-card:hover { transform:translateY(-3px); box-shadow:0 8px 36px rgba(0,40,80,0.08); }
-    .wip-cat { font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; color:var(--text-soft); margin-bottom:10px; }
+    .wip-card { padding:24px; border-radius:20px; background:#fff; border:1px solid rgba(66,165,245,0.08); box-shadow:0 8px 32px rgba(37,55,70,0.05); transition:transform 0.4s cubic-bezier(.16,1,.3,1), box-shadow 0.4s; position:relative; overflow:hidden; }
+    .wip-card:hover { transform:translateY(-4px); box-shadow:0 16px 44px rgba(37,55,70,0.09); }
+    .wip-thumb { aspect-ratio:16/9; margin:-24px -24px 18px; background:var(--snow-deep); overflow:hidden; }
+    .wip-thumb img { width:100%; height:100%; object-fit:cover; }
+    .wip-cat { font-family:'Zen Maru Gothic',sans-serif; font-size:9px; font-weight:700; letter-spacing:0.2em; color:var(--ink-soft); margin-bottom:10px; text-transform:uppercase; }
     .wip-name { font-size:16px; font-weight:700; margin-bottom:8px; }
     .wip-desc { font-size:13px; color:var(--text-soft); line-height:1.8; margin-bottom:14px; font-family:var(--font-hand); }
-    .wip-status { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.1em; padding:3px 10px; border-radius:4px; background:rgba(124,77,255,0.08); color:var(--purple); }
-    .wip-status i { width:5px; height:5px; border-radius:50%; background:var(--purple); animation:blink 1.5s infinite; }
+    .wip-status { display:inline-flex; align-items:center; gap:6px; font-family:'Zen Maru Gothic',sans-serif; font-size:9px; font-weight:700; letter-spacing:0.1em; padding:3px 10px; border-radius:4px; background:var(--aqua-mist); color:var(--aqua-deep); margin-right:6px; margin-bottom:6px; }
+    .wip-status i { width:5px; height:5px; border-radius:50%; background:var(--lamp); }
+    .wip-link { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--cyan); }
+    .wip-card.feature { grid-column:span 2; }
+    .wip-card.compact { padding:18px; }
+    .wip-card.compact .wip-thumb { margin:-18px -18px 14px; }
+    .wip-gallery { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin:14px 0 8px; }
+    .wip-gallery img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; border:1px solid rgba(66,165,245,0.10); }
+    .wip-tags { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 10px; }
+    .card-tags { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 10px; }
+    .wip-tags span,
+    .card-tags span { display:inline-flex; align-items:center; min-height:20px; padding:2px 8px; border-radius:999px; background:rgba(30,136,229,0.06); color:var(--text-soft); border:1px solid rgba(30,136,229,0.10); font-size:10px; font-weight:700; }
+    .wip-read { margin-top:12px; }
+    .wip-cta-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:12px; }
 
     /* ── ぶいちゃすと！ ── */
-    #buichasuto .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
-    .bvc-hero { display:flex; align-items:center; gap:32px; padding:32px; border-radius:24px; background:#fff; border:1px solid rgba(255,64,129,0.1); box-shadow:0 4px 24px rgba(0,40,80,0.05); margin-bottom:32px; }
+    .bvc-hero { display:flex; align-items:center; gap:32px; padding:32px; border-radius:24px; background:#fff; border:1px solid rgba(255,201,77,0.1); box-shadow:0 4px 24px rgba(0,40,80,0.05); margin-bottom:32px; }
     .bvc-logo { width:80px; height:80px; border-radius:20px; background:linear-gradient(135deg,var(--pink),var(--purple)); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--font-ui); font-size:10px; font-weight:700; color:#fff; text-align:center; letter-spacing:0.05em; line-height:1.4; }
     .bvc-name { font-size:24px; font-weight:900; margin-bottom:6px; }
     .bvc-sub { font-size:13px; color:var(--text-soft); font-family:var(--font-hand); margin-bottom:14px; }
-    .bvc-link { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:8px; font-size:11px; font-weight:700; background:rgba(255,64,129,0.08); color:var(--pink); border:1px solid rgba(255,64,129,0.2); transition:all 0.2s; }
+    .bvc-link { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:8px; font-size:11px; font-weight:700; background:rgba(255,201,77,0.08); color:var(--pink); border:1px solid rgba(255,201,77,0.2); transition:all 0.2s; }
     .bvc-link:hover { background:var(--pink); color:#fff; }
     @media(max-width:600px) { .bvc-hero { flex-direction:column; align-items:flex-start; gap:16px; } }
 
     /* ── World section ── */
-    #worlds .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
     .world-tabs { display:flex; gap:8px; margin-bottom:32px; }
-    .world-tab { padding:8px 20px; border-radius:8px; font-family:var(--font-ui); font-size:11px; font-weight:700; letter-spacing:0.08em; border:1px solid rgba(0,188,212,0.15); color:var(--text-soft); cursor:none; transition:all 0.25s; }
-    .world-tab.active { background:var(--cyan); color:#fff; border-color:var(--cyan); box-shadow:0 0 20px rgba(0,188,212,0.3); }
+    .world-tab { padding:8px 20px; border-radius:8px; font-family:var(--font-ui); font-size:11px; font-weight:700; letter-spacing:0.08em; border:1px solid rgba(30,136,229,0.15); color:var(--text-soft); transition:all 0.25s; }
+    .world-tab.active { background:var(--cyan); color:#fff; border-color:var(--cyan); }
     .world-tab:hover:not(.active) { border-color:var(--cyan); color:var(--cyan); }
     .world-panel { display:none; }
     .world-panel.active { display:block; }
     .world-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .world-card { border-radius:20px; overflow:hidden; background:#fff; border:1px solid rgba(0,188,212,0.08); transition:all 0.35s; box-shadow:0 2px 20px rgba(0,40,80,0.04); }
-    .world-card:hover { transform:translateY(-4px); box-shadow:0 8px 40px rgba(0,188,212,0.12); border-color:rgba(0,188,212,0.2); }
-    .world-thumb { aspect-ratio:16/9; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.06),rgba(124,77,255,0.06)); display:flex; align-items:center; justify-content:center; }
+    .world-card { border-radius:20px; overflow:hidden; background:#fff; border:1px solid rgba(30,136,229,0.08); transition:all 0.35s; box-shadow:0 2px 20px rgba(0,40,80,0.04); }
+    .world-card:hover { transform:translateY(-4px); box-shadow:0 8px 40px rgba(30,136,229,0.12); border-color:rgba(30,136,229,0.2); }
+    .world-thumb { aspect-ratio:16/9; overflow:hidden; background:linear-gradient(135deg,rgba(30,136,229,0.06),rgba(66,165,245,0.06)); display:flex; align-items:center; justify-content:center; }
     .world-thumb img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
     .world-card:hover .world-thumb img { transform:scale(1.04); }
     .world-thumb-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
@@ -198,93 +183,88 @@
     .world-name { font-size:16px; font-weight:700; margin-bottom:6px; }
     .world-desc { font-size:13px; color:var(--text-soft); margin-bottom:16px; line-height:1.7; }
     .world-meta { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0 0 16px; }
-    .world-meta-item { border:1px solid rgba(0,188,212,0.10); border-radius:10px; background:rgba(0,188,212,0.035); padding:8px 7px; }
+    .world-meta-item { border:1px solid rgba(30,136,229,0.10); border-radius:10px; background:rgba(30,136,229,0.035); padding:8px 7px; }
     .world-meta-item strong { display:block; font-family:var(--font-ui); font-size:13px; color:var(--text); line-height:1.1; }
     .world-meta-item span { display:block; margin-top:3px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.08em; color:var(--text-soft); }
     .world-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .world-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; transition:all 0.2s; }
-    .world-btn-intro { background:rgba(0,188,212,0.08); color:var(--cyan); border:1px solid rgba(0,188,212,0.2); }
-    .world-btn-intro:hover { background:rgba(0,188,212,0.15); }
-    .world-btn-open { background:rgba(124,77,255,0.08); color:var(--purple); border:1px solid rgba(124,77,255,0.2); }
-    .world-btn-open:hover { background:rgba(124,77,255,0.15); }
+    .world-btn-intro { background:rgba(30,136,229,0.08); color:var(--cyan); border:1px solid rgba(30,136,229,0.2); }
+    .world-btn-intro:hover { background:rgba(30,136,229,0.15); }
+    .world-btn-open { background:rgba(66,165,245,0.08); color:var(--purple); border:1px solid rgba(66,165,245,0.2); }
+    .world-btn-open:hover { background:rgba(66,165,245,0.15); }
     .world-btn svg { width:13px; height:13px; }
 
     /* ── Events ── */
-    #events .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
     .event-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
     .ev-sub-head { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
     .ev-sub-head + .ev-sub-head { margin-top:48px; }
     .ev-sub-tag { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; }
-    .ev-sub-tag-org { background:rgba(255,64,129,0.1); color:var(--pink); }
-    .ev-sub-tag-cast { background:rgba(124,77,255,0.1); color:var(--purple); }
+    .ev-sub-tag-org { background:rgba(255,201,77,0.1); color:var(--pink); }
+    .ev-sub-tag-cast { background:rgba(66,165,245,0.1); color:var(--purple); }
     .ev-sub-title { font-size:15px; font-weight:700; color:var(--text-soft); }
-    .ev-divider { margin:40px 0 28px; border:none; border-top:1px solid rgba(0,188,212,0.08); }
-    .kanata-card { display:flex; align-items:center; gap:28px; padding:28px 32px; border-radius:20px; background:#fff; border:1px solid rgba(124,77,255,0.12); box-shadow:0 4px 24px rgba(0,40,80,0.05); transition:all 0.3s; position:relative; overflow:hidden; }
-    .kanata-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(124,77,255,0.03),rgba(0,188,212,0.03)); pointer-events:none; }
-    .kanata-card:hover { transform:translateY(-3px); box-shadow:0 8px 40px rgba(0,40,80,0.09); border-color:rgba(124,77,255,0.25); }
+    .ev-divider { margin:40px 0 28px; border:none; border-top:1px solid rgba(30,136,229,0.08); }
+    .kanata-card { display:flex; align-items:center; gap:28px; padding:28px 32px; border-radius:20px; background:#fff; border:1px solid rgba(66,165,245,0.12); box-shadow:0 4px 24px rgba(0,40,80,0.05); transition:all 0.3s; position:relative; overflow:hidden; }
+    .kanata-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(66,165,245,0.03),rgba(30,136,229,0.03)); pointer-events:none; }
+    .kanata-card:hover { transform:translateY(-3px); box-shadow:0 8px 40px rgba(0,40,80,0.09); border-color:rgba(66,165,245,0.25); }
     .kanata-icon { width:72px; height:72px; border-radius:16px; overflow:hidden; flex-shrink:0; background:linear-gradient(135deg,#0a0a1a,#1a1a3a); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.08); }
     .kanata-icon img { width:100%; height:100%; object-fit:cover; }
     .kanata-icon-fallback { font-family:var(--font-ui); font-size:11px; font-weight:700; color:rgba(255,255,255,0.6); text-align:center; letter-spacing:0.08em; line-height:1.4; }
     .kanata-body { flex:1; min-width:0; }
     .kanata-head { display:flex; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
     .kanata-name { font-size:20px; font-weight:900; letter-spacing:0.03em; }
-    .kanata-badge { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.1em; background:rgba(124,77,255,0.1); color:var(--purple); }
+    .kanata-badge { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.1em; background:rgba(66,165,245,0.1); color:var(--purple); }
     .kanata-desc { font-size:13px; color:var(--text-soft); line-height:1.9; margin-bottom:16px; font-family:var(--font-hand); }
     .kanata-links { display:flex; gap:10px; flex-wrap:wrap; }
     .kanata-link { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; font-size:11px; font-weight:700; border:1px solid; transition:all 0.2s; }
     .kanata-link-x { color:#000; border-color:rgba(0,0,0,0.15); }
     .kanata-link-x:hover { background:#000; color:#fff; border-color:#000; }
-    .kanata-link-vrc { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
+    .kanata-link-vrc { color:var(--cyan); border-color:rgba(30,136,229,0.25); }
     .kanata-link-vrc:hover { background:var(--cyan); color:#fff; border-color:var(--cyan); }
     .kanata-link svg { width:12px; height:12px; flex-shrink:0; }
 
     /* ── Videos ── */
-    #videos .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
     .video-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .ev-sub-tag-video { background:rgba(255,64,129,0.1); color:var(--pink); }
-    .ev-sub-tag-live  { background:rgba(255,64,129,0.1); color:var(--pink); }
-    .ev-sub-tag-shorts{ background:rgba(124,77,255,0.1); color:var(--purple); }
-    .ev-sub-tag-booth  { background:rgba(255,64,129,0.1); color:var(--pink); }
-    .ev-sub-tag-gimmick{ background:rgba(124,77,255,0.1); color:var(--purple); }
-    .vid-featured { display:flex; gap:28px; align-items:flex-start; background:#fff; border-radius:20px; padding:24px; border:1px solid rgba(255,64,129,0.08); box-shadow:0 4px 24px rgba(0,40,80,0.05); }
+    .ev-sub-tag-video { background:rgba(255,201,77,0.1); color:var(--pink); }
+    .ev-sub-tag-live  { background:rgba(255,201,77,0.1); color:var(--pink); }
+    .ev-sub-tag-shorts{ background:rgba(66,165,245,0.1); color:var(--purple); }
+    .ev-sub-tag-booth  { background:rgba(255,201,77,0.1); color:var(--pink); }
+    .ev-sub-tag-gimmick{ background:rgba(66,165,245,0.1); color:var(--purple); }
+    .vid-featured { display:flex; gap:28px; align-items:flex-start; background:#fff; border-radius:20px; padding:24px; border:1px solid rgba(255,201,77,0.08); box-shadow:0 4px 24px rgba(0,40,80,0.05); }
     .vid-embed { flex:0 0 58%; position:relative; border-radius:12px; overflow:hidden; background:#000; }
     .vid-embed::before { content:''; display:block; padding-top:56.25%; }
     .vid-embed iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
     .vid-meta { flex:1; display:flex; flex-direction:column; gap:16px; padding-top:4px; }
     .vid-meta-title { font-size:14px; font-weight:700; line-height:1.75; color:var(--text); }
     .vid-meta-ch { font-size:11px; color:var(--text-soft); font-family:var(--font-ui); letter-spacing:0.06em; }
-    .vid-meta-link { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--pink); border:1px solid rgba(255,64,129,0.25); padding:7px 16px; border-radius:8px; transition:all 0.2s; margin-top:auto; }
+    .vid-meta-link { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:var(--pink); border:1px solid rgba(255,201,77,0.25); padding:7px 16px; border-radius:8px; transition:all 0.2s; margin-top:auto; }
     .vid-meta-link:hover { background:var(--pink); color:#fff; }
     @media(max-width:700px) { .vid-featured { flex-direction:column; } .vid-embed { flex:none; width:100%; } }
 
     /* ── Illust ── */
-    #illust .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
     .illust-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-    .illust-thumb { aspect-ratio:1/1; border-radius:16px; overflow:hidden; background:linear-gradient(135deg,rgba(124,77,255,0.06),rgba(255,64,129,0.06)); border:1px solid rgba(124,77,255,0.08); display:flex; align-items:center; justify-content:center; }
+    .illust-thumb { aspect-ratio:1/1; border-radius:16px; overflow:hidden; background:linear-gradient(135deg,rgba(66,165,245,0.06),rgba(255,201,77,0.06)); border:1px solid rgba(66,165,245,0.08); display:flex; align-items:center; justify-content:center; }
     .illust-thumb svg { width:32px; height:32px; opacity:0.18; }
 
     /* ── Album ── */
-    #album .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
     .album-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-    .album-thumb { aspect-ratio:4/3; border-radius:16px; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.06),rgba(124,77,255,0.06)); border:1px solid rgba(0,188,212,0.08); display:flex; align-items:center; justify-content:center; }
+    .album-thumb { aspect-ratio:4/3; border-radius:16px; overflow:hidden; background:linear-gradient(135deg,rgba(30,136,229,0.06),rgba(66,165,245,0.06)); border:1px solid rgba(30,136,229,0.08); display:flex; align-items:center; justify-content:center; }
     .album-thumb svg { width:32px; height:32px; opacity:0.18; }
 
     /* ── Booth ── */
-    #booth .sec-tag { color:var(--pink); border-color:rgba(255,64,129,0.25); }
 
     /* ── News / Articles / Blog ── */
-    #news .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
-    #articles .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
-    #blog .sec-tag { color:var(--purple); border-color:rgba(124,77,255,0.25); }
 
     .card-list { display:flex; flex-direction:column; gap:14px; }
-    .card-item { display:grid; grid-template-columns:112px minmax(0,1fr); align-items:flex-start; gap:20px; padding:22px; border-radius:16px; background:#fff; border:1px solid rgba(0,188,212,0.06); border-left:3px solid var(--cyan); transition:all 0.3s; }
-    .card-item:hover { transform:translateX(6px); background:rgba(0,188,212,0.015); }
+    .card-item { display:grid; grid-template-columns:112px minmax(0,1fr); align-items:flex-start; gap:20px; padding:22px; border-radius:16px; background:#fff; border:1px solid rgba(30,136,229,0.06); border-left:3px solid var(--cyan); transition:all 0.3s; }
+    .card-item.feature { grid-template-columns:160px minmax(0,1fr); padding:26px; }
+    .card-item.feature .card-thumb { width:160px; }
+    .card-item.compact { padding:16px; gap:14px; }
+    .card-item:hover { transform:translateX(6px); background:rgba(30,136,229,0.015); }
     #news .card-item { border-left-color:var(--cyan); }
     #articles .card-item { border-left-color:var(--purple); }
     #blog .card-item { border-left-color:var(--purple); }
     .card-date { font-family:var(--font-ui); font-size:10px; letter-spacing:0.1em; color:var(--text-soft); white-space:nowrap; padding-top:3px; }
-    .card-thumb { width:112px; aspect-ratio:16/10; border-radius:12px; overflow:hidden; background:linear-gradient(135deg,rgba(0,188,212,0.08),rgba(255,255,255,0.92)); border:1px solid rgba(0,188,212,0.08); }
+    .card-thumb { width:112px; aspect-ratio:16/10; border-radius:12px; overflow:hidden; background:linear-gradient(135deg,rgba(30,136,229,0.08),rgba(255,255,255,0.92)); border:1px solid rgba(30,136,229,0.08); }
     .card-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
     .card-body { min-width:0; }
     .card-body h4 { font-size:15px; font-weight:700; margin-bottom:5px; }
@@ -292,30 +272,29 @@
     .card-excerpt { margin-bottom:8px; }
     .news-read { margin-top:10px; }
     .news-read summary { color:var(--cyan); font-family:var(--font-ui); font-size:11px; font-weight:800; cursor:pointer; }
-    .news-richtext { margin-top:12px; padding-top:12px; border-top:1px solid rgba(0,188,212,0.10); }
+    .news-richtext { margin-top:12px; padding-top:12px; border-top:1px solid rgba(30,136,229,0.10); }
     .news-richtext h5 { margin:14px 0 6px; font-size:14px; color:var(--text); }
     .news-richtext p,
     .news-richtext li,
     .news-richtext blockquote { font-size:13px; line-height:1.85; color:var(--text-soft); }
     .news-richtext ul { padding-left:1.2em; margin:8px 0; }
-    .news-richtext blockquote { margin:10px 0; padding:8px 12px; border-left:3px solid rgba(0,188,212,0.32); background:rgba(0,188,212,0.035); }
+    .news-richtext blockquote { margin:10px 0; padding:8px 12px; border-left:3px solid rgba(30,136,229,0.32); background:rgba(30,136,229,0.035); }
     .news-richtext a { color:var(--cyan); font-weight:700; }
     .news-richtext figure { margin:12px 0; }
-    .news-richtext figure img { width:100%; max-height:320px; object-fit:cover; border-radius:12px; border:1px solid rgba(0,188,212,0.10); }
+    .news-richtext figure img { width:100%; max-height:320px; object-fit:cover; border-radius:12px; border:1px solid rgba(30,136,229,0.10); }
 
     /* ── Placeholder card ── */
-    .placeholder-card { padding:32px; border-radius:20px; background:rgba(0,188,212,0.02); border:1.5px dashed rgba(0,188,212,0.15); text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .placeholder-card { padding:32px; border-radius:20px; background:rgba(30,136,229,0.02); border:1.5px dashed rgba(30,136,229,0.15); text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
     .placeholder-card svg { width:36px; height:36px; opacity:0.15; }
     .placeholder-card p { font-size:13px; color:var(--text-soft); font-family:var(--font-hand); }
-    .placeholder-badge { display:inline-block; padding:3px 10px; border-radius:4px; background:rgba(0,188,212,0.08); color:var(--cyan); font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; }
+    .placeholder-badge { display:inline-block; padding:3px 10px; border-radius:4px; background:rgba(30,136,229,0.08); color:var(--cyan); font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.12em; }
 
     .placeholder-grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
     .placeholder-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 
     /* ── Links ── */
-    #links .sec-tag { color:var(--cyan); border-color:rgba(0,188,212,0.25); }
     .links-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
-    .link-card { display:flex; align-items:center; gap:16px; padding:20px 22px; border-radius:18px; background:#fff; border:1px solid rgba(0,188,212,0.08); box-shadow:0 2px 14px rgba(0,40,80,0.04); transition:all 0.25s; }
+    .link-card { display:flex; align-items:center; gap:16px; padding:20px 22px; border-radius:18px; background:#fff; border:1px solid rgba(30,136,229,0.08); box-shadow:0 2px 14px rgba(0,40,80,0.04); transition:all 0.25s; }
     .link-card:hover { transform:translateY(-3px); box-shadow:0 8px 32px rgba(0,40,80,0.08); }
     .link-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .link-icon svg { width:20px; height:20px; }
@@ -331,30 +310,30 @@
     .link-yt .link-icon { background:rgba(255,0,0,0.07); }
     .link-yt .link-icon svg { fill:#FF0000; }
     .link-yt:hover { border-color:rgba(255,0,0,0.2); }
-    .link-vrc .link-icon { background:rgba(0,188,212,0.08); }
+    .link-vrc .link-icon { background:rgba(30,136,229,0.08); }
     .link-vrc .link-icon svg { fill:var(--cyan); }
-    .link-vrc:hover { border-color:rgba(0,188,212,0.25); }
-    .link-booth .link-icon { background:rgba(255,64,129,0.07); }
+    .link-vrc:hover { border-color:rgba(30,136,229,0.25); }
+    .link-booth .link-icon { background:rgba(255,201,77,0.07); }
     .link-booth .link-icon svg { fill:var(--pink); }
-    .link-booth:hover { border-color:rgba(255,64,129,0.2); }
+    .link-booth:hover { border-color:rgba(255,201,77,0.2); }
     .link-discord .link-icon { background:rgba(88,101,242,0.08); }
     .link-discord .link-icon svg { fill:#5865F2; }
     .link-discord:hover { border-color:rgba(88,101,242,0.2); }
     .link-fanbox .link-icon { background:rgba(255,84,33,0.07); }
     .link-fanbox .link-icon svg { fill:#ff5421; }
     .link-fanbox:hover { border-color:rgba(255,84,33,0.2); }
-    .link-support .link-icon { background:rgba(124,77,255,0.08); }
+    .link-support .link-icon { background:rgba(66,165,245,0.08); }
     .link-support .link-icon svg { fill:var(--purple); }
-    .link-support:hover { border-color:rgba(124,77,255,0.25); }
-    .link-contact .link-icon { background:rgba(0,188,212,0.08); }
+    .link-support:hover { border-color:rgba(66,165,245,0.25); }
+    .link-contact .link-icon { background:rgba(30,136,229,0.08); }
     .link-contact .link-icon svg { fill:var(--cyan); }
-    .link-contact:hover { border-color:rgba(0,188,212,0.25); }
+    .link-contact:hover { border-color:rgba(30,136,229,0.25); }
 
     /* ── Footer ── */
-    .foot { text-align:center; padding:60px 20px; border-top:1px solid rgba(0,188,212,0.06); position:relative; z-index:1; }
+    .foot { text-align:center; padding:60px 20px; border-top:1px solid rgba(30,136,229,0.06); position:relative; z-index:1; }
     .foot-msg { font-size:14px; color:var(--text-soft); margin-bottom:20px; font-family:var(--font-hand); }
     .foot-row { display:flex; justify-content:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-    .foot-link { padding:8px 16px; border-radius:8px; font-size:11px; font-weight:700; border:1px solid rgba(0,188,212,0.08); color:var(--text-soft); transition:all 0.3s; display:flex; align-items:center; gap:6px; }
+    .foot-link { padding:8px 16px; border-radius:8px; font-size:11px; font-weight:700; border:1px solid rgba(30,136,229,0.08); color:var(--text-soft); transition:all 0.3s; display:flex; align-items:center; gap:6px; }
     .foot-link svg { width:14px; height:14px; }
     .foot-link:hover { color:var(--cyan); border-color:var(--cyan); }
     .foot-copy { font-size:10px; color:var(--text-soft); opacity:0.3; }
@@ -372,9 +351,8 @@
       .hero-grid { grid-template-columns:1fr; }
       .hero-grid > .avatar-wrap { order:-1; justify-self:center; max-width:280px; margin-bottom:24px; }
       .hdr-nav { display:none; }
-      body { cursor:auto; } a { cursor:auto; }
-      .cursor { display:none; }
       .world-grid, .event-grid, .video-grid, .album-grid { grid-template-columns:1fr; }
+      .wip-card.feature { grid-column:auto; }
       .illust-grid { grid-template-columns:repeat(2,1fr); }
       .placeholder-grid-2, .placeholder-grid-3 { grid-template-columns:1fr; }
       .ug-grid { grid-template-columns:1fr; }
@@ -387,42 +365,373 @@
       .card-item { grid-template-columns:1fr; }
       .card-thumb { width:100%; }
     }
+
+    /* ═══════════ v11 OCEAN LAYER（Fable 5 直接実装・後勝ちオーバーライド） ═══════════ */
+
+    /* Loader */
+    .sea-loader { position:fixed; inset:0; z-index:99999; }
+    .sl-panel { position:absolute; inset:0; background:#fff; display:flex; align-items:center; justify-content:center; }
+    .sl-wave-edge { position:absolute; top:100%; left:0; width:100%; height:60px; display:block; }
+    .sl-inner { text-align:center; position:relative; }
+    .sl-name { position:relative; font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:clamp(16px,4.2vw,40px); letter-spacing:0.14em; color:#dcecf6; user-select:none; white-space:nowrap; }
+    .sl-fill { position:absolute; inset:0; color:var(--aqua-deep); clip-path:inset(100% 0% 0% 0%); }
+    .sl-sub { margin-top:14px; font-family:'Klee One',cursive; font-size:13px; color:var(--ink-soft); letter-spacing:0.24em; }
+    #slCanvas { position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+    .sl-panel { z-index:1; }
+    .sl-bubbles { position:absolute; left:50%; top:-36px; transform:translateX(-50%); display:flex; gap:14px; }
+    .sl-bubble { display:block; width:8px; height:8px; border:1.5px solid rgba(66,165,245,0.55); border-radius:50%; }
+    .sl-bubble:nth-child(2) { width:5px; height:5px; margin-top:9px; }
+    .sl-bubble:nth-child(3) { width:6px; height:6px; margin-top:3px; }
+
+    /* 深度計 */
+    .depth-meter { position:fixed; right:16px; bottom:20px; z-index:150; display:flex; flex-direction:column; align-items:center; gap:5px; font-family:'Zen Maru Gothic',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.14em; color:var(--aqua-deep); opacity:0.55; pointer-events:none; }
+    .dm-wave { width:20px; height:8px; }
+    @media(max-width:820px) { .depth-meter { display:none; } }
+
+    /* 波の区切り */
+    .wave-sep { color:rgba(66,165,245,0.30); height:60px; }
+    .wave-sep svg { width:100%; height:100%; display:block; }
+
+    /* ヒーロー: 光の帯・スクロールヒント */
+    .hero { padding:120px 0 110px; }
+    .hero-rays { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .hero-rays i { position:absolute; top:-25%; height:150%; width:170px; background:linear-gradient(180deg, rgba(126,208,245,0.20), rgba(126,208,245,0) 72%); transform:skewX(-14deg); filter:blur(16px); }
+    .hero-rays i:nth-child(1) { left:6%; animation:raySway 11s ease-in-out infinite alternate; }
+    .hero-rays i:nth-child(2) { left:30%; width:110px; opacity:0.7; animation:raySway 13s ease-in-out -3s infinite alternate; }
+    .hero-rays i:nth-child(3) { left:58%; width:220px; opacity:0.5; animation:raySway 15s ease-in-out -6s infinite alternate; }
+    @keyframes raySway { from { transform:skewX(-14deg) translateX(0); } to { transform:skewX(-10deg) translateX(38px); } }
+    .dive-hint { position:absolute; left:50%; bottom:24px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--aqua-deep); opacity:0.6; font-size:10px; letter-spacing:0.32em; font-weight:700; z-index:1; }
+    .dive-hint svg { width:16px; height:16px; animation:diveBob 2.2s ease-in-out infinite; }
+    @keyframes diveBob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(6px); } }
+
+    /* ヘッダー: 浮かぶカプセル */
+    .hdr { position:sticky; top:10px; z-index:100; width:min(calc(100% - 24px), 1120px); margin:12px auto 0; border-radius:999px; border:1px solid rgba(30,136,229,0.10); background:rgba(255,255,255,0.72); backdrop-filter:blur(18px); box-shadow:0 10px 34px rgba(23,64,99,0.07); padding:10px 18px; }
+    .hdr-actions a { border-radius:999px; }
+
+    /* セクション: 余白・章番号・大きな見出し */
+    .sec { padding:110px 0; }
+    .sec + .sec { border-top:none; }
+    .wrap { counter-reset: sec; }
+    section.sec:not([hidden]) { counter-increment: sec; }
+    section.sec:not([hidden]) .sec-tag::before { content: counter(sec, decimal-leading-zero) " ─ "; font-weight:900; letter-spacing:0.08em; }
+    .sec-tag { color:var(--aqua-deep); opacity:0.8; letter-spacing:0.32em; }
+    .sec-title { font-size:clamp(30px,4.6vw,46px); letter-spacing:0.02em; margin-bottom:14px; }
+    .sec-desc { margin-bottom:44px; }
+
+    /* ボタン: ピル */
+    .btn { border-radius:999px; padding:14px 30px; }
+    .btn-p { background:var(--aqua-deep); color:#fff; box-shadow:0 12px 30px rgba(30,136,229,0.26); }
+    .btn-p:hover { background:var(--aqua); transform:translateY(-2px); box-shadow:0 16px 38px rgba(30,136,229,0.32); }
+    .btn-p .btn-dot { background:var(--lamp); }
+    .btn-p:hover .btn-dot { transform:scale(1.9); box-shadow:0 0 14px rgba(255,201,77,0.8); }
+    .btn-s { border-color:rgba(30,136,229,0.35); color:var(--aqua-deep); background:rgba(255,255,255,0.65); }
+    .btn-s:hover { background:#fff; transform:translateY(-2px); }
+
+    /* ワールド: 見せ場を大きく */
+    .world-grid { grid-template-columns:repeat(2,1fr); gap:28px; }
+    .world-card { border-radius:26px; }
+    .world-thumb { aspect-ratio:16/10; }
+    .world-body { padding:24px; }
+    .world-name { font-size:20px; }
+    .world-tab { border-radius:999px; }
+    @media(max-width:820px) { .world-grid { grid-template-columns:1fr; } }
+
+    /* カード微調整 */
+    .wip-card { border-radius:24px; }
+    .card-item { border-radius:20px; }
+    .link-card { border-radius:22px; }
+    .profile-tag { background:rgba(255,255,255,0.7); }
+
+    /* フッター: 海底 */
+    .foot { position:relative; margin-top:90px; padding:100px 20px 56px; background:linear-gradient(180deg, var(--abyss) 0%, var(--abyss-deep) 100%); color:#cfe6f5; border-radius:56px 56px 0 0; border-top:none; overflow:hidden; }
+    .foot::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(255,201,77,0.15), transparent 55%); pointer-events:none; }
+    .foot-sea { display:flex; justify-content:center; margin-bottom:26px; }
+    .foot-lamp { width:10px; height:10px; border-radius:50%; background:var(--lamp); box-shadow:0 0 18px 5px rgba(255,201,77,0.55); animation:lampPulse 3.4s ease-in-out infinite; }
+    @keyframes lampPulse { 0%,100% { box-shadow:0 0 14px 4px rgba(255,201,77,0.45); } 50% { box-shadow:0 0 26px 9px rgba(255,201,77,0.7); } }
+    .foot-msg { color:#bcd9ec; }
+    .foot-link { border-color:rgba(255,255,255,0.14); color:#9fc3da; }
+    .foot-link:hover { color:#fff; border-color:rgba(255,255,255,0.5); }
+    .foot-close { margin-top:30px; font-family:'Klee One',cursive; font-size:15px; letter-spacing:0.28em; color:#ffd57a; }
+    .foot-copy { margin-top:10px; color:#7fa2ba; opacity:0.55; }
+
+    /* ═══════════ v12 ELECTRONIC SEA LAYER（Fable 5 直接実装・後勝ち） ═══════════ */
+
+    /* ワイヤーフレーム水面 */
+    .hero > .container { position:relative; z-index:1; }
+    .hero { padding-bottom:150px; }
+
+    /* ゴースト見出し（巨大アウトライン英字） */
+    .sec > .container { position:relative; }
+    .sec > .container::before { content:var(--ghost, ""); position:absolute; top:-58px; right:-10px; font-family:'Zen Maru Gothic',sans-serif; font-weight:900; font-size:clamp(70px,12.5vw,148px); line-height:1; letter-spacing:0.04em; color:transparent; -webkit-text-stroke:1.2px rgba(66,165,245,0.13); pointer-events:none; user-select:none; z-index:0; white-space:nowrap; overflow:hidden; max-width:100%; text-transform:uppercase; }
+    .sec-tag { position:relative; z-index:1; }
+
+    /* ボタン文法の解体: 主CTA=ブロブ形 / 副=波線テキストリンク */
+    .btn { border-radius:0; }
+    .btn-p { background:var(--aqua-deep); color:#fff; padding:17px 36px; border-radius:46% 54% 52% 48% / 58% 46% 54% 42%; box-shadow:0 14px 34px rgba(30,136,229,0.24); transition:border-radius 0.7s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
+    .btn-p:hover { background:var(--aqua-deep); border-radius:52% 48% 46% 54% / 46% 58% 42% 54%; transform:translateY(-2px); box-shadow:0 18px 40px rgba(30,136,229,0.3); }
+    .btn-s { border:none; background:transparent; padding:14px 4px 16px; color:var(--ink); background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0,4 Q2.5,1 5,4 T10,4 T15,4 T20,4' fill='none' stroke='%2342a5f5' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:0 calc(100% - 2px); background-size:100% 7px; border-radius:0; }
+    .btn-s:hover { background-color:transparent; color:var(--aqua-deep); transform:none; }
+
+    /* ワールド: カード解体 → 編集誌的ショーケース */
+    .world-tabs { gap:22px; margin-bottom:56px; }
+    .world-tab { background:none; border:none; border-radius:0; padding:8px 2px; color:var(--ink-soft); letter-spacing:0.1em; }
+    .world-tab.active { background:none; color:var(--ink); box-shadow:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0,4 Q2.5,1 5,4 T10,4 T15,4 T20,4' fill='none' stroke='%2342a5f5' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:0 100%; background-size:100% 7px; }
+    .world-tab:hover:not(.active) { color:var(--aqua-deep); border:none; }
+    .world-grid { display:flex; flex-direction:column; gap:96px; }
+    .world-card { display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); align-items:center; background:none; border:none; box-shadow:none; border-radius:0; overflow:visible; }
+    .world-card:hover { transform:none; box-shadow:none; border:none; }
+    .world-card:nth-child(even) { direction:rtl; }
+    .world-card:nth-child(even) > * { direction:ltr; }
+    .world-thumb { position:relative; aspect-ratio:16/9; border-radius:28px; overflow:hidden; box-shadow:0 30px 70px rgba(23,64,99,0.16); }
+    .world-thumb::after { content:''; position:absolute; inset:0; background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.32) 50%, transparent 58%); transform:translateX(-130%); transition:transform 0.9s ease; pointer-events:none; }
+    .world-card:hover .world-thumb::after { transform:translateX(130%); }
+    .world-body { padding:0 0 0 48px; }
+    .world-card:nth-child(even) .world-body { padding:0 48px 0 0; }
+    .world-name { font-size:clamp(24px,3vw,32px); margin-bottom:12px; letter-spacing:0.02em; }
+    .world-desc { font-size:14px; line-height:2; font-family:var(--font-hand); margin-bottom:20px; }
+    .world-meta { display:flex; gap:30px; margin:0 0 22px; }
+    .world-meta-item { border:none; background:none; padding:0; border-radius:0; }
+    .world-meta-item strong { font-size:22px; }
+    .world-actions { gap:26px; }
+    .world-actions .world-btn { background:none; border:none; border-radius:0; padding:8px 2px 10px; color:var(--aqua-deep); font-size:13px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0,4 Q2.5,1 5,4 T10,4 T15,4 T20,4' fill='none' stroke='%2342a5f5' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:0 100%; background-size:100% 6px; }
+    .world-actions .world-btn:hover { background-color:transparent; color:var(--ink); }
+
+    /* WIP: カード解体 → 番号付き編集コラム */
+    .wip-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:48px; counter-reset:wip; }
+    .wip-card { background:none; border:none; box-shadow:none; padding:0; border-radius:0; counter-increment:wip; overflow:visible; }
+    .wip-card:hover { transform:none; box-shadow:none; }
+    .wip-card::before { content:"0" counter(wip); display:block; font-size:46px; font-weight:900; line-height:1; color:transparent; -webkit-text-stroke:1.2px rgba(66,165,245,0.4); margin-bottom:14px; }
+    .wip-thumb { margin:0 0 16px; border-radius:18px; }
+    .wip-card.compact { padding:0; }
+    .wip-card.compact .wip-thumb { margin:0 0 14px; }
+
+    /* お知らせ/記事/ブログ: 箱を捨てて罫線リスト */
+    .card-list { gap:0; }
+    .card-item { background:none; border:none; border-radius:0; border-bottom:1px solid rgba(66,165,245,0.16); padding:28px 4px; }
+    .card-item:first-child { border-top:1px solid rgba(66,165,245,0.16); }
+    .card-item:hover { transform:none; background:none; }
+    .card-item.feature { padding:34px 4px; }
+    .card-thumb { border-radius:14px; }
+
+    /* リンク: アイコン箱カード → 罫線インデックス */
+    .links-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 64px; }
+    .link-card { background:none; border:none; box-shadow:none; border-radius:0; padding:20px 4px; border-bottom:1px solid rgba(66,165,245,0.16); }
+    .link-card:hover { transform:none; box-shadow:none; background:none; }
+    .link-icon { width:34px; height:34px; border-radius:10px; }
+    .link-name { transition:color 0.25s; }
+    .link-card:hover .link-name { color:var(--aqua-deep); }
+    .link-arrow { transition:transform 0.3s ease; }
+    .link-card:hover .link-arrow { transform:translateX(6px); opacity:1; }
+
+    /* プロフィールタグ: ピル解体 */
+    .profile-tag { background:none; border:none; padding:0 2px; color:var(--aqua-deep); font-size:12.5px; letter-spacing:0.08em; }
+    .profile-tags { gap:6px 22px; }
+
+    /* イベント/ぶいちゃすと/動画: 箱の面を薄く */
+    .kanata-card { background:rgba(255,255,255,0.55); border:none; box-shadow:none; border-radius:24px; }
+    .kanata-card:hover { transform:none; box-shadow:0 18px 44px rgba(23,64,99,0.08); }
+    .bvc-hero { background:rgba(255,255,255,0.55); border:none; box-shadow:none; }
+    .vid-featured { background:none; border:none; box-shadow:none; padding:0; }
+    .vid-embed { border-radius:22px; box-shadow:0 26px 60px rgba(23,64,99,0.16); }
+
+    /* プレースホルダー: 点線箱の面を消す */
+    .placeholder-card { background:none; }
+
+    /* レスポンシブ（v12） */
+    @media(max-width:820px) {
+      .sec > .container::before { font-size:clamp(52px,16vw,90px); top:-40px; }
+      .world-card, .world-card:nth-child(even) { direction:ltr; grid-template-columns:1fr; }
+      .world-body, .world-card:nth-child(even) .world-body { padding:26px 0 0; }
+      .world-grid { gap:70px; }
+      .links-grid { grid-template-columns:1fr; }
+      .wip-grid { grid-template-columns:1fr; gap:36px; }
+      .sea-grid { height:140px; }
+    }
+
+    /* ═══════════ v13 OCEAN SCENE LAYER（Fable 5 直接実装・後勝ち） ═══════════ */
+
+    /* hero-rays は canvas のゴッドレイに置換済み */
+    .hero-rays { display:none; }
+
+    /* ダイブコンピュータ風ゲージ */
+    .depth-meter { display:none; }
+    .gauge { position:fixed; right:14px; top:50%; transform:translateY(-50%); height:36vh; z-index:150; pointer-events:none; }
+    .g-track { position:absolute; right:6px; top:0; bottom:0; width:1px; background:linear-gradient(180deg, rgba(66,165,245,0.15), rgba(66,165,245,0.5), rgba(190,228,253,0.5)); display:block; }
+    .g-track::before, .g-track::after { content:''; position:absolute; right:-2px; width:5px; height:1px; background:rgba(66,165,245,0.4); }
+    .g-track::before { top:0; } .g-track::after { bottom:0; }
+    .g-thumb { position:absolute; right:4px; top:0; width:5px; height:5px; border-radius:50%; background:var(--lamp); box-shadow:0 0 8px 2px rgba(255,201,77,0.55); display:block; }
+    .g-read { position:absolute; right:14px; top:0; font-size:9px; font-weight:700; letter-spacing:0.12em; color:var(--aqua-deep); opacity:0.75; transform:translateY(-40%); white-space:nowrap; }
+    @media(max-width:820px) { .gauge { right:8px; height:30vh; } .g-read { display:none; } }
+
+    /* 深海ゾーン: リンクセクションは暗い水の中で発光する */
+    /* ═══ 背景適応ゾーン: .zone-deep はJSが水色の輝度から自動付与 ═══ */
+    .zone-deep .sec-title { color:#eaf6ff; }
+    .zone-deep .sec-desc { color:rgba(214,236,250,0.68); }
+    .zone-deep .sec-tag { color:#9fd8fb; opacity:0.9; }
+    .zone-deep > .container::before { -webkit-text-stroke-color:rgba(190,228,253,0.13); }
+    /* リンク一覧 */
+    .zone-deep .link-card { border-bottom-color:rgba(160,215,250,0.22); }
+    .zone-deep .link-card:first-child { border-top-color:rgba(160,215,250,0.22); }
+    .zone-deep .link-name { color:#eaf6ff; }
+    .zone-deep .link-card:hover .link-name { color:#fff; }
+    .zone-deep .link-handle { color:rgba(214,236,250,0.6); }
+    .zone-deep .link-icon { background:rgba(160,215,250,0.12); }
+    .zone-deep .link-icon svg { fill:#bfe4fd; }
+    .zone-deep .link-initial { color:#bfe4fd; }
+    .zone-deep .link-arrow { color:#9fd8fb; }
+    /* お知らせ・記事系（罫線リスト） */
+    .zone-deep .card-item { border-bottom-color:rgba(160,215,250,0.24); }
+    .zone-deep .card-item:first-child { border-top-color:rgba(160,215,250,0.24); }
+    .zone-deep .card-body h4 { color:#eaf6ff; }
+    .zone-deep .card-body p, .zone-deep .card-excerpt { color:rgba(214,236,250,0.66); }
+    .zone-deep .card-date { color:#9fd8fb; }
+    .zone-deep .wip-cat { color:rgba(190,228,253,0.75); }
+    .zone-deep .card-tags span { background:rgba(160,215,250,0.12); color:#bfe4fd; border-color:rgba(160,215,250,0.25); }
+    .zone-deep .news-read summary { color:#9fd8fb; }
+    .zone-deep .news-richtext { border-top-color:rgba(160,215,250,0.2); }
+    .zone-deep .news-richtext p, .zone-deep .news-richtext li, .zone-deep .news-richtext blockquote { color:rgba(214,236,250,0.75); }
+    .zone-deep .news-richtext h5 { color:#eaf6ff; }
+    .zone-deep .news-richtext blockquote { border-left-color:rgba(160,215,250,0.4); background:rgba(160,215,250,0.06); }
+    .zone-deep .news-richtext a { color:#9fd8fb; }
+    .zone-deep .card-thumb { border-color:rgba(160,215,250,0.25); background:rgba(160,215,250,0.08); }
+    .zone-deep .wip-link { color:#9fd8fb; }
+    /* 進行中（箱なしコラム）・ワールド（編集組み）が沈んだ場合 */
+    .zone-deep .wip-name { color:#eaf6ff; }
+    .zone-deep .wip-desc { color:rgba(214,236,250,0.66); }
+    .zone-deep .world-name { color:#eaf6ff; }
+    .zone-deep .world-desc { color:rgba(214,236,250,0.7); }
+    .zone-deep .world-meta-item strong { color:#eaf6ff; }
+    .zone-deep .world-meta-item span { color:rgba(190,228,253,0.7); }
+    .zone-deep .profile-bio { color:rgba(214,236,250,0.72); }
+
+    /* フッター: 不透明な板 → 半透明の深海ガラス（シーンが透ける） */
+    .foot { background:linear-gradient(180deg, rgba(15,42,64,0.5) 0%, rgba(10,31,49,0.85) 100%); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+
+    /* ═══════════ v15 LAYER — 「連絡と支援」構成の移植（v14で承認） ═══════════ */
+
+    #links .abyss-lamp { display:flex; justify-content:center; margin-bottom:20px; position:relative; z-index:1; }
+    #links .abyss-lamp i { width:10px; height:10px; border-radius:50%; background:var(--lamp); box-shadow:0 0 18px 6px rgba(255,201,77,0.55); animation:lampPulse 3.4s ease-in-out infinite; display:block; }
+    #links .sec-tag, #links .sec-title { text-align:center; }
+    #links .sec-desc { text-align:center; margin-left:auto; margin-right:auto; }
+    #links .sec-tag::before { content:"" !important; }
+    #links .links-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 60px; max-width:760px; margin:0 auto; }
+    #links .link-card { align-items:center; gap:14px; padding:19px 4px; transition:padding 0.3s ease, background 0.3s; }
+    #links .link-card:hover { padding-left:10px; }
+    #links .link-icon { width:40px; height:40px; border-radius:50%; background:rgba(160,215,250,0.1); box-shadow:inset 0 0 0 1.5px rgba(160,215,250,0.4); color:#bfe4fd; transition:box-shadow 0.3s, transform 0.3s; }
+    #links .link-icon svg { width:18px; height:18px; fill:currentColor; }
+    #links .link-card:hover .link-icon { transform:scale(1.06); box-shadow:inset 0 0 0 1.5px rgba(190,228,253,0.7), 0 0 14px rgba(122,206,252,0.3); }
+    #links .link-initial { color:#bfe4fd; font-size:11px; }
+    #links .link-arrow { opacity:0; transform:translateX(-5px); transition:all 0.3s ease; }
+    #links .link-card:hover .link-arrow { opacity:1; transform:none; color:#9fd8fb; }
+    @media(max-width:640px) { #links .links-grid { grid-template-columns:1fr; } }
+
+    /* ═══════════ v15.1 POLISH — 光の論理の一貫性 ═══════════ */
+
+    /* ぶいちゃすと: カード=シーグラス / ロゴ=白タイル / ボタン=視認性最優先 */
+    .bvc-hero { position:relative; overflow:hidden; border-radius:26px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.84));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.95), 0 2px 6px rgba(23,64,99,0.05), 0 22px 48px -14px rgba(23,64,99,0.24); }
+    .bvc-hero::before { content:''; position:absolute; top:0; left:12%; right:38%; height:1px; background:linear-gradient(90deg,transparent,#fff,transparent); }
+    .bvc-logo { background:#fff; box-shadow:inset 0 0 0 1.5px rgba(30,136,229,0.3); color:var(--aqua-deep);
+      font-family:'Zen Maru Gothic',sans-serif; font-size:12px; font-weight:900; letter-spacing:0.04em; line-height:1.5;
+      border-radius:20px 24px 21px 25px; }
+    .bvc-link { background:var(--aqua-deep); color:#fff; border:none; border-radius:999px; padding:11px 24px; font-size:12.5px;
+      box-shadow:0 10px 24px rgba(30,136,229,0.32); transition:transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease; }
+    .bvc-link:hover { background:var(--aqua); color:#fff; transform:translateY(-1px); box-shadow:0 14px 30px rgba(30,136,229,0.4); }
+
+    /* 素材統一: イベントカードも同じシーグラス */
+    .kanata-card { background:linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.84));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.95), 0 2px 6px rgba(23,64,99,0.05), 0 22px 48px -14px rgba(23,64,99,0.2); }
+    .kanata-card::after { content:''; position:absolute; top:0; left:12%; right:38%; height:1px; background:linear-gradient(90deg,transparent,#fff,transparent); }
+
+    /* COMING SOON プレースホルダー: 中層でも沈まない薄い面 */
+    .placeholder-card { background:rgba(255,255,255,0.5); border-color:rgba(66,165,245,0.3); border-radius:20px; }
+    .placeholder-card p { color:var(--ink-soft); }
+
+    /* 中層の補助テキストをわずかに濃く（全ゾーン共通・上層では無害） */
+    .sec-desc { color:#47677f; }
+
+
+    /* ═══════════ v15.9 — hiddenの柵 + 黄色UIの純化 ═══════════ */
+
+    /* 柵: author の display 宣言が hidden 属性に勝つバグの恒久封じ */
+    [hidden] { display:none !important; }
+
+    /* ラベル・ボタン類は青系に統一（黄色は灯りの光点・グロー専用） */
+    .ev-sub-tag-org, .ev-sub-tag-video, .ev-sub-tag-live, .ev-sub-tag-shorts,
+    .ev-sub-tag-booth, .ev-sub-tag-gimmick, .ev-sub-tag-cast { background:var(--aqua-mist); color:var(--aqua-deep); }
+    .vid-featured { border-color:rgba(66,165,245,0.12); }
+    .vid-meta-link { color:var(--aqua-deep); border-color:rgba(30,136,229,0.3); }
+    .vid-meta-link:hover { background:var(--aqua-deep); color:#fff; }
+
+    /* ═══════════ VRTuber 定義ブロック ═══════════ */
+    .vrt-def { position:relative; overflow:hidden; margin:36px 0 28px; padding:30px 32px; border-radius:26px; max-width:720px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.84));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.95), 0 2px 6px rgba(23,64,99,0.05), 0 22px 48px -14px rgba(23,64,99,0.2); }
+    .vrt-def::before { content:''; position:absolute; top:0; left:12%; right:38%; height:1px; background:linear-gradient(90deg,transparent,#fff,transparent); }
+    .vrt-tag { display:inline-block; font-size:9px; font-weight:700; letter-spacing:0.3em; color:var(--aqua-deep); background:var(--aqua-mist); padding:3px 12px; border-radius:999px; margin-bottom:10px; }
+    .vrt-title { font-size:22px; font-weight:900; margin-bottom:6px; }
+    .vrt-lead { font-family:var(--font-hand); font-size:13px; color:var(--ink-soft); margin-bottom:20px; }
+    .vrt-compare { display:flex; align-items:stretch; gap:14px; margin-bottom:18px; flex-wrap:wrap; }
+    .vrt-col { flex:1; min-width:180px; padding:16px 18px; border-radius:16px; background:rgba(66,165,245,0.05); border:1px solid rgba(66,165,245,0.12); }
+    .vrt-col-main { background:var(--aqua-mist); border-color:rgba(30,136,229,0.3); box-shadow:0 8px 24px -8px rgba(30,136,229,0.25); }
+    .vrt-arrow { align-self:center; color:var(--aqua-deep); font-size:18px; font-weight:700; }
+    .vrt-col-tag { display:block; font-size:11px; font-weight:900; letter-spacing:0.14em; color:var(--aqua-deep); margin-bottom:6px; }
+    .vrt-col-main .vrt-col-tag { font-size:13px; }
+    .vrt-col-def { font-size:13px; font-weight:700; margin-bottom:2px; }
+    .vrt-col-sub { font-size:12px; color:var(--ink-soft); font-family:var(--font-hand); }
+    .vrt-note { font-size:13px; color:var(--ink-soft); line-height:1.9; margin-bottom:14px; }
+    .vrt-link { display:inline-block; font-size:12px; font-weight:700; color:var(--aqua-deep); padding:4px 2px 8px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0,4 Q2.5,1 5,4 T10,4 T15,4 T20,4' fill='none' stroke='%2342a5f5' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat:repeat-x; background-position:0 100%; background-size:0% 7px;
+      transition:background-size 0.5s cubic-bezier(.22,1,.36,1); }
+    .vrt-link:hover { background-size:100% 7px; }
+    @media(max-width:560px) { .vrt-arrow { display:none; } .vrt-col { min-width:100%; } }
+
+    #vrtuber .vrt-def { margin:0; }
+
+    /* VRTuber 補助脚注（プロフィールが主・これは補足） */
+    .vrt-aside { max-width:640px; margin-top:26px; padding:16px 20px; border-left:3px solid var(--aqua); border-radius:6px 14px 14px 6px; background:rgba(66,165,245,0.055); }
+    .vrt-aside-head { display:block; font-size:12px; font-weight:900; letter-spacing:0.06em; color:var(--aqua-deep); margin-bottom:6px; }
+    .vrt-aside-body { font-size:12.5px; line-height:1.9; color:var(--ink-soft); margin-bottom:8px; }
+    .vrt-aside .vrt-link { font-size:11.5px; }
   </style>
 </head>
 <body>
 
-  <!-- LOADER -->
-  <div class="loader" id="loader">
-    <div class="loader-name" data-text="NATSUNE">NATSUNE</div>
-    <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
-    <div class="loader-pct" id="loaderPct">0%</div>
-    <div class="loader-sub">ENTERING PORTAL...</div>
+  <!-- v11 Ocean intro loader -->
+  <div class="sea-loader" id="seaLoader" aria-hidden="true">
+    <div class="sl-panel" id="slPanel">
+      <div class="sl-inner">
+        <div class="sl-bubbles"><i class="sl-bubble"></i><i class="sl-bubble"></i><i class="sl-bubble"></i></div>
+        <div class="sl-name">SAMETSUKI NATSUNE<span class="sl-fill" id="slFill" aria-hidden="true">SAMETSUKI NATSUNE</span></div>
+        <div class="sl-sub">鮫月ナツネ</div>
+      </div>
+    </div>
+    <canvas id="slCanvas" aria-hidden="true"></canvas>
   </div>
-  <div class="curtain-top" id="curtainTop"></div>
-  <div class="curtain-bot" id="curtainBot"></div>
 
   <canvas id="bgCanvas"></canvas>
-  <svg class="cursor" id="cur" width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
-    <polygon class="cur-shape" points="1,1 1,13.5 4.5,10.5 6.5,15.5 8.5,14.5 6.5,9.5 11,9.5"/>
-  </svg>
   <div class="scroll-bar" id="scrollBar"></div>
+  <div class="gauge" aria-hidden="true"><i class="g-track"></i><i class="g-thumb" id="gThumb"></i><span class="g-read" id="gRead">0m</span></div>
 
   <div class="wrap">
     <!-- Header -->
     <header class="hdr">
       <a href="#" class="hdr-logo">
         <img src="images/icon.png" alt="鮫月ナツネ" />
-        <span>NATSUNE</span>
+        <span>鮫月ナツネ</span>
       </a>
       <nav class="hdr-nav">
+        <a href="#news">お知らせ</a>
+        <a href="#vrtuber">VRTuber</a>
         <a href="#profile">プロフィール</a>
         <a href="#wip">進行中</a>
         <a href="#worlds">ワールド</a>
         <a href="#events">イベント</a>
         <a href="#videos">動画</a>
         <a href="#buichasuto">ぶいちゃすと</a>
-        <a href="#news">お知らせ</a>
-        <a href="#links">リンク</a>
+                <a href="#links">リンク</a>
       </nav>
       <div class="hdr-actions">
         <a href="shien.html" class="hdr-btn-support">支援</a>
@@ -430,22 +739,18 @@
       </div>
     </header>
 
-    <!-- Marquee -->
-    <div class="marquee"><div class="m-track">
-      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
-      <span class="hi">World Creator</span><span>&mdash;</span><span>Event Organizer</span><span>&mdash;</span><span class="hi">YouTuber</span><span>&mdash;</span><span>Community</span><span>&mdash;</span><span class="hi">VRChat</span><span>&mdash;</span>
-    </div></div>
-
     <!-- Hero -->
-    <section class="hero"><div class="container hero-grid">
+    <section class="hero">
+      <div class="dive-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14m0 0l-6-6m6 6l6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="container hero-grid">
       <div>
-        <p class="hero-role">VRChat Creator / World Builder / Community Organizer</p>
+        <p class="hero-role">VRChatで、体験と居心地をつくる。</p>
         <h1 class="hero-name" id="heroName">鮫月ナツネ</h1>
         <div class="hero-name-en" id="heroNameEn">SAMETSUKI NATSUNE</div>
         <p class="hero-desc">鮫月ナツネの活動をまとめた公式ポータルです。<br>VRChatで制作したワールド、参加しているイベント、YouTubeで公開した動画など、<br>今見られる情報をここに整理して掲載しています。</p>
         <div class="hero-btns">
           <a href="#worlds" class="btn btn-p magnetic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <span class="btn-dot"></span>
             活動を見る
           </a>
           <a href="https://x.com/natsune_vrc" target="_blank" class="btn btn-s magnetic">
@@ -456,14 +761,76 @@
       </div>
       <div class="avatar-wrap">
         <div class="avatar-glow"></div>
-        <div class="avatar-blob"><img src="images/tate01.png" alt="鮫月ナツネ" /></div>
+        <div class="avatar-blob"><div class="av-breathe"><img src="images/tate01.png" alt="鮫月ナツネ" /></div></div>
       </div>
     </div></section>
 
     <!-- 0a. プロフィール -->
+    <section class="sec" id="news"><div class="container">
+      <div class="sec-tag">News</div>
+      <h2 class="sec-title">お知らせ</h2>
+      <p class="sec-desc">最近なにしてるかは、ここでチェック！</p>
+      <div class="card-list">
+        <div class="card-item" data-publication="draft" hidden>
+          <div class="card-date">2026.04.01</div>
+          <div class="card-body">
+            <h4>BOOTHショップ・Fanbox 運営中</h4>
+            <p>BOOTHにてアセット販売、Fanboxにてコンテンツ発信を行っています。ご支援いただけると嬉しいです。</p>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-date">-</div>
+          <div class="card-body">
+            <h4>お知らせを順次追加予定</h4>
+            <p>イベント情報・ワールドアップデート・動画公開情報などをこちらに掲載していきます。</p>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 8. 記事 -->
+    <section class="sec" id="articles" data-section-key="articles" data-publication="draft" hidden><div class="container">
+      <div class="sec-tag">Articles</div>
+      <h2 class="sec-title">記事</h2>
+      <p class="sec-desc">VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。</p>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-5 14H7v-2h7v2Zm3-4H7v-2h10v2Zm0-4H7V7h10v2Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>記事を準備中です</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-5 14H7v-2h7v2Zm3-4H7v-2h10v2Zm0-4H7V7h10v2Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>制作Tipsなどを掲載予定</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 9. ブログ -->
+    <section class="sec" id="blog" data-section-key="blog" data-publication="draft" hidden><div class="container">
+      <div class="sec-tag">Blog</div>
+      <h2 class="sec-title">ブログ</h2>
+      <p class="sec-desc">活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。</p>
+      <div class="placeholder-grid-2">
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>ブログを書き始める予定です</p>
+        </div>
+        <div class="placeholder-card">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>
+          <span class="placeholder-badge">COMING SOON</span>
+          <p>日常の記録を残していきます</p>
+        </div>
+      </div>
+    </div></section>
+
+    <div class="wave-sep" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C240,55 480,5 720,30 C960,55 1200,5 1440,30" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg></div>
     <section class="sec" id="profile"><div class="container">
-      <div class="sec-tag">// PROFILE</div>
+      <div class="sec-tag">Profile</div>
       <div class="profile-tags">
+        <span class="profile-tag">VRTuber</span>
         <span class="profile-tag">VRChat Creator</span>
         <span class="profile-tag">World Builder</span>
         <span class="profile-tag">Event Organizer</span>
@@ -471,13 +838,18 @@
         <span class="profile-tag">Illustrator</span>
       </div>
       <p class="profile-bio">VRChatを中心に活動するクリエイター。ワールド制作・イベント運営・動画投稿・イラスト制作など、幅広い分野で活動中。「体験」と「居心地」を大切にしたコンテンツ作りを心がけています。</p>
+      <aside class="vrt-aside reveal-item" id="vrtuber">
+        <span class="vrt-aside-head">VRTuberってなに？</span>
+        <p class="vrt-aside-body">かんたんに言うと、「VRの中で会えるVTuber」！画面の向こうで配信してるだけじゃなくて、VRChatっていう仮想世界に本人がいて、話せて、いっしょに遊べます。</p>
+        <a class="vrt-link" href="https://x.com/natsune_vrc/status/2048344358064214449" target="_blank" rel="noopener noreferrer">言い出しっぺのポストはこちら →</a>
+      </aside>
     </div></section>
 
     <!-- 0b. 現在進行中のプロジェクト -->
     <section class="sec" id="wip"><div class="container">
-      <div class="sec-tag">// WORK IN PROGRESS</div>
+      <div class="sec-tag">Work in Progress</div>
       <h2 class="sec-title">現在進行中のプロジェクト</h2>
-      <p class="sec-desc">今まさに動いているプロジェクトたち。</p>
+      <p class="sec-desc">いま動かしてるあれこれ。お楽しみに！</p>
       <div class="wip-grid">
         <div class="wip-card reveal-item">
           <div class="wip-cat">WORLD</div>
@@ -501,10 +873,11 @@
     </div></section>
 
     <!-- 1. ワールド制作 -->
+    <div class="wave-sep" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C240,55 480,5 720,30 C960,55 1200,5 1440,30" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg></div>
     <section class="sec" id="worlds"><div class="container">
-      <div class="sec-tag">// WORLD</div>
+      <div class="sec-tag">Worlds</div>
       <h2 class="sec-title">ワールド制作</h2>
-      <p class="sec-desc">体験と居心地を設計するワールドづくり。制作したワールドと、監修・協力したワールドを掲載しています。</p>
+      <p class="sec-desc">「また来たくなる場所」を目指してつくってます。まずは遊びに行ってみて！</p>
 
       <div class="world-tabs">
         <button class="world-tab active" data-panel="made">制作ワールド</button>
@@ -571,24 +944,24 @@
 
     <!-- Unity基礎講座 -->
     <section class="sec" id="unity-guide" data-section-key="unityGuide" data-publication="draft" hidden><div class="container">
-      <div class="sec-tag" style="color:var(--cyan);border-color:rgba(0,188,212,0.25)">// UNITY GUIDE</div>
+      <div class="sec-tag">Unity Guide</div>
       <h2 class="sec-title">ワールド改変 Unity基礎講座</h2>
       <p class="sec-desc">「Unityもさわったことない」から始めても大丈夫。8ステップで最初のアップロードまで、やりたいことから逆引きできるギミックガイドも収録。</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:32px">
-        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(0,188,212,0.1);display:flex;align-items:flex-start;gap:12px">
+        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(30,136,229,0.1);display:flex;align-items:flex-start;gap:12px">
           <span style="font-size:20px;flex-shrink:0">📋</span>
           <div><div style="font-size:13px;font-weight:700;margin-bottom:4px">8ステップで環境構築</div><div style="font-size:12px;color:var(--text-soft);font-family:var(--font-hand);line-height:1.7">VCC導入からアップロードまで順番に解説</div></div>
         </div>
-        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(0,188,212,0.1);display:flex;align-items:flex-start;gap:12px">
+        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(30,136,229,0.1);display:flex;align-items:flex-start;gap:12px">
           <span style="font-size:20px;flex-shrink:0">🔍</span>
           <div><div style="font-size:13px;font-weight:700;margin-bottom:4px">やりたいことから逆引き</div><div style="font-size:12px;color:var(--text-soft);font-family:var(--font-hand);line-height:1.7">持ち上げ・貫通・音・光など9ギミック収録</div></div>
         </div>
-        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(0,188,212,0.1);display:flex;align-items:flex-start;gap:12px">
+        <div style="padding:18px 20px;border-radius:16px;background:#fff;border:1px solid rgba(30,136,229,0.1);display:flex;align-items:flex-start;gap:12px">
           <span style="font-size:20px;flex-shrink:0">🛠️</span>
           <div><div style="font-size:13px;font-weight:700;margin-bottom:4px">超初心者向けに丁寧</div><div style="font-size:12px;color:var(--text-soft);font-family:var(--font-hand);line-height:1.7">難易度ラベル・つまずきQ&A付き</div></div>
         </div>
       </div>
-      <a href="unity.html" class="btn btn-p" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;box-shadow:0 4px 20px rgba(0,188,212,0.25);transition:all 0.25s">
+      <a href="unity.html" class="btn btn-p" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#fff;box-shadow:0 4px 20px rgba(30,136,229,0.25);transition:all 0.25s">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         講座を見る →
       </a>
@@ -831,7 +1204,7 @@
                     <p><strong>VRC Pickup</strong> コンポーネント<br>（VRChat SDK に入っている）</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>持ち上げたいオブジェクトをHierarchyで選択する</div>
@@ -862,7 +1235,7 @@
                     <p><strong>Animator</strong>（Unityの標準）<br><strong>VRC Trigger / Udon</strong>（SDK）</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>ドアのオブジェクトにAnimatorをAdd Componentする</div>
@@ -893,7 +1266,7 @@
                     <p><strong>VRC Station</strong> コンポーネント<br>（VRChat SDK に入っている）</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>椅子のオブジェクト（または空のGameObject）にAdd Component → 「VRC Station」を追加</div>
@@ -936,7 +1309,7 @@
                     <p><strong>Collider</strong>（Box/Mesh Collider）<br>の <strong>Is Trigger</strong> チェックボックス</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>対象オブジェクトをHierarchyで選択する</div>
@@ -966,7 +1339,7 @@
                     <p>Unityの <strong>Cube/Plane</strong> + <strong>Mesh Renderer</strong> を無効化</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>Hierarchy → 右クリック → 3D Object → Cube を作る</div>
@@ -1009,7 +1382,7 @@
                     <p>Unityの <strong>Audio Source</strong> コンポーネント + 音声ファイル（MP3/WAV）</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>音を出したい位置にGameObjectを置く（空でOK）</div>
@@ -1039,7 +1412,7 @@
                     <p>Unityメニューの <strong>Window → Rendering → Lighting</strong> → Environmentタブ</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>Unityの上メニュー「Window」→「Rendering」→「Lighting」を開く</div>
@@ -1069,7 +1442,7 @@
                     <p>Unityの <strong>Light</strong> コンポーネント（Point / Spot / Directional）</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>Hierarchy → 右クリック → Light → Point Light（または Spot Light）を選ぶ</div>
@@ -1112,7 +1485,7 @@
                     <p><strong>VRC Station</strong>（着地型テレポート）または <strong>UdonSharp</strong> で Teleport スクリプト</p>
                   </div>
                 </div>
-                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(0,188,212,0.03);border:1px solid rgba(0,188,212,0.08);margin-bottom:10px">
+                <div class="gg-5col full" style="padding:12px 14px;border-radius:12px;background:rgba(30,136,229,0.03);border:1px solid rgba(30,136,229,0.08);margin-bottom:10px">
                   <h5 style="font-family:var(--font-ui);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-soft);margin-bottom:6px">手順（VRC Station方式）</h5>
                   <div class="gg-steps">
                     <div class="gg-step"><span class="gg-step-n">1</span>ワープ先にGameObjectを置き、VRC Stationを追加する</div>
@@ -1150,9 +1523,9 @@
 
     <!-- 2. イベント -->
     <section class="sec" id="events"><div class="container">
-      <div class="sec-tag">// EVENTS</div>
+      <div class="sec-tag">Events</div>
       <h2 class="sec-title">イベント</h2>
-      <p class="sec-desc">VRChatを舞台にしたイベントへの関わりをまとめています。</p>
+      <p class="sec-desc">イベントにも立ってます！VRChatのどこかで見かけたら、気軽に声かけてね。</p>
 
       <!-- 運営イベント -->
       <div class="ev-sub-head" data-section-key="eventOrganizer" data-publication="draft" hidden>
@@ -1188,7 +1561,7 @@
             <span class="kanata-name">彼方BAR</span>
             <span class="kanata-badge">キャスト</span>
           </div>
-          <p class="kanata-desc">VRChat内で開催されるバーイベント。ゆっくりとした時間の中でお酒と会話を楽しめる空間づくりに、キャストとして参加しています。</p>
+          <p class="kanata-desc">VRChatのバーイベント。お酒とゆるい会話の、夜のお店。キャストとしてカウンターに立ってます！</p>
           <div class="kanata-links">
             <a href="https://x.com/KanataBar_VRC" target="_blank" class="kanata-link kanata-link-x">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>
@@ -1205,9 +1578,9 @@
 
     <!-- 3. 動画コンテンツ -->
     <section class="sec" id="videos"><div class="container">
-      <div class="sec-tag">// VIDEOS</div>
+      <div class="sec-tag">Videos</div>
       <h2 class="sec-title">動画コンテンツ</h2>
-      <p class="sec-desc">YouTubeで発信している動画コンテンツ。VRChatの楽しさや制作の裏側をお届けします。</p>
+      <p class="sec-desc">VRChatの楽しさとか、制作の裏側とか。動画でも出してます。まずは1本どうぞ！</p>
 
       <!-- 最新動画 -->
       <div class="ev-sub-head">
@@ -1219,7 +1592,7 @@
           <iframe src="https://www.youtube.com/embed/t-RJGCgLKQ0" title="最新動画" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
         </div>
         <div class="vid-meta">
-          <p class="vid-meta-ch">// @natsune_vrc</p>
+          <p class="vid-meta-ch">@natsune_vrc</p>
           <p class="vid-meta-title">【完全無料】 VRChatで自分だけのマイワールドの作り方を世界一わかりやすく解説！【超初心者向け】</p>
           <a href="https://www.youtube.com/@natsune_vrc" target="_blank" class="vid-meta-link">
             チャンネルを見る →
@@ -1275,14 +1648,14 @@
 
     <!-- 3b. ぶいちゃすと！ -->
     <section class="sec" id="buichasuto"><div class="container">
-      <div class="sec-tag">// COMMUNITY</div>
+      <div class="sec-tag">Community</div>
       <h2 class="sec-title">ぶいちゃすと！</h2>
-      <p class="sec-desc">VRChatの住民を中心とした動画投稿グループ。ナツネが運営しています。</p>
+      <p class="sec-desc">動画をつくって出しあう、VRChat住民の部活みたいなグループ。リーダーはわたし！</p>
       <div class="bvc-hero reveal-item">
         <div class="bvc-logo">ぶいちゃ<br>すと！</div>
         <div>
           <div class="bvc-name">ぶいちゃすと！</div>
-          <p class="bvc-sub">VRChatを舞台に活動するクリエイターが集まる動画投稿グループ。<br>メンバーによる多彩なコンテンツを発信中。</p>
+          <p class="bvc-sub">VRChat勢のクリエイターが集まって、動画を撮って出すグループ！<br>いっしょにやりたい人、ゆるゆる募集中です。</p>
           <a href="buichasuto.html" class="bvc-link">
             <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-1 14-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8Z"/></svg>
             詳しく見る
@@ -1305,7 +1678,7 @@
 
     <!-- 4. イラスト -->
     <section class="sec" id="illust" data-section-key="illust" data-publication="draft" hidden><div class="container">
-      <div class="sec-tag">// ILLUSTRATION</div>
+      <div class="sec-tag">Illustration</div>
       <h2 class="sec-title">イラスト</h2>
       <p class="sec-desc">描いたイラストや、活動で使用したビジュアルを掲載します。</p>
       <div class="placeholder-grid-2">
@@ -1324,7 +1697,7 @@
 
     <!-- 5. アルバム -->
     <section class="sec" id="album" data-section-key="album" data-publication="draft" hidden><div class="container">
-      <div class="sec-tag">// ALBUM</div>
+      <div class="sec-tag">Album</div>
       <h2 class="sec-title">アルバム</h2>
       <p class="sec-desc">VRChatでの思い出の写真、スクリーンショットギャラリー。</p>
       <div class="placeholder-grid-2">
@@ -1343,7 +1716,7 @@
 
     <!-- 6. ブース -->
     <section class="sec" id="booth" data-section-key="booth" data-publication="draft" hidden><div class="container">
-      <div class="sec-tag">// BOOTH</div>
+      <div class="sec-tag">Booth</div>
       <h2 class="sec-title">ブース</h2>
       <p class="sec-desc">ナツネの世界観に触れられるショップ。VRChatアバター・アセット・グッズを販売中。</p>
 
@@ -1387,71 +1760,15 @@
     </div></section>
 
     <!-- 7. お知らせ -->
-    <section class="sec" id="news"><div class="container">
-      <div class="sec-tag">// NEWS</div>
-      <h2 class="sec-title">お知らせ</h2>
-      <p class="sec-desc">活動の最新情報をお届けします。</p>
-      <div class="card-list">
-        <div class="card-item" data-publication="draft" hidden>
-          <div class="card-date">2026.04.01</div>
-          <div class="card-body">
-            <h4>BOOTHショップ・Fanbox 運営中</h4>
-            <p>BOOTHにてアセット販売、Fanboxにてコンテンツ発信を行っています。ご支援いただけると嬉しいです。</p>
-          </div>
-        </div>
-        <div class="card-item">
-          <div class="card-date">-</div>
-          <div class="card-body">
-            <h4>お知らせを順次追加予定</h4>
-            <p>イベント情報・ワールドアップデート・動画公開情報などをこちらに掲載していきます。</p>
-          </div>
-        </div>
-      </div>
-    </div></section>
+    <div class="wave-sep" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C240,55 480,5 720,30 C960,55 1200,5 1440,30" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg></div>
 
-    <!-- 8. 記事 -->
-    <section class="sec" id="articles" data-section-key="articles" data-publication="draft" hidden><div class="container">
-      <div class="sec-tag">// ARTICLES</div>
-      <h2 class="sec-title">記事</h2>
-      <p class="sec-desc">VRChat・ワールド制作・ギミック開発などについての記事・解説コンテンツ。</p>
-      <div class="placeholder-grid-2">
-        <div class="placeholder-card">
-          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-5 14H7v-2h7v2Zm3-4H7v-2h10v2Zm0-4H7V7h10v2Z"/></svg>
-          <span class="placeholder-badge">COMING SOON</span>
-          <p>記事を準備中です</p>
-        </div>
-        <div class="placeholder-card">
-          <svg viewBox="0 0 24 24" fill="var(--cyan)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2Zm-5 14H7v-2h7v2Zm3-4H7v-2h10v2Zm0-4H7V7h10v2Z"/></svg>
-          <span class="placeholder-badge">COMING SOON</span>
-          <p>制作Tipsなどを掲載予定</p>
-        </div>
-      </div>
-    </div></section>
-
-    <!-- 9. ブログ -->
-    <section class="sec" id="blog" data-section-key="blog" data-publication="draft" hidden><div class="container">
-      <div class="sec-tag">// BLOG</div>
-      <h2 class="sec-title">ブログ</h2>
-      <p class="sec-desc">活動の日常や思ったこと、VRChatでの体験を気ままに綴るブログ。</p>
-      <div class="placeholder-grid-2">
-        <div class="placeholder-card">
-          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>
-          <span class="placeholder-badge">COMING SOON</span>
-          <p>ブログを書き始める予定です</p>
-        </div>
-        <div class="placeholder-card">
-          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>
-          <span class="placeholder-badge">COMING SOON</span>
-          <p>日常の記録を残していきます</p>
-        </div>
-      </div>
-    </div></section>
 
     <!-- 10. リンク -->
     <section class="sec" id="links"><div class="container">
-      <div class="sec-tag">// LINKS</div>
+      <div class="abyss-lamp" aria-hidden="true"><i></i></div>
+      <div class="sec-tag">Links</div>
       <h2 class="sec-title">リンク</h2>
-      <p class="sec-desc">各種SNSやプラットフォームへのリンクをまとめています。</p>
+      <p class="sec-desc">SNSはこちら！フォローしてもらえたらうれしいです！</p>
       <div class="links-grid">
         <!-- X / Twitter -->
         <a href="https://x.com/natsune_vrc" target="_blank" class="link-card link-x reveal-item">
@@ -1546,6 +1863,7 @@
   </div>
 
   <footer class="foot">
+    <div class="foot-sea" aria-hidden="true"><span class="foot-lamp"></span></div>
     <p class="foot-msg">ここまで見てくれてありがとう。</p>
     <div class="foot-row">
       <a href="https://x.com/natsune_vrc" target="_blank" class="foot-link">
@@ -1592,6 +1910,32 @@
       if (!raw) return '';
       const num = Number(raw);
       return Number.isFinite(num) ? num.toLocaleString('ja-JP') : '';
+    }
+
+    function stringList(value) {
+      if (Array.isArray(value)) return value.map(item => String(item || '').trim()).filter(Boolean);
+      return String(value || '').split(/\r?\n|,/).map(item => item.trim()).filter(Boolean);
+    }
+
+    function articleLayout(value) {
+      return ['standard', 'feature', 'compact'].includes(value) ? value : 'standard';
+    }
+
+    function scheduleTime(value) {
+      const raw = String(value || '').trim();
+      if (!raw) return null;
+      const normalized = raw.includes('T') ? raw : raw.replace(/\./g, '-').replace(' ', 'T');
+      const time = new Date(normalized).getTime();
+      return Number.isFinite(time) ? time : null;
+    }
+
+    function isPublicItem(item) {
+      if (!item || item.status === 'draft') return false;
+      if (item.status === 'scheduled') {
+        const time = scheduleTime(item.scheduledAt);
+        return time !== null && time <= Date.now();
+      }
+      return true;
     }
 
     function inlineMarkdown(value) {
@@ -1686,18 +2030,24 @@
       setText('#news .sec-desc', news.description);
       const list = document.querySelector('#news .card-list');
       if (!list || !Array.isArray(news.items)) return;
-      list.innerHTML = news.items.filter(item => item.status !== 'draft').map(item => {
+      list.innerHTML = news.items.filter(isPublicItem).map(item => {
         const image = item.image ? safeUrl(item.image) : '';
         const body = item.text || '';
         const excerpt = item.excerpt || body;
+        const tags = stringList(item.tags);
+        const relatedUrl = item.linkUrl ? safeUrl(item.linkUrl) : '';
+        const external = relatedUrl && /^[a-z][a-z0-9+.-]*:/i.test(relatedUrl);
         return `
-          <article class="card-item">
+          <article class="card-item ${escapeHTML(articleLayout(item.layout))}">
             ${image ? `<div class="card-thumb"><img src="${escapeHTML(image)}" alt="${escapeHTML(item.imageAlt || item.title || '')}"></div>` : `<div class="card-date">${escapeHTML(item.date || '-')}</div>`}
             <div class="card-body">
               ${image ? `<div class="card-date">${escapeHTML(item.date || '-')}</div>` : ''}
+              ${item.category ? `<div class="wip-cat">${escapeHTML(item.category)}</div>` : ''}
               <h4>${escapeHTML(item.title || '')}</h4>
               <p class="card-excerpt">${textLines(excerpt || '')}</p>
+              ${tags.length ? `<div class="card-tags">${tags.slice(0, 6).map(tag => `<span>${escapeHTML(tag)}</span>`).join('')}</div>` : ''}
               ${body ? `<details class="news-read"><summary>本文を読む</summary><div class="news-richtext">${markdownToHTML(body)}</div></details>` : ''}
+              ${relatedUrl && relatedUrl !== '#' ? `<div class="wip-cta-row"><a class="wip-link" href="${escapeHTML(relatedUrl)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHTML(item.linkLabel || '詳しく見る')}</a></div>` : ''}
             </div>
           </article>
         `;
@@ -1710,7 +2060,7 @@
       setText('#links .sec-desc', links.description);
       const grid = document.querySelector('#links .links-grid');
       if (!grid || !Array.isArray(links.items)) return;
-      grid.innerHTML = links.items.filter(item => item.status !== 'draft').map(item => {
+      grid.innerHTML = links.items.filter(isPublicItem).map(item => {
         const url = safeUrl(item.url);
         const external = /^https?:\/\//.test(url);
         const kind = String(item.kind || 'contact').replace(/[^a-z0-9-]/gi, '').toLowerCase() || 'contact';
@@ -1726,6 +2076,35 @@
           </a>
         `;
       }).join('');
+    }
+
+    function renderProjects(projects) {
+      if (!projects) return;
+      setText('#wip .sec-title', projects.title);
+      setText('#wip .sec-desc', projects.description);
+      const grid = document.querySelector('#wip .wip-grid');
+      if (!grid || !Array.isArray(projects.items)) return;
+      const items = projects.items.filter(isPublicItem);
+      grid.innerHTML = items.length ? items.map(item => {
+        const image = item.image ? safeUrl(item.image) : '';
+        const link = item.url ? safeUrl(item.url) : '';
+        const external = /^https?:\/\//.test(link);
+        const gallery = stringList(item.gallery).map(safeUrl).filter(url => url && url !== '#').slice(0, 6);
+        const body = item.body || '';
+        const layout = articleLayout(item.layout);
+        return `
+          <article class="wip-card reveal-item ${escapeHTML(layout)}">
+            ${image ? `<div class="wip-thumb"><img src="${escapeHTML(image)}" alt="${escapeHTML(item.imageAlt || item.title || '')}"></div>` : ''}
+            <div class="wip-cat">${escapeHTML(item.category || 'PROJECT')}</div>
+            <div class="wip-name">${escapeHTML(item.title || '')}</div>
+            <p class="wip-desc">${textLines(item.description || '')}</p>
+            ${gallery.length ? `<div class="wip-gallery">${gallery.map((src, index) => `<img src="${escapeHTML(src)}" alt="${escapeHTML(item.title || 'プロジェクト画像')} ${index + 1}">`).join('')}</div>` : ''}
+            <div class="wip-status"><i></i> ${escapeHTML(item.phase || 'IN PROGRESS')}</div>
+            ${body ? `<details class="news-read wip-read"><summary>進捗本文を読む</summary><div class="news-richtext">${markdownToHTML(body)}</div></details>` : ''}
+            ${link ? `<div class="wip-cta-row"><a class="wip-link" href="${escapeHTML(link)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHTML(item.linkLabel || '詳細を見る')}</a></div>` : ''}
+          </article>
+        `;
+      }).join('') : '<div class="wip-card"><div class="wip-name">進行中のプロジェクトはまだありません</div></div>';
     }
 
     function renderWorldPlaceholder(text) {
@@ -1800,8 +2179,8 @@
       if (!worlds) return;
       setText('#worlds .sec-title', worlds.title);
       setText('#worlds .sec-desc', worlds.description);
-      renderWorldPanel('#panel-made', (worlds.made || []).filter(item => item.status !== 'draft'), '制作ワールドを順次追加予定');
-      renderWorldPanel('#panel-supervised', (worlds.supervised || []).filter(item => item.status !== 'draft'), '監修ワールドを順次追加予定');
+      renderWorldPanel('#panel-made', (worlds.made || []).filter(isPublicItem), '制作ワールドを順次追加予定');
+      renderWorldPanel('#panel-supervised', (worlds.supervised || []).filter(isPublicItem), '監修ワールドを順次追加予定');
     }
 
     const SECTION_CONFIG_DEFAULTS = {
@@ -1865,16 +2244,22 @@
         setText('.profile-bio', data.profile.bio);
       }
       renderNews(data.news);
+      renderProjects(data.projects);
       renderWorlds(data.worlds);
       renderLinks(data.links);
       applySectionVisibility(data.sections);
     }
 
+    const IS_ADMIN_PREVIEW = new URLSearchParams(location.search).get('adminPreview') === '1';
+    if (IS_ADMIN_PREVIEW) document.documentElement.classList.add('admin-preview-mode');
+
     function readAdminPreviewData() {
-      if (new URLSearchParams(location.search).get('adminPreview') !== '1') return null;
+      if (!IS_ADMIN_PREVIEW) return null;
       try {
         const raw = sessionStorage.getItem('natsune_site_admin_preview_data');
-        return raw ? JSON.parse(raw) : null;
+        if (raw) return JSON.parse(raw);
+        const sharedRaw = localStorage.getItem('natsune_site_admin_preview_data');
+        return sharedRaw ? JSON.parse(sharedRaw) : null;
       } catch (error) {
         console.warn('admin preview data fallback:', error);
         return null;
@@ -1895,7 +2280,7 @@
         }
       }
 
-      if (new URLSearchParams(location.search).get('adminPreview') === '1') {
+      if (IS_ADMIN_PREVIEW) {
         window.addEventListener('message', event => {
           if (location.origin !== 'null' && event.origin !== location.origin) return;
           if (event.data?.type !== 'natsune-admin-preview-data') return;
@@ -1913,45 +2298,81 @@
 
     await hydrateSiteData();
 
-    // ── LOADER + REVEAL ──
-    (() => {
-      const loader = document.getElementById('loader');
-      const bar = document.getElementById('loaderBar');
-      const pct = document.getElementById('loaderPct');
-      const wrap = document.querySelector('.wrap');
-      wrap.style.opacity = '0';
-      wrap.style.transform = 'scale(0.95)';
-      document.querySelector('.foot').style.opacity = '0';
+    // ── Reduced-motion flag (checked by every animation block below) ──
+    const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 12 + 3;
-        if (progress > 100) progress = 100;
-        bar.style.width = progress + '%';
-        pct.textContent = Math.floor(progress) + '%';
-        if (progress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            const tl = gsap.timeline();
-            const cTop = document.getElementById('curtainTop');
-            const cBot = document.getElementById('curtainBot');
-            tl.to(loader, { opacity: 0, duration: 0.08 })
-              .to(loader, { opacity: 1, duration: 0.04 })
-              .to(loader, { opacity: 0, duration: 0.08 })
-              .set(loader, { display: 'none' })
-              .to(cTop, { yPercent: -100, duration: 1, ease: 'expo.inOut' }, '-=0.05')
-              .to(cBot, { yPercent: 100, duration: 1, ease: 'expo.inOut' }, '<')
-              .to(wrap, { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }, '-=0.7')
-              .to('.foot', { opacity: 1, duration: 0.5 }, '-=0.4')
-              .from('.hero-status', { y: 30, opacity: 0, duration: 0.5 }, '-=0.5')
-              .from('.hero-role', { y: 30, opacity: 0, duration: 0.5 }, '-=0.4')
-              .from('.hero-desc', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
-              .from('.hero-btns', { y: 30, opacity: 0, duration: 0.5 }, '-=0.2')
-              .from('.avatar-wrap', { scale: 0.85, opacity: 0, duration: 0.9, ease: 'back.out(1.4)' }, '-=0.5')
-              .set([cTop, cBot], { display: 'none' });
-          }, 300);
-        }
-      }, 80);
+    // ── v11 Ocean intro loader（偽%なし・同一セッション2回目はスキップ） ──
+    (() => {
+      const loader = document.getElementById('seaLoader');
+      const wrap = document.querySelector('.wrap');
+      const foot = document.querySelector('.foot');
+      const isPreview = typeof IS_ADMIN_PREVIEW !== 'undefined' && IS_ADMIN_PREVIEW;
+      const seen = sessionStorage.getItem('natsuneIntroSeen');
+      const heroIn = () => gsap.timeline()
+        .from('.hero-role', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' })
+        .from('.hero-desc', { y: 24, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6')
+        .from('.hero-btns', { y: 24, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.7')
+        .from('.avatar-wrap', { scale: 0.94, opacity: 0, duration: 1.2, ease: 'expo.out' }, '-=0.9');
+      try { sessionStorage.setItem('natsuneIntroSeen', '1'); } catch (_) {}
+      if (REDUCE_MOTION || isPreview || seen) {
+        if (loader) loader.remove();
+        wrap.style.opacity = '1'; foot.style.opacity = '1';
+        if (!REDUCE_MOTION) heroIn().delay(0.1);
+        return;
+      }
+      wrap.style.opacity = '0'; foot.style.opacity = '0';
+      document.body.style.overflow = 'hidden';
+
+      // 液体カーテン: エッジがリアルタイムに波打ちながら引き上がる（ただのスライド禁止）
+      const slCanvas = document.getElementById('slCanvas');
+      const dive = { p: 0 };
+      let diveCtx = null, diveW = 0, diveH = 0;
+      const drawDive = () => {
+        if (!diveCtx) return;
+        const p = dive.p, tn = performance.now() / 1000;
+        const amp = 12 + 66 * Math.sin(Math.PI * Math.min(1, p * 1.04)); // 中盤で波が最大
+        const base = (1 - p) * (diveH + amp * 2.6) - amp * 1.3;
+        const edge = x => base
+          + Math.sin(x * 0.008 + tn * 5.2) * amp * 0.6
+          + Math.sin(x * 0.0175 - tn * 3.4 + 1.7) * amp * 0.36
+          + Math.sin(x * 0.032 + tn * 7.1) * amp * 0.16;
+        diveCtx.clearRect(0, 0, diveW, diveH);
+        // 追走する水色の膜（2層）
+        [[18, 'rgba(130,200,246,0.4)'], [42, 'rgba(130,200,246,0.16)']].forEach(([off, col]) => {
+          diveCtx.beginPath();
+          for (let x = 0; x <= diveW; x += 10) { const y = edge(x); x === 0 ? diveCtx.moveTo(x, y) : diveCtx.lineTo(x, y); }
+          for (let x = diveW; x >= 0; x -= 10) diveCtx.lineTo(x, edge(x) + off);
+          diveCtx.closePath(); diveCtx.fillStyle = col; diveCtx.fill();
+        });
+        // 白いカーテン本体
+        diveCtx.beginPath(); diveCtx.moveTo(0, -20);
+        for (let x = 0; x <= diveW; x += 10) diveCtx.lineTo(x, edge(x));
+        diveCtx.lineTo(diveW, -20); diveCtx.closePath();
+        diveCtx.fillStyle = '#ffffff'; diveCtx.fill();
+        // 端の泡のライン
+        diveCtx.beginPath();
+        for (let x = 0; x <= diveW; x += 10) { const y = edge(x); x === 0 ? diveCtx.moveTo(x, y) : diveCtx.lineTo(x, y); }
+        diveCtx.strokeStyle = 'rgba(190,228,253,0.9)'; diveCtx.lineWidth = 2.5; diveCtx.stroke();
+      };
+      const initDive = () => {
+        const dpr = Math.min(devicePixelRatio || 1, 1.5);
+        diveW = innerWidth; diveH = innerHeight;
+        slCanvas.width = diveW * dpr; slCanvas.height = diveH * dpr;
+        diveCtx = slCanvas.getContext('2d');
+        diveCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        drawDive(); // 白全面を描いてからパネルを引き継ぐ（1フレームの素抜け防止）
+        document.getElementById('slPanel').style.opacity = '0';
+      };
+
+      const tl = gsap.timeline({ delay: 0.15, onComplete: () => { document.body.style.overflow = ''; loader.remove(); } });
+      tl.to('#slFill', { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'power2.inOut' })
+        .to('.sl-bubble', { y: -46, opacity: 0, duration: 0.8, ease: 'power1.out', stagger: 0.12 }, '-=0.65')
+        .to('#seaLoader .sl-inner', { y: -22, opacity: 0, duration: 0.45, ease: 'power2.in' }, '+=0.12')
+        .to(dive, { p: 1, duration: 1.15, ease: 'power3.inOut', onStart: initDive, onUpdate: drawDive }, '-=0.2')
+        .to(wrap, { opacity: 1, duration: 0.7, ease: 'power2.out' }, '-=0.85')
+        .fromTo(wrap, { filter: 'blur(16px)' }, { filter: 'blur(0px)', duration: 1.4, ease: 'power2.out', clearProps: 'filter' }, '<')
+        .to(foot, { opacity: 1, duration: 0.5 }, '-=0.5')
+        .add(heroIn(), '-=0.7');
     })();
 
     // ── Lenis ──
@@ -1960,67 +2381,373 @@
     gsap.registerPlugin(ScrollTrigger);
     lenis.on('scroll', ScrollTrigger.update);
 
-    // ── Custom cursor (arrow) ──
-    const cur = document.getElementById('cur');
-    document.addEventListener('mousemove', e => {
-      cur.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
-    });
-    document.querySelectorAll('a, .btn, .world-tab, .world-btn').forEach(el => {
-      el.addEventListener('mouseenter', () => cur.classList.add('hover'));
-      el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
-    });
+    // ═══ 海のシーンレンダラー（v13・links-v2第5版から移植） ═══
+    // スクロール = カメラの潜行。色・光・粒子・ランプが深度に連動する
+    if (!REDUCE_MOTION) (() => {
+      const cv = document.getElementById('bgCanvas');
+      const sctx2 = cv.getContext('2d');
+      let W, H, DPR;
 
-    // ── Sparkle cursor trail ──
-    (() => {
-      const c = document.getElementById('bgCanvas'), ctx = c.getContext('2d');
-      let w, h, mouse = { x: -999, y: -999 };
-      const resize = () => { w = c.width = innerWidth; h = c.height = innerHeight; };
-      resize(); addEventListener('resize', resize);
-      document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-
-      const sparkles = [];
-      document.addEventListener('mousemove', () => {
-        for (let i = 0; i < 2; i++) {
-          sparkles.push({
-            x: mouse.x + (Math.random()-0.5)*12, y: mouse.y + (Math.random()-0.5)*12,
-            size: Math.random()*3+1, life: 1,
-            color: ['0,188,212','255,64,129','124,77,255'][~~(Math.random()*3)],
-            vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5 - 0.8
-          });
-        }
-      });
-
-      (function draw() {
-        ctx.clearRect(0, 0, w, h);
-        for (let i = sparkles.length-1; i >= 0; i--) {
-          const s = sparkles[i];
-          s.x += s.vx; s.y += s.vy; s.life -= 0.025; s.size *= 0.97;
-          if (s.life <= 0) { sparkles.splice(i,1); continue; }
-          ctx.save();
-          ctx.globalAlpha = s.life;
-          ctx.translate(s.x, s.y);
-          ctx.beginPath();
-          const r = s.size;
-          for (let p = 0; p < 4; p++) {
-            const a = (p/4)*Math.PI*2 - Math.PI/4;
-            ctx.moveTo(0,0);
-            ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+      const RAMP = [
+        [0.00, [255, 255, 255]],
+        [0.45, [238, 248, 253]],
+        [0.68, [207, 232, 248]],
+        [0.84, [125, 184, 221]],
+        [0.93, [ 42,  90, 128]],
+        [1.00, [ 13,  34,  52]]
+      ];
+      function colAt(x) {
+        x = Math.max(0, Math.min(1, x));
+        for (let k = 1; k < RAMP.length; k++) {
+          if (x <= RAMP[k][0]) {
+            const [t0v, c0] = RAMP[k - 1], [t1v, c1] = RAMP[k];
+            const f = (x - t0v) / (t1v - t0v);
+            return c0.map((v, q) => Math.round(v + (c1[q] - v) * f));
           }
-          ctx.strokeStyle = `rgba(${s.color},${s.life})`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-          ctx.beginPath(); ctx.arc(0,0,r*0.3,0,Math.PI*2);
-          ctx.fillStyle = `rgba(${s.color},${s.life*0.8})`;
-          ctx.fill();
-          ctx.restore();
         }
-        if (sparkles.length > 100) sparkles.splice(0, 20);
-        requestAnimationFrame(draw);
+        return RAMP[RAMP.length - 1][1];
+      }
+
+      let raySprite, vigSprite, washAqua, washWarm, lampCool, lampWarm, rampStrip, causticTile, rippleTile, moteA, moteS;
+      function makeGlow(r, g, b) {
+        const c = document.createElement('canvas');
+        c.width = c.height = 256;
+        const gctx = c.getContext('2d');
+        const g2 = gctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+        g2.addColorStop(0, `rgba(${r},${g},${b},1)`);
+        g2.addColorStop(1, `rgba(${r},${g},${b},0)`);
+        gctx.fillStyle = g2; gctx.fillRect(0, 0, 256, 256);
+        return c;
+      }
+      function buildSprites() {
+        washAqua = makeGlow(168, 220, 250);
+        washWarm = makeGlow(255, 224, 150);
+        lampCool = makeGlow(180, 228, 255);
+        lampWarm = makeGlow(255, 198, 125);
+
+        /* ── ベイク: 深度ランプ帯（毎フレームのグラデ生成を全廃） ── */
+        rampStrip = document.createElement('canvas');
+        rampStrip.width = 4; rampStrip.height = 1024;
+        const rsc = rampStrip.getContext('2d');
+        const rsg = rsc.createLinearGradient(0, 0, 0, 1024);
+        RAMP.forEach(s => rsg.addColorStop(s[0], `rgb(${s[1][0]},${s[1][1]},${s[1][2]})`));
+        rsc.fillStyle = rsg; rsc.fillRect(0, 0, 4, 1024);
+
+        /* ── ベイク: 光の筋タイル（整数周期＝左右シームレス） ── */
+        const bakeLines = (cr, cg, cb, lines, lw, blur) => {
+          const cv2 = document.createElement('canvas');
+          cv2.width = 1024; cv2.height = 480;
+          const bc = cv2.getContext('2d');
+          bc.shadowColor = `rgba(${cr},${cg},${cb},0.55)`;
+          bc.shadowBlur = blur;
+          for (let k = 0; k < lines; k++) {
+            const yBase = 24 + (k / lines) * 432;
+            const alpha = 0.5 * (1 - k / (lines * 1.35));
+            bc.beginPath();
+            for (let x = 0; x <= 1024; x += 8) {
+              const y = yBase
+                + Math.sin((x / 1024) * Math.PI * 2 * 3 + k * 1.7) * 9
+                + Math.sin((x / 1024) * Math.PI * 2 * 7 + k) * 5;
+              x === 0 ? bc.moveTo(x, y) : bc.lineTo(x, y);
+            }
+            bc.strokeStyle = `rgba(${cr},${cg},${cb},${alpha})`;
+            bc.lineWidth = lw;
+            bc.stroke();
+          }
+          return cv2;
+        };
+        causticTile = bakeLines(255, 255, 255, 10, 1.6, 3);
+        rippleTile = bakeLines(96, 178, 240, 8, 2, 2);
+
+        /* ── ベイク: 浮遊粒スプライト ── */
+        const bakeMote = (r2, g2, b2) => {
+          const cv3 = document.createElement('canvas');
+          cv3.width = cv3.height = 24;
+          const mc = cv3.getContext('2d');
+          const mg = mc.createRadialGradient(12, 12, 0, 12, 12, 12);
+          mg.addColorStop(0, `rgba(${r2},${g2},${b2},1)`);
+          mg.addColorStop(0.55, `rgba(${r2},${g2},${b2},0.9)`);
+          mg.addColorStop(1, `rgba(${r2},${g2},${b2},0)`);
+          mc.fillStyle = mg; mc.fillRect(0, 0, 24, 24);
+          return cv3;
+        };
+        moteA = bakeMote(210, 240, 255);
+        moteS = bakeMote(255, 205, 90);
+        raySprite = document.createElement('canvas');
+        raySprite.width = 320; raySprite.height = Math.ceil(H * 1.5);
+        const rc = raySprite.getContext('2d');
+        const g = rc.createLinearGradient(0, 0, 0, raySprite.height);
+        g.addColorStop(0, 'rgba(235,250,255,0.5)');
+        g.addColorStop(0.5, 'rgba(190,230,252,0.1)');
+        g.addColorStop(1, 'rgba(190,230,252,0)');
+        rc.fillStyle = g;
+        rc.beginPath();
+        rc.moveTo(120, 0); rc.lineTo(200, 0);
+        rc.lineTo(320, raySprite.height); rc.lineTo(0, raySprite.height);
+        rc.closePath(); rc.fill();
+
+        vigSprite = document.createElement('canvas');
+        vigSprite.width = W; vigSprite.height = H;
+        const vc = vigSprite.getContext('2d');
+        const vg = vc.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.75);
+        vg.addColorStop(0, 'rgba(4,18,32,0)');
+        vg.addColorStop(1, 'rgba(4,18,32,1)');
+        vc.fillStyle = vg; vc.fillRect(0, 0, W, H);
+      }
+      function sizeCanvas() {
+        DPR = Math.min(devicePixelRatio || 1, 1.5);
+        W = innerWidth; H = innerHeight;
+        cv.width = W * DPR; cv.height = H * DPR;
+        sctx2.setTransform(DPR, 0, 0, DPR, 0, 0);
+        buildSprites();
+      }
+
+      const LAYERS = [
+        { n: 26, par: 0.18, rMin: 0.6, rMax: 1.4, aMax: 0.2,  v: 0.05 },
+        { n: 22, par: 0.45, rMin: 1.0, rMax: 2.2, aMax: 0.28, v: 0.1  },
+        { n: 14, par: 0.9,  rMin: 1.8, rMax: 3.4, aMax: 0.36, v: 0.16 }
+      ];
+      let motes = [];
+      function seedMotes() {
+        motes = [];
+        LAYERS.forEach((L, li) => {
+          for (let k = 0; k < L.n; k++) {
+            motes.push({
+              li, x: Math.random() * 1.2 - 0.1, y: Math.random(),
+              r: L.rMin + Math.random() * (L.rMax - L.rMin),
+              a: (0.35 + Math.random() * 0.65) * L.aMax,
+              ph: Math.random() * Math.PI * 2,
+              sun: li === 2 && Math.random() < 0.15
+            });
+          }
+        });
+      }
+
+      let px = -999, py = -999, ptx = -999, pty = -999;
+      addEventListener('pointermove', e => { ptx = e.clientX; pty = e.clientY; }, { passive: true });
+      addEventListener('touchmove', e => { const tc = e.touches[0]; if (tc) { ptx = tc.clientX; pty = tc.clientY; } }, { passive: true });
+
+      sizeCanvas(); seedMotes();
+      addEventListener('resize', sizeCanvas);
+
+      let tt = 0;
+      (function frame() {
+        tt += 0.008;
+        const docMax = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        const dNorm = Math.min(1, window.scrollY / docMax);
+
+        const a0 = dNorm * 0.9;
+        const srcY = a0 * 1023;
+        const srcH = Math.max(2, Math.min(0.24, 1.0 - a0) * 1023);
+        sctx2.drawImage(rampStrip, 0, srcY, 4, srcH, 0, 0, W, H);
+
+        const surface = Math.pow(1 - dNorm, 2.2);
+
+        /* 水面ゾーン: 漂う色の面（スプライト描画）と、目に見える水紋 */
+        if (surface > 0.06) {
+          const w1x = W * (0.3 + Math.sin(tt * 0.35) * 0.06), w1y = H * 0.3;
+          const w1r = Math.max(W, H) * 0.58;
+          sctx2.globalAlpha = 0.2 * surface;
+          sctx2.drawImage(washAqua, w1x - w1r, w1y - w1r, w1r * 2, w1r * 2);
+          const w2x = W * (0.82 + Math.sin(tt * 0.28 + 2) * 0.04), w2y = H * (0.14 + Math.sin(tt * 0.22) * 0.03);
+          const w2r = Math.max(W, H) * 0.4;
+          sctx2.globalAlpha = 0.15 * surface;
+          sctx2.drawImage(washWarm, w2x - w2r, w2y - w2r, w2r * 2, w2r * 2);
+          sctx2.globalAlpha = 1;
+
+        }
+
+        sctx2.save();
+        sctx2.globalCompositeOperation = 'lighter';
+
+        /* コースティクス（波打つ光の筋）はユーザー判断で撤去 — 電子表現は Vanta.NET が担う */
+
+        if (surface > 0.04) {
+          const rays = [
+            { x: W * 0.16, sway: Math.sin(tt * 0.7) * 0.05 - 0.16, a: 0.46 },
+            { x: W * 0.46, sway: Math.sin(tt * 0.55 + 2) * 0.06 - 0.1, a: 0.3 },
+            { x: W * 0.78, sway: Math.sin(tt * 0.62 + 4) * 0.05 - 0.2, a: 0.38 }
+          ];
+          rays.forEach(r => {
+            sctx2.save();
+            sctx2.translate(r.x, -H * 0.08);
+            sctx2.rotate(r.sway);
+            sctx2.globalAlpha = r.a * surface * 0.55;
+            sctx2.drawImage(raySprite, -160, 0);
+            sctx2.restore();
+          });
+          sctx2.globalAlpha = 1;
+        }
+
+        motes.forEach(m => {
+          const L = LAYERS[m.li];
+          m.y -= L.v * 0.0012;
+          if (m.y < -0.03) { m.y = 1.03; m.x = Math.random() * 1.2 - 0.1; }
+          const sx = m.x * W + Math.sin(tt * 0.9 + m.ph) * (5 + m.li * 4);
+          const sy = ((m.y * (H * 1.35) - window.scrollY * L.par) % (H * 1.35) + (H * 1.35)) % (H * 1.35) - H * 0.15;
+          if (sy < -10 || sy > H + 10) return;
+          const tw = 0.75 + 0.25 * Math.sin(tt * 2 + m.ph * 3);
+          const ms = m.r * 4;
+          if (m.sun && surface > 0.15) {
+            sctx2.globalAlpha = m.a * tw * surface;
+            sctx2.drawImage(moteS, sx - ms / 2, sy - ms / 2, ms, ms);
+          } else {
+            sctx2.globalAlpha = m.a * tw * (0.55 + 0.45 * (1 - m.li / 3));
+            sctx2.drawImage(moteA, sx - ms / 2, sy - ms / 2, ms, ms);
+          }
+        });
+        sctx2.globalAlpha = 1;
+
+        px += (ptx - px) * 0.07; py += (pty - py) * 0.07;
+        if (px > -500) {
+          const warm = Math.pow(dNorm, 1.4);
+          const R = 220 + 60 * warm;
+          sctx2.globalAlpha = 0.08 * (1 - warm * 0.5);
+          sctx2.drawImage(lampCool, px - R, py - R, R * 2, R * 2);
+          if (warm > 0.02) {
+            sctx2.globalAlpha = 0.14 * warm;
+            sctx2.drawImage(lampWarm, px - R, py - R, R * 2, R * 2);
+          }
+          sctx2.globalAlpha = 1;
+        }
+        sctx2.restore();
+
+        sctx2.globalAlpha = 0.06 + 0.42 * Math.pow(dNorm, 1.5);
+        sctx2.drawImage(vigSprite, 0, 0, W, H);
+        sctx2.globalAlpha = 1;
+
+        requestAnimationFrame(frame);
       })();
     })();
 
     // ── Scroll progress ──
     gsap.to('#scrollBar', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 0.3 } });
+
+    // ── ダイブコンピュータ風ゲージ（v13） ──
+    (() => {
+      const gThumb = document.getElementById('gThumb');
+      const gRead = document.getElementById('gRead');
+      const gauge = document.querySelector('.gauge');
+      if (!gThumb || !gauge) return;
+      const update = () => {
+        const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        const d = Math.min(1, window.scrollY / max);
+        const h = gauge.offsetHeight - 5;
+        gThumb.style.top = (d * h) + 'px';
+        gRead.style.top = (d * h) + 'px';
+        gRead.textContent = d < 0.015 ? '0m' : '-' + (Math.round(d * 300) / 10) + 'm';
+      };
+      lenis.on('scroll', update);
+      addEventListener('resize', update);
+      update();
+    })();
+
+    // ── 背景適応ゾーン: 各セクション位置の水の色から文字トーンを自動決定 ──
+    // RAMPはシーンレンダラーと同一定義（変更時は両方を必ず同期させること）
+    (() => {
+      const RAMP2 = [
+        [0.00, [255, 255, 255]],
+        [0.45, [238, 248, 253]],
+        [0.68, [207, 232, 248]],
+        [0.84, [125, 184, 221]],
+        [0.93, [ 42,  90, 128]],
+        [1.00, [ 13,  34,  52]]
+      ];
+      function colAt2(x) {
+        x = Math.max(0, Math.min(1, x));
+        for (let k = 1; k < RAMP2.length; k++) {
+          if (x <= RAMP2[k][0]) {
+            const [t0, c0] = RAMP2[k - 1], [t1, c1] = RAMP2[k];
+            const f = (x - t0) / (t1 - t0);
+            return c0.map((v, q) => v + (c1[q] - v) * f);
+          }
+        }
+        return RAMP2[RAMP2.length - 1][1];
+      }
+      const assignZones = () => {
+        const docMax = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+        document.querySelectorAll('section.sec').forEach(sec => {
+          const center = sec.offsetTop + sec.offsetHeight / 2;
+          const y = Math.max(0, Math.min(docMax, center - innerHeight / 2));
+          const c = colAt2((y / docMax) * 0.9 + 0.12);
+          const lum = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+          sec.classList.toggle('zone-deep', lum < 140);
+        });
+      };
+      assignZones();
+      let zt = 0;
+      const later = () => { clearTimeout(zt); zt = setTimeout(assignZones, 180); };
+      addEventListener('resize', later);
+      addEventListener('load', later);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(document.body);
+    })();
+
+    // ── リンクのブランドアイコン復元（hydration後の装飾。renderLinks等は不変） ──
+    (() => {
+      const ICONS = {
+        x: '<svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg>',
+        yt: '<svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>',
+        vrc: '<svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M4 6.5h16A2.5 2.5 0 0 1 22.5 9v6a2.5 2.5 0 0 1-2.5 2.5h-4.2L13 14.7h-2l-2.8 2.8H4A2.5 2.5 0 0 1 1.5 15V9A2.5 2.5 0 0 1 4 6.5zm3.2 3.2a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6zm9.6 0a2.3 2.3 0 1 0 0 4.6 2.3 2.3 0 0 0 0-4.6z"/></svg>',
+        discord: '<svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.07.07 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.06.06 0 0 0-.03.02C.53 9.05-.32 13.58.1 18.06a.08.08 0 0 0 .03.05 19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.23-2a.08.08 0 0 0-.04-.1 13.1 13.1 0 0 1-1.87-.9.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08 0c.12.11.24.2.37.3a.08.08 0 0 1 0 .12 12.3 12.3 0 0 1-1.88.9.08.08 0 0 0-.04.1c.36.7.78 1.37 1.23 2a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.67a.06.06 0 0 0-.03-.02zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>',
+        fanbox: '<svg viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M3.5 7.5 12 12l8.5-4.5"/><path d="M12 12v9.5"/></svg>',
+        booth: '<svg viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="1.8"><path d="M6 7V6a6 6 0 0 1 12 0v1"/><path d="M3.5 7h17l-1.4 13a2 2 0 0 1-2 1.8H6.9a2 2 0 0 1-2-1.8z"/></svg>',
+        support: '<svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+        contact: '<svg viewBox="0 0 24 24" style="fill:none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="19" height="15" rx="3"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>'
+      };
+      document.querySelectorAll('#links .link-card').forEach(a => {
+        const kind = [...a.classList].find(c => c.startsWith('link-') && c !== 'link-card');
+        const key = kind ? kind.slice(5) : '';
+        const icon = a.querySelector('.link-icon');
+        if (ICONS[key] && icon && !icon.querySelector('svg')) icon.innerHTML = ICONS[key];
+      });
+    })();
+
+    // ── ゴースト見出し（各セクション背後の巨大アウトライン英字） ──
+    document.querySelectorAll('section.sec').forEach(sec => {
+      const tag = sec.querySelector('.sec-tag');
+      const box = sec.querySelector('.container');
+      if (tag && box) box.style.setProperty('--ghost', JSON.stringify(tag.textContent.trim()));
+    });
+
+    // ── 電子の海の水面（ベイク済みドットのスタンプ・30fps） ──
+    if (!REDUCE_MOTION) (() => {
+      const c = document.getElementById('seaGrid');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      let w, h;
+      const resize = () => { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; };
+      resize(); addEventListener('resize', resize);
+      const ROWS = 9, COLS = 58;
+      const dot = document.createElement('canvas'); dot.width = dot.height = 16;
+      const dctx = dot.getContext('2d');
+      const dg = dctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+      dg.addColorStop(0, 'rgba(66,165,245,1)');
+      dg.addColorStop(0.7, 'rgba(66,165,245,0.85)');
+      dg.addColorStop(1, 'rgba(66,165,245,0)');
+      dctx.fillStyle = dg; dctx.fillRect(0, 0, 16, 16);
+      let t0 = 0, sgSkip = false;
+      (function draw() {
+        sgSkip = !sgSkip;
+        if (sgSkip) { requestAnimationFrame(draw); return; }
+        t0 += 0.024;
+        ctx.clearRect(0, 0, w, h);
+        for (let r = 0; r < ROWS; r++) {
+          const depth = r / (ROWS - 1);
+          const y0 = h * Math.pow(depth, 1.55) * 0.92 + h * 0.06;
+          const amp = 2 + depth * 7;
+          ctx.globalAlpha = 0.1 + depth * 0.28;
+          const size = (0.8 + depth * 1.7) * 2.6;
+          for (let i = 0; i <= COLS; i++) {
+            const x = (i / COLS) * w;
+            const y = y0 + Math.sin(i * 0.42 + t0 * (1.2 + depth) + r * 0.9) * amp
+                        + Math.sin(i * 0.13 - t0 * 0.7) * amp * 0.5;
+            ctx.drawImage(dot, x - size / 2, y - size / 2, size, size);
+          }
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      })();
+    })();
 
     // ── Hero name split + F32 animation + physics interaction ──
     const heroName = document.getElementById('heroName');
@@ -2062,28 +2789,19 @@
     });
 
     function initHeroPhysics(el) {
+      // パラメータは承認済みの値のまま。計測をフレーム1回に統合し、書込は差分時のみ（軽量化・挙動同一）
       const PUSH_R = 80, PUSH_F = 18, SPRING = 0.15, DAMP = 0.75;
       const spans = el.querySelectorAll('span');
       let grabbed = null, gox = 0, goy = 0;
+      let mx = -9999, my = -9999, inside = false;
 
       spans.forEach(sp => {
-        sp._p = { x:0, y:0, vx:0, vy:0, dx:null, dy:null };
+        sp._p = { x:0, y:0, vx:0, vy:0, dx:null, dy:null, wx:0, wy:0 };
       });
 
+      el.addEventListener('mouseenter', () => { inside = true; });
       el.addEventListener('mousemove', e => {
-        const mx = e.clientX, my = e.clientY;
-        spans.forEach(sp => {
-          if (sp === grabbed) return;
-          const r = sp.getBoundingClientRect();
-          const cx = r.left+r.width/2, cy = r.top+r.height/2;
-          const dx = cx-mx, dy = cy-my;
-          const d = Math.sqrt(dx*dx+dy*dy);
-          if (d < PUSH_R && d > 0) {
-            const f = (1-d/PUSH_R)*PUSH_F*0.3;
-            sp._p.vx += (dx/d)*f;
-            sp._p.vy += (dy/d)*f;
-          }
-        });
+        mx = e.clientX; my = e.clientY;
         if (grabbed) {
           const r = grabbed.getBoundingClientRect();
           const bx = r.left+r.width/2-grabbed._p.x;
@@ -2093,7 +2811,7 @@
         }
       });
 
-      el.addEventListener('mouseleave', () => { if(grabbed){grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
+      el.addEventListener('mouseleave', () => { inside = false; mx = my = -9999; if(grabbed){grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
 
       spans.forEach(sp => {
         sp.addEventListener('mousedown', e => {
@@ -2105,76 +2823,135 @@
       document.addEventListener('mouseup', () => { if(grabbed){grabbed._p.dx=null;grabbed._p.dy=null;grabbed=null;} });
 
       (function tick(){
+        if (inside) {
+          spans.forEach(sp => {
+            if (sp === grabbed) return;
+            const r = sp.getBoundingClientRect();
+            const cx = r.left+r.width/2, cy = r.top+r.height/2;
+            const dx = cx-mx, dy = cy-my;
+            const d = Math.sqrt(dx*dx+dy*dy);
+            if (d < PUSH_R && d > 0) {
+              const f = (1-d/PUSH_R)*PUSH_F*0.3;
+              sp._p.vx += (dx/d)*f;
+              sp._p.vy += (dy/d)*f;
+            }
+          });
+        }
         spans.forEach(sp => {
           const p = sp._p; if(!p) return;
           if (p.dx!==null) { p.x+=(p.dx-p.x)*0.4; p.y+=(p.dy-p.y)*0.4; p.vx=0;p.vy=0; }
-          else { p.vx+=-p.x*SPRING; p.vy+=-p.y*SPRING; p.vx*=DAMP; p.vy*=DAMP; p.x+=p.vx; p.y+=p.vy;
+          else if (p.x!==0||p.y!==0||p.vx!==0||p.vy!==0) {
+            p.vx+=-p.x*SPRING; p.vy+=-p.y*SPRING; p.vx*=DAMP; p.vy*=DAMP; p.x+=p.vx; p.y+=p.vy;
             if(Math.abs(p.x)<0.1&&Math.abs(p.y)<0.1&&Math.abs(p.vx)<0.05){p.x=0;p.y=0;p.vx=0;p.vy=0;}
           }
-          sp.style.left=p.x+'px'; sp.style.top=p.y+'px';
+          const qx = Math.round(p.x*10)/10, qy = Math.round(p.y*10)/10;
+          if (qx!==p.wx||qy!==p.wy) { p.wx=qx; p.wy=qy; sp.style.left=qx+'px'; sp.style.top=qy+'px'; }
         });
         requestAnimationFrame(tick);
       })();
     }
 
-    // ── Scroll reveals (Intersection Observer) ──
+    // ── Scroll reveals (water-quality: slow, power3/expo easing — spec §7-1/7-3/7-4) ──
     const revealCSS = `
-      .reveal-item { opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; }
+      .reveal-item { opacity: 0; transform: translateY(32px); transition: opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1); }
       .reveal-item.in { opacity: 1; transform: none; }
-      .reveal-head { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+      .reveal-head { opacity: 0; transform: translateY(22px); transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1); }
       .reveal-head.in { opacity: 1; transform: none; }
+      .reveal-line { overflow: hidden; }
+      .reveal-line .rl-inner { display: block; transform: translateY(110%); transition: transform 1.1s cubic-bezier(.16,1,.3,1); }
+      .reveal-line.in .rl-inner { transform: none; }
+      .reveal-image { clip-path: inset(8%); transform: scale(1.08); transition: clip-path 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1); }
+      .reveal-image.in { clip-path: inset(0%); transform: scale(1); }
     `;
     const styleEl = document.createElement('style');
     styleEl.textContent = revealCSS;
     document.head.appendChild(styleEl);
 
-    document.querySelectorAll('.world-card, .placeholder-card, .card-item, .illust-thumb, .album-thumb').forEach((el, i) => {
-      el.classList.add('reveal-item');
-      el.style.transitionDelay = (i % 6) * 0.07 + 's';
-    });
-    document.querySelectorAll('.sec-title, .sec-desc, .sec-tag').forEach(el => {
-      el.classList.add('reveal-head');
-    });
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          observer.unobserve(entry.target);
-        }
+    if (REDUCE_MOTION) {
+      // Reduced motion: strip all reveal classes so everything renders in its final state immediately.
+      document.head.appendChild(Object.assign(document.createElement('style'), {
+        textContent: '.reveal-item,.reveal-head,.reveal-line,.reveal-image{opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important;} .reveal-line .rl-inner{transform:none!important;}'
+      }));
+    } else {
+      document.querySelectorAll('.world-card, .placeholder-card, .card-item, .illust-thumb, .album-thumb').forEach((el, i) => {
+        el.classList.add('reveal-item');
+        el.style.transitionDelay = (i % 6) * 0.08 + 's';
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      // 見出しは行単位リビール（wrapper+translate方式。要素自体をclipするとIOが交差ゼロ判定し発火しない）
+      document.querySelectorAll('.sec-title').forEach(el => {
+        el.classList.add('reveal-line');
+        const inner = document.createElement('span');
+        inner.className = 'rl-inner';
+        while (el.firstChild) inner.appendChild(el.firstChild);
+        el.appendChild(inner);
+      });
+      document.querySelectorAll('.sec-desc, .sec-tag').forEach(el => el.classList.add('reveal-head'));
+      // 主要画像は inset+scale リビール（仕様§7-4）
+      document.querySelectorAll('.world-thumb img, .wip-thumb img').forEach(el => el.classList.add('reveal-image'));
 
-    document.querySelectorAll('.reveal-item, .reveal-head').forEach(el => observer.observe(el));
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    // ── 3D tilt ──
-    document.querySelectorAll('.tilt').forEach(card => {
+      document.querySelectorAll('.reveal-item, .reveal-head, .reveal-line, .reveal-image').forEach(el => observer.observe(el));
+
+      // 柵（v13）: 高速スクロールや重負荷でIOの交差フレームを飛び越しても、
+      // 通過済みの未発火要素を必ず回収して表示する掃討処理。
+      // IOは「良いタイミング」担当、こちらは「絶対に取り逃さない」担当。
+      const pendingReveal = new Set(document.querySelectorAll('.reveal-item, .reveal-head, .reveal-line, .reveal-image'));
+      let sweepAt = 0;
+      const revealSweep = () => {
+        const now = performance.now();
+        if (now - sweepAt < 180) return;
+        sweepAt = now;
+        pendingReveal.forEach(el => {
+          if (el.classList.contains('in')) { pendingReveal.delete(el); return; }
+          const r = el.getBoundingClientRect();
+          if (r.top < innerHeight - 40) {
+            el.classList.add('in');
+            observer.unobserve(el);
+            pendingReveal.delete(el);
+          }
+        });
+      };
+      lenis.on('scroll', revealSweep);
+      addEventListener('resize', revealSweep);
+      setTimeout(revealSweep, 400);
+    }
+
+    // ── 3D tilt (decayed ±12→±5 per spec §7-6, upscale-quality subtlety) ──
+    if (!REDUCE_MOTION) document.querySelectorAll('.tilt').forEach(card => {
       card.addEventListener('mousemove', e => {
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
-        gsap.to(card, { rotateY: x*12, rotateX: -y*12, scale: 1.02, duration: 0.2, transformPerspective: 600 });
+        gsap.to(card, { rotateY: x*5, rotateX: -y*5, scale: 1.015, duration: 0.3, transformPerspective: 600 });
       });
-      card.addEventListener('mouseleave', () => gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.4, ease: 'elastic.out(1,0.5)' }));
+      card.addEventListener('mouseleave', () => gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.5, ease: 'elastic.out(1,0.6)' }));
     });
 
-    // ── Magnetic buttons ──
-    document.querySelectorAll('.magnetic').forEach(btn => {
+    // ── Magnetic buttons (decayed 0.3→0.15 per spec §7-6) ──
+    if (!REDUCE_MOTION) document.querySelectorAll('.magnetic').forEach(btn => {
       btn.addEventListener('mousemove', e => {
         const r = btn.getBoundingClientRect();
-        gsap.to(btn, { x: (e.clientX - r.left - r.width/2)*0.3, y: (e.clientY - r.top - r.height/2)*0.3, duration: 0.2 });
+        gsap.to(btn, { x: (e.clientX - r.left - r.width/2)*0.15, y: (e.clientY - r.top - r.height/2)*0.15, duration: 0.3 });
       });
-      btn.addEventListener('mouseleave', () => gsap.to(btn, { x:0, y:0, duration:0.5, ease:'elastic.out(1,0.3)' }));
+      btn.addEventListener('mouseleave', () => gsap.to(btn, { x:0, y:0, duration:0.6, ease:'elastic.out(1,0.6)' }));
     });
 
     // ── Parallax avatar ──
-    gsap.to('.avatar-blob', { y: -40, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    if (!REDUCE_MOTION) gsap.to('.avatar-blob', { y: -30, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
-    // ── Avatar Eye Tracking interaction (desktop only) ──
-    if (window.matchMedia('(pointer:fine)').matches && window.innerWidth > 768) {
+    // ── Avatar Eye Tracking interaction (desktop only, kept — spec §5) ──
+    if (!REDUCE_MOTION && window.matchMedia('(pointer:fine)').matches && window.innerWidth > 768) {
       const avatarWrap = document.querySelector('.avatar-wrap');
       if (avatarWrap) {
-        const avatarImg = avatarWrap.querySelector('.av-blob img, .avatar-blob img');
+        const avatarImg = avatarWrap.querySelector('.avatar-blob img');
         avatarWrap.addEventListener('mousemove', e => {
           const r = avatarWrap.getBoundingClientRect();
           const cx = (e.clientX - r.left) / r.width - 0.5;
