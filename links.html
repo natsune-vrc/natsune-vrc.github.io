@@ -79,6 +79,7 @@
 
     .bubble-link {
       --brand: var(--aqua-deep);
+      --d:0;
       --mx:50%; --my:50%;
       position:relative; counter-increment:deep;
       display:flex; align-items:center; gap:15px; padding:17px 20px;
@@ -186,8 +187,21 @@
         0 26px 54px -12px rgba(30,136,229,0.6);
     }
 
-    /* 深海ゾーン: 暗いガラス・発光するリム */
-    .links .bubble-link:nth-last-child(-n+3) {
+    /* 深度は「器は連続・中身は二段」:
+       ガラス材質は --d (X=0 → YouTube=0.25 → VRChat=0.5 → BOOTH=0.75) で連続的に沈み、
+       文字・アイコンはインク色を保持。完全深海 .row-deep (Discord以降) でのみ発光色へ。 */
+    .links .bubble-link:not(.primary):not(.row-deep) {
+      background:linear-gradient(135deg,
+        color-mix(in srgb, rgba(208,234,251,0.5) calc(var(--d)*100%), rgba(255,255,255,0.92)),
+        color-mix(in srgb, rgba(208,234,251,0.28) calc(var(--d)*100%), rgba(255,255,255,0.74)));
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, rgba(160,215,250,0.55) calc(var(--d)*100%), rgba(255,255,255,0.95)),
+        0 0 24px color-mix(in srgb, rgba(102,196,250,0.16) calc(var(--d)*100%), rgba(102,196,250,0)),
+        0 18px 42px -13px color-mix(in srgb, rgba(8,30,52,0.4) calc(var(--d)*100%), rgba(23,64,99,0.22));
+    }
+    .links .bubble-link:not(.primary):not(.row-deep)::before { background:linear-gradient(90deg, transparent, color-mix(in srgb, rgba(200,235,255,0.75) calc(var(--d)*100%), rgba(255,255,255,1)), transparent); }
+    /* 完全深海（Discord以降） */
+    .links .bubble-link.row-deep {
       background:linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
       color:#eaf6ff;
       box-shadow:
@@ -195,14 +209,14 @@
         0 0 26px rgba(102,196,250,0.18),
         0 16px 38px -12px rgba(4,20,36,0.55);
     }
-    .links .bubble-link:nth-last-child(-n+3)::before { background:linear-gradient(90deg, transparent, rgba(200,235,255,0.7), transparent); }
-    .links .bubble-link:nth-last-child(-n+3)::after { background:radial-gradient(220px circle at var(--mx) var(--my), rgba(170,225,255,0.35), rgba(170,225,255,0) 55%); }
-    .links .bubble-link:nth-last-child(-n+3) .bl-handle { color:rgba(214,236,250,0.62); }
-    .links .bubble-link:nth-last-child(-n+3) .bl-num { color:#9fd8fb; opacity:0.8; }
-    .links .bubble-link:nth-last-child(-n+3) .bl-icon { background:rgba(160,215,250,0.1); box-shadow:inset 0 0 0 1.5px rgba(160,215,250,0.45); color:#bfe4fd; }
-    .links .bubble-link:nth-last-child(-n+3) .bl-mark { color:#cfeafd; opacity:0.08; }
-    .links .bubble-link:nth-last-child(-n+3) .bl-arrow { color:#bfe4fd; }
-    .links .bubble-link:nth-last-child(-n+3):hover {
+    .links .bubble-link.row-deep::before { background:linear-gradient(90deg, transparent, rgba(200,235,255,0.7), transparent); }
+    .links .bubble-link.row-deep::after { background:radial-gradient(220px circle at var(--mx) var(--my), rgba(170,225,255,0.35), rgba(170,225,255,0) 55%); }
+    .bubble-link.row-deep .bl-handle { color:rgba(214,236,250,0.62); }
+    .bubble-link.row-deep .bl-num { color:#9fd8fb; opacity:0.8; }
+    .bubble-link.row-deep .bl-icon { background:rgba(160,215,250,0.1); box-shadow:inset 0 0 0 1.5px rgba(160,215,250,0.45); color:#bfe4fd; }
+    .bubble-link.row-deep .bl-mark { color:#cfeafd; opacity:0.08; }
+    .bubble-link.row-deep .bl-arrow { color:#bfe4fd; }
+    .links .bubble-link.row-deep:hover {
       box-shadow:
         inset 0 0 0 1px rgba(190,228,253,0.6),
         0 0 40px rgba(122,206,252,0.3),
@@ -437,9 +451,18 @@
         });
       }
 
+      const assignRowDepth = () => {
+        [...document.querySelectorAll('.links .bubble-link')].forEach((el, i) => {
+          const d = Math.max(0, Math.min(1, (i - 1) / 4));
+          el.style.setProperty('--d', d.toFixed(3));
+          el.classList.toggle('row-deep', d >= 0.999);
+        });
+      };
+
       ready.finally(() => {
         requestAnimationFrame(() => {
           document.getElementById('linkList').classList.add('in');
+          assignRowDepth();
           layMoorings();
           bindGlass();
         });
