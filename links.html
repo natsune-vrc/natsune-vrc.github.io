@@ -146,9 +146,9 @@
     .bl-num::before { content:"0" counter(deep); }
     .bl-label { display:block; font-size:14.5px; font-weight:900; letter-spacing:0.03em; line-height:1.5; }
     .bl-handle { display:block; font-size:11px; color:var(--ink-soft); letter-spacing:0.04em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .bl-sub { position:relative; display:block; height:1.65em; overflow:hidden; }
-    .bl-sub .bl-handle, .bl-sub .bl-note { position:absolute; left:0; right:0; top:0; transition:opacity 0.28s ease, transform 0.28s ease; }
-    .bl-note { display:block; font-size:11px; font-weight:700; color:var(--aqua-deep); letter-spacing:0.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:0; transform:translateY(7px); }
+    .bl-sub { position:relative; display:block; }
+    .bl-sub .bl-handle { transition:opacity 0.24s ease, transform 0.24s ease; }
+    .bl-note { position:absolute; left:0; right:0; top:-0.62em; font-size:10.5px; font-weight:700; line-height:1.24; color:var(--aqua-deep); letter-spacing:0; opacity:0; transform:translateY(6px); transition:opacity 0.28s ease, transform 0.28s ease; pointer-events:none; }
     .bubble-link:hover .bl-sub .bl-handle { opacity:0; transform:translateY(-7px); }
     .bubble-link:hover .bl-note { opacity:1; transform:none; }
     .bubble-link.primary .bl-note { color:#fff; }
@@ -460,13 +460,13 @@
       /* ひとこと（本人の声）: ホバーでハンドルと入れ替わる */
       const NOTES = {
         home: '活動ぜんぶの入口！まずはここから',
-        x: 'お知らせも日常もここ！',
-        yt: 'VRChatの楽しさを動画で！',
-        vrc: 'フレンド申請も歓迎です！',
-        booth: 'アセットやグッズを販売中！',
-        discord: '参加はお問い合わせから！',
-        fanbox: 'FANBOXで応援うれしい！',
-        support: 'FANBOXで応援うれしい！',
+        x: 'お知らせも日常も、だいたいここ！フォローしてね！',
+        yt: 'ワールドの作り方や、VRChatの楽しさを動画で！',
+        vrc: 'VRChatのプロフィール。フレンド申請も歓迎！',
+        booth: 'つくったアセットやグッズを販売中！',
+        discord: 'コミュニティサーバー。参加はお問い合わせから！',
+        fanbox: 'pixiv FANBOXで応援してもらえたらうれしい！',
+        support: 'pixiv FANBOXで応援してもらえたらうれしい！',
         contact: 'お仕事の相談も参加希望も、お気軽に！'
       };
       const decorateNotes = () => {
