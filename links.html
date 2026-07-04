@@ -36,7 +36,8 @@
     /* ── 海のシーン（1枚のキャンバスが全てを描く） ── */
     #ocean { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-    .page { position:relative; z-index:1; width:min(100% - 36px, 480px); margin:0 auto; padding:64px 0 0; }
+    .page { position:relative; z-index:1; width:min(100% - 48px, 1040px); margin:0 auto; min-height:100svh;
+      display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); align-items:center; gap:clamp(28px,5vw,64px); padding:24px 0 60px; }
 
     /* ── プロフィール ── */
     .prof { position:relative; text-align:center; margin-bottom:54px; }
@@ -70,20 +71,15 @@
     .prof-vrt { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.08em; color:var(--aqua-deep); background:var(--aqua-mist); border-radius:999px; padding:4px 14px; margin-bottom:12px; position:relative; z-index:1; }
 
     /* ── 海中: 潜水ラインとシーグラスのカード ── */
-    .sea { position:relative; padding:6px 0 78px; }
-    .sea::before {
-      content:''; position:absolute; left:50%; top:-44px; bottom:-6px; width:1px;
-      background:linear-gradient(180deg, rgba(66,165,245,0) 0%, rgba(66,165,245,0.4) 10%, rgba(160,215,250,0.5) 60%, rgba(234,246,255,0.5) 100%);
-    }
-    .links { position:relative; display:flex; flex-direction:column; gap:24px; counter-reset:deep; }
+    .sea { position:relative; }
+    .links { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:13px; counter-reset:deep; }
 
     .bubble-link {
       --brand: var(--aqua-deep);
       --d:0;
       --mx:50%; --my:50%;
       position:relative; counter-increment:deep;
-      display:flex; align-items:center; gap:15px; padding:17px 20px;
-      width:min(100%, 360px);
+      display:flex; align-items:center; gap:12px; padding:13px 16px;
       overflow:hidden;
       background:linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.74));
       -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
@@ -121,8 +117,9 @@
     }
     .bubble-link:hover::after { opacity:0.55; }
 
-    .bubble-link:nth-child(odd)  { align-self:flex-start; }
-    .bubble-link:nth-child(even) { align-self:flex-end; border-radius:26px 21px 27px 22px; }
+    .bubble-link:nth-child(even) { border-radius:26px 21px 27px 22px; }
+    .bubble-link.primary { grid-column:1 / -1; }
+    .bubble-link:last-child:nth-child(even) { grid-column:1 / -1; }
     .mooring { position:absolute; top:50%; width:26px; height:1px; background:rgba(160,215,250,0.55); z-index:0; }
     .bubble-link { z-index:1; }
 
@@ -135,21 +132,28 @@
     }
 
     .bl-icon {
-      width:47px; height:47px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+      width:42px; height:42px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
       border-radius:50%; position:relative; z-index:2;
       background:rgba(255,255,255,0.55);
       box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 38%, transparent);
       color:var(--brand);
       transition:box-shadow 0.35s ease, transform 0.35s ease;
     }
-    .bl-icon svg { width:22px; height:22px; }
+    .bl-icon svg { width:19px; height:19px; }
     .bubble-link:hover .bl-icon { transform:scale(1.05); box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--brand) 70%, transparent), 0 0 14px color-mix(in srgb, var(--brand) 25%, transparent); }
     .bl-body { flex:1; min-width:0; position:relative; z-index:2; }
     .bl-num { display:block; font-size:9px; font-weight:700; letter-spacing:0.26em; color:var(--aqua-deep); opacity:0.6; line-height:1.4; }
     .bl-num::before { content:"0" counter(deep); }
-    .bl-label { display:block; font-size:16.5px; font-weight:900; letter-spacing:0.03em; line-height:1.45; }
+    .bl-label { display:block; font-size:14.5px; font-weight:900; letter-spacing:0.03em; line-height:1.5; }
     .bl-handle { display:block; font-size:11px; color:var(--ink-soft); letter-spacing:0.04em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .bl-mark { position:absolute; right:-16px; top:50%; width:96px; height:96px; transform:translateY(-50%) rotate(-10deg); color:var(--brand); opacity:0.07; z-index:0; pointer-events:none; transition:opacity 0.45s ease, transform 0.45s ease; }
+    .bl-sub { position:relative; display:block; height:1.65em; overflow:hidden; }
+    .bl-sub .bl-handle, .bl-sub .bl-note { position:absolute; left:0; right:0; top:0; transition:opacity 0.28s ease, transform 0.28s ease; }
+    .bl-note { display:block; font-size:11px; font-weight:700; color:var(--aqua-deep); letter-spacing:0.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:0; transform:translateY(7px); }
+    .bubble-link:hover .bl-sub .bl-handle { opacity:0; transform:translateY(-7px); }
+    .bubble-link:hover .bl-note { opacity:1; transform:none; }
+    .bubble-link.primary .bl-note { color:#fff; }
+    .bubble-link.row-deep .bl-note { color:#bfe4fd; }
+    .bl-mark { position:absolute; right:-14px; top:50%; width:78px; height:78px; transform:translateY(-50%) rotate(-10deg); color:var(--brand); opacity:0.07; z-index:0; pointer-events:none; transition:opacity 0.45s ease, transform 0.45s ease; }
     .bl-mark svg { width:100%; height:100%; }
     .bubble-link:hover .bl-mark { opacity:0.13; transform:translateY(-50%) translateX(-5px) rotate(-6deg); }
     .bl-arrow { flex-shrink:0; color:var(--brand); opacity:0; transform:translateX(-5px); transition:transform 0.3s ease, opacity 0.3s; font-size:15px; position:relative; z-index:2; }
@@ -166,7 +170,6 @@
 
     .bubble-link.primary {
       --brand:#ffffff;
-      align-self:center; width:min(100%, 392px);
       background:linear-gradient(135deg, rgba(30,136,229,0.97), rgba(38,150,243,0.88));
       color:#fff;
       box-shadow:
@@ -202,11 +205,11 @@
     .links .bubble-link:not(.primary):not(.row-deep)::before { background:linear-gradient(90deg, transparent, color-mix(in srgb, rgba(200,235,255,0.75) calc(var(--d)*100%), rgba(255,255,255,1)), transparent); }
     /* 完全深海（Discord以降） */
     .links .bubble-link.row-deep {
-      background:linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+      background:linear-gradient(135deg, rgba(16,48,76,0.92), rgba(9,29,50,0.9));
       color:#eaf6ff;
       box-shadow:
         inset 0 0 0 1px rgba(160,215,250,0.35),
-        0 0 26px rgba(102,196,250,0.18),
+        0 0 26px rgba(102,196,250,0.22),
         0 16px 38px -12px rgba(4,20,36,0.55);
     }
     .links .bubble-link.row-deep::before { background:linear-gradient(90deg, transparent, rgba(200,235,255,0.7), transparent); }
@@ -224,7 +227,7 @@
     }
 
     /* ── 深度ゲージ（ダイブコンピュータ） ── */
-    .gauge { position:fixed; right:14px; top:50%; transform:translateY(-50%); height:36vh; z-index:2; pointer-events:none; }
+    .gauge { display:none; }
     .g-track { position:absolute; right:6px; top:0; bottom:0; width:1px; background:linear-gradient(180deg, rgba(66,165,245,0.15), rgba(66,165,245,0.5), rgba(190,228,253,0.5)); display:block; }
     .g-track::before, .g-track::after { content:''; position:absolute; right:-2px; width:5px; height:1px; background:rgba(66,165,245,0.4); }
     .g-track::before { top:0; } .g-track::after { bottom:0; }
@@ -233,10 +236,10 @@
     @media(max-width:600px) { .gauge { right:8px; height:30vh; } .g-read { display:none; } }
 
     /* ── 海底 ── */
-    .foot { text-align:center; padding:12px 0 48px; }
+    .foot { position:absolute; left:0; right:0; bottom:12px; text-align:center; padding:0; z-index:1; }
     .foot-lamp { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--lamp); box-shadow:0 0 16px 5px rgba(255,201,77,0.55); animation:lampPulse 3.4s ease-in-out infinite; margin-bottom:14px; }
     @keyframes lampPulse { 0%,100%{box-shadow:0 0 12px 4px rgba(255,201,77,0.42)} 50%{box-shadow:0 0 24px 8px rgba(255,201,77,0.68)} }
-    .foot-copy { font-size:10px; color:rgba(214,236,250,0.55); letter-spacing:0.08em; }
+    .foot-copy { font-size:10px; color:rgba(23,64,99,0.5); letter-spacing:0.08em; }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
@@ -244,12 +247,15 @@
       .bubble-link, .links .bubble-link { opacity:1 !important; animation:none !important; }
     }
     @media (min-width:600px) {
-      .page { padding-top:80px; }
-      .prof-name { font-size:36px; }
+      .prof-name { font-size:34px; }
     }
-    @media (max-width:420px) {
-      .bubble-link { width:calc(100% - 20px); }
-      .mooring { width:18px; }
+    @media (max-width:880px) {
+      .page { display:block; min-height:auto; padding:52px 0 36px; }
+      .prof { margin-bottom:26px; }
+      .links { grid-template-columns:1fr; gap:11px; }
+      .bubble-link.primary, .bubble-link:last-child:nth-child(even) { grid-column:auto; }
+      .foot { position:static; padding:30px 0 6px; }
+      .foot-copy { color:rgba(214,236,250,0.55); }
     }
   </style>
 </head>
@@ -451,9 +457,44 @@
         });
       }
 
+      /* ひとこと（本人の声）: ホバーでハンドルと入れ替わる */
+      const NOTES = {
+        home: '活動ぜんぶの入口！まずはここから',
+        x: 'お知らせも日常もここ！',
+        yt: 'VRChatの楽しさを動画で！',
+        vrc: 'フレンド申請も歓迎です！',
+        booth: 'アセットやグッズを販売中！',
+        discord: '参加はお問い合わせから！',
+        fanbox: 'FANBOXで応援うれしい！',
+        support: 'FANBOXで応援うれしい！',
+        contact: 'お仕事の相談も参加希望も、お気軽に！'
+      };
+      const decorateNotes = () => {
+        document.querySelectorAll('.links .bubble-link').forEach(el => {
+          if (el.querySelector('.bl-sub')) return;
+          const kind = el.classList.contains('primary')
+            ? 'home'
+            : ([...el.classList].find(c => c.startsWith('kind-')) || '').slice(5);
+          const handle = el.querySelector('.bl-handle');
+          if (!handle) return;
+          const sub = document.createElement('span');
+          sub.className = 'bl-sub';
+          handle.parentNode.insertBefore(sub, handle);
+          sub.appendChild(handle);
+          const note = document.createElement('span');
+          note.className = 'bl-note';
+          note.textContent = NOTES[kind] || '';
+          sub.appendChild(note);
+        });
+      };
+
+      /* 深度は格子の行ごと（上=水面 → 最下行=深海） */
       const assignRowDepth = () => {
-        [...document.querySelectorAll('.links .bubble-link')].forEach((el, i) => {
-          const d = Math.max(0, Math.min(1, (i - 1) / 4));
+        const rows = [...document.querySelectorAll('.links .bubble-link')];
+        const lastRow = Math.max(1, Math.floor((rows.length - 2) / 2));
+        rows.forEach((el, i) => {
+          const rowIdx = i === 0 ? 0 : Math.floor((i - 1) / 2);
+          const d = i === 0 ? 0 : Math.max(0, Math.min(1, rowIdx / lastRow));
           el.style.setProperty('--d', d.toFixed(3));
           el.classList.toggle('row-deep', d >= 0.999);
         });
@@ -463,10 +504,9 @@
         requestAnimationFrame(() => {
           document.getElementById('linkList').classList.add('in');
           assignRowDepth();
-          layMoorings();
+          decorateNotes();
           bindGlass();
         });
-        addEventListener('resize', layMoorings);
       });
 
       /* ═══ 深度ゲージ ═══ */
